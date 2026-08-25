@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Registro - Talvia</title>
+</head>
+<body>
+    <h1>Crear cuenta</h1>
+    <form id="registroForm">
+        <label>Nombre:
+            <input type="text" id="nombre" name="nombre" required>
+        </label><br><br>
+
+        <label>Correo:
+            <input type="email" id="correo" name="correo" required>
+        </label><br><br>
+
+        <label>Contraseña:
+            <input type="password" id="contrasena" name="contrasena" required>
+        </label><br><br>
+
+        <label>Rol:
+            <select id="rol" name="rol" required>
+                <option value="TRABAJADOR">Trabajador</option>
+                <option value="EMPRESA">Empresa</option>
+            </select>
+        </label><br><br>
+
+        <button type="submit">Registrarme</button>
+    </form>
+
+    <p id="mensaje"></p>
+
+    <script>
+        document.getElementById('registroForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const datos = {
+                nombre: document.getElementById('nombre').value,
+                email: document.getElementById('correo').value,
+                contrasena: document.getElementById('contrasena').value,
+                rol: document.getElementById('rol').value
+            };
+
+            try {
+                const respuesta = await fetch('/api/auth/registro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(datos)
+                });
+
+                if (respuesta.ok) {
+                    document.getElementById('mensaje').textContent = 'Registro exitoso. Ya puedes iniciar sesión.';
+                    window.location.href = '/login';
+                } else {
+                    const texto = await respuesta.text();
+                    document.getElementById('mensaje').textContent = 'Error: ' + texto;
+                }
+            } catch (error) {
+                document.getElementById('mensaje').textContent = 'Error de conexión con el servidor.';
+            }
+        });
+    </script>
+</body>
+</html>

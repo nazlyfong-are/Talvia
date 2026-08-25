@@ -15,13 +15,13 @@ public class Usuario {
     private String contrasena;
     private String tlefono;
     private LocalDateTime fechaRegistro;
-    private boolean activo;
+    private Boolean activo;
     private Rol rol;
     
     public Usuario() {
     }
     public Usuario(String id, String nombre, String email, String contrasena, String tlefono,
-            LocalDateTime fechaRegistro, boolean activo, Rol rol) {
+            LocalDateTime fechaRegistro, Boolean activo, Rol rol) {
         this.id = id;
         this.nombre = nombre;
         this.email = email;
