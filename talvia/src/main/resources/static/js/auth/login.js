@@ -1,5 +1,5 @@
 /* ============================================
-   NEXUM LOGIN — JavaScript (dual mode)
+  TALVIA LOGIN— JavaScript (dual mode)
    Modes: 'client' | 'admin'
 ============================================ */
 
@@ -9,7 +9,7 @@ let currentMode = 'client';
 document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   if (params.get('error') === 'unauthorized') {
-    showToast('USTED NO DEBE ACCEDER A ESTE APARTADO. SOLO TRABAJADORES.', 'error');
+    showToast('No tienes autorización para acceder a esa sección.', 'error');
   }
 });
 
@@ -164,21 +164,21 @@ async function handleLogin(event) {
   try {
     const data = await realAuth(email, password, securityCode);
 
-   // Solo bloquear si el rol no es ADMIN ni TRABAJADOR
-if (isAdmin && data.role !== 'ADMIN' && data.role !== 'TRABAJADOR' && data.role !== 'SUPER_ADMIN') {
-    showToast('Acceso restringido. Solo administradores y trabajadores.', 'error');
-    shakeField('email');
-    shakeField('password');
-    return;
-}
+    // Solo ADMIN requiere entrar por el modo admin
+    if (isAdmin && data.role !== 'ADMIN') {
+      showToast('Acceso restringido. Solo administradores.', 'error');
+      shakeField('email');
+      shakeField('password');
+      return;
+    }
 
-// Admin intentando entrar por modo cliente
-if (!isAdmin && (data.role === 'ADMIN' || data.role === 'TRABAJADOR')) {
-    showToast('Usa el modo Admin para ingresar con este perfil.', 'error');
-    shakeField('email');
-    shakeField('password');
-    return;
-}
+    // Admin intentando entrar por modo cliente
+    if (!isAdmin && data.role === 'ADMIN') {
+      showToast('Usa el modo Admin para ingresar con este perfil.', 'error');
+      shakeField('email');
+      shakeField('password');
+      return;
+    }
 
     showToast(
       isAdmin ? '✓ Acceso admin concedido. Cargando panel…' : '✓ Sesión iniciada. Redirigiendo…',
@@ -186,15 +186,13 @@ if (!isAdmin && (data.role === 'ADMIN' || data.role === 'TRABAJADOR')) {
     );
 
     setTimeout(() => {
-      if (data.role === 'SUPER_ADMIN') {
-    window.location.href = '/private/superadmin/dashboard';
-} else if (data.role === 'ADMIN') {
-    window.location.href = '/private/admin/main_admins';
-} else if (data.role === 'TRABAJADOR') {
-    window.location.href = '/private/worker/worker_dashboard';
-} else {
-    window.location.href = '/private/customers/main_customers';
-}
+      if (data.role === 'ADMIN') {
+        window.location.href = '/private/admin/dashboard';
+      } else if (data.role === 'TRABAJADOR') {
+        window.location.href = '/private/worker/dashboard';
+      } else {
+        window.location.href = '/private/empresa/dashboard';
+      }
     }, 1500);
 
   } catch (err) {

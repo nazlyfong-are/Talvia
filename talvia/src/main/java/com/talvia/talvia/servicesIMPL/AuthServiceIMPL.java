@@ -1,121 +1,115 @@
 package com.talvia.talvia.servicesIMPL;
 
-import com.talvia.talvia.model.adminModel;
-import com.talvia.talvia.model.superAdminModel;
-import com.talvia.talvia.model.workerModel;
-import com.talvia.talvia.repository.AdminRepository;
-import com.talvia.talvia.repository.SuperAdminRepository;
-import com.talvia.talvia.repository.WorkerRepository;
 import com.talvia.talvia.dto.LoginRequestDTO;
 import com.talvia.talvia.dto.LoginResponseDTO;
+import com.talvia.talvia.model.usuario.Admin;
+import com.talvia.talvia.repository.AdminRepository;
 import com.talvia.talvia.security.UserPrincipal;
+import com.talvia.talvia.security.LoginAttempService;
 import com.talvia.talvia.services.AuthService;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+
+import java.security.Security;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceIMPL implements AuthService {
 
+    private static final String GENERIC_ERROR = "Correo, contraseña o código incorrectos.";
+
     @Autowired private AuthenticationManager authenticationManager;
-    @Autowired private HttpServletRequest    request;
-    @Autowired private SuperAdminRepository  superAdminRepository;
-    @Autowired private AdminRepository       adminRepository;
-    @Autowired private WorkerRepository      workerRepository;
+    @Autowired private HttpServletRequest request;
+    @Autowired private AdminRepository adminRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private LoginAttempService loginAttemptService;
 
     @Override
     public LoginResponseDTO login(LoginRequestDTO loginRequest) {
-        System.out.println(">>> LOGIN: " + loginRequest.getCorreoElectronico());
 
-        if (loginRequest.getCorreoElectronico() == null || loginRequest.getContrasena() == null)
-            throw new BadCredentialsException("Correo y contraseña son obligatorios.");
+        String correo = loginRequest.getCorreoElectronico();
 
-        // Autenticar con Spring Security (verifica correo + contraseña)
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getCorreoElectronico(),
-                        loginRequest.getContrasena()
-                )
-        );
+        if (correo == null || loginRequest.getContrasena() == null) {
+            throw new BadCredentialsException(GENERIC_ERROR);
+        }
+
+        // Verificar bloqueo ANTES de intentar autenticar
+        if (loginAttemptService.estaBloqueado(correo)) {
+            long minutos = loginAttemptService.minutosRestantesDeBloqueo(correo);
+            throw new BadCredentialsException(
+                "Demasiados intentos fallidos. Intenta de nuevo en " + minutos + " minuto(s)."
+            );
+        }
+
+        Authentication authentication;
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(correo, loginRequest.getContrasena())
+            );
+        } catch (AuthenticationException e) {
+            loginAttemptService.registrarFallo(correo);
+            throw new BadCredentialsException(GENERIC_ERROR);
+        }
+
+        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
+        String role = principal.getRole();
+
+        if ("ADMIN".equals(role)) {
+            String codigo = loginRequest.getSecurityCode();
+            if (codigo == null || codigo.isBlank()) {
+                loginAttemptService.registrarFallo(correo);
+                throw new BadCredentialsException(GENERIC_ERROR);
+            }
+
+            Admin admin = adminRepository.findByEmail(correo)
+                    .orElseThrow(() -> {
+                        loginAttemptService.registrarFallo(correo);
+                        return new BadCredentialsException(GENERIC_ERROR);
+                    });
+
+            String codigoLimpio = codigo.replace("-", "").toUpperCase();
+
+            if (admin.getCodigoAcceso() == null || !passwordEncoder.matches(codigoLimpio, admin.getCodigoAcceso())) {
+                loginAttemptService.registrarFallo(correo);
+                throw new BadCredentialsException(GENERIC_ERROR);
+            }
+        }
+
+        // Login exitoso: resetear contador de intentos
+        loginAttemptService.registrarExito(correo);
+
+        // Prevención de session fixation
+        HttpSession oldSession = request.getSession(false);
+        if (oldSession != null) {
+            oldSession.invalidate();
+        }
+        HttpSession session = request.getSession(true);
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        HttpSession session = request.getSession(true);
         session.setAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
                 SecurityContextHolder.getContext()
         );
-
-        UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-        String role  = principal.getRole();
-        String correo = loginRequest.getCorreoElectronico();
-        String codigo = loginRequest.getSecurityCode();
-
-        // ── Validar código de acceso según rol ──
-        switch (role) {
-
-            case "SUPER_ADMIN" -> {
-                if (codigo == null || codigo.isBlank())
-                    throw new BadCredentialsException(
-                        "El código de acceso es obligatorio.");
-                superAdminModel sa = superAdminRepository
-                        .findByCorreoElectronico(correo)
-                        .orElseThrow(() -> new BadCredentialsException("Usuario no encontrado."));
-                // Comparar código limpio (sin guión)
-                String codigoLimpio = codigo.replace("-", "").toUpperCase();
-                String saCodigoLimpio = sa.getCodigoAcceso() != null
-                        ? sa.getCodigoAcceso().replace("-", "").toUpperCase() : "";
-                if (!codigoLimpio.equals(saCodigoLimpio))
-                    throw new BadCredentialsException("Código de acceso incorrecto.");
-            }
-
-            case "ADMIN" -> {
-                if (codigo == null || codigo.isBlank())
-                    throw new BadCredentialsException(
-                        "El código de acceso es obligatorio para administradores.");
-                adminModel admin = adminRepository
-                        .findByCorreoElectronico(correo)
-                        .orElseThrow(() -> new BadCredentialsException("Admin no encontrado."));
-                String codigoLimpio = codigo.replace("-", "").toUpperCase();
-                String adminCodigoLimpio = admin.getCodigoAcceso() != null
-                        ? admin.getCodigoAcceso().replace("-", "").toUpperCase() : "";
-                if (!codigoLimpio.equals(adminCodigoLimpio))
-                    throw new BadCredentialsException("Código de acceso incorrecto.");
-            }
-
-            case "TRABAJADOR" -> {
-                if (codigo == null || codigo.isBlank())
-                    throw new BadCredentialsException(
-                        "El código de acceso es obligatorio para trabajadores.");
-                workerModel worker = workerRepository.findByCorreoElectronico(correo);
-                if (worker == null)
-                    throw new BadCredentialsException("Trabajador no encontrado.");
-                String codigoLimpio = codigo.replace("-", "").toUpperCase();
-                String workerCodigoLimpio = worker.getCodigoAcceso() != null
-                        ? worker.getCodigoAcceso().replace("-", "").toUpperCase() : "";
-                if (!codigoLimpio.equals(workerCodigoLimpio))
-                    throw new BadCredentialsException("Código de acceso incorrecto.");
-            }
-        }
-
-        // Guardar datos en sesión
-        session.setAttribute("userId",    principal.getId());
+        session.setAttribute("userId", principal.getId());
         session.setAttribute("userEmail", principal.getUsername());
-        session.setAttribute("userRole",  role);
-
-        System.out.println(">>> ROL: " + role + " | ID: " + principal.getId());
+        session.setAttribute("userRole", role);
 
         return new LoginResponseDTO(
-                principal.getId(), principal.getUsername(), role,
-                "Inicio de sesión exitoso.");
+                String.valueOf(principal.getId()),
+                principal.getUsername(),
+                role,
+                "Inicio de sesión exitoso."
+        );
     }
 
     @Override

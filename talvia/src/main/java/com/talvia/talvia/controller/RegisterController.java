@@ -1,15 +1,11 @@
 package com.talvia.talvia.controller;
 
+import com.talvia.talvia.dto.RegisterEmpresaDTO;
+import com.talvia.talvia.dto.RegisterTrabajadorDTO;
+import com.talvia.talvia.services.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.talvia.talvia.dto.RegisterEmpresaDTO;
-import com.talvia.talvia.dto.RegisterNaturalDTO;
-import com.talvia.talvia.services.RegisterService;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/register")
@@ -18,10 +14,10 @@ public class RegisterController {
     @Autowired
     private RegisterService registerService;
 
-    @PostMapping("/natural")
-    public ResponseEntity<?> registerNatural(@RequestBody RegisterNaturalDTO dto) {
+    @PostMapping("/trabajador")
+    public ResponseEntity<?> registerTrabajador(@RequestBody RegisterTrabajadorDTO dto) {
         try {
-            registerService.registerNatural(dto);
+            registerService.registerTrabajador(dto);
             return ResponseEntity.ok("Cuenta creada exitosamente.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(409).body(e.getMessage());

@@ -1,82 +1,52 @@
 package com.talvia.talvia.model.usuario;
 
 import java.time.LocalDateTime;
-
-import org.springframework.data.annotation.Id;
-
+import jakarta.persistence.Id;
 import com.talvia.talvia.model.enums.Rol;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "usuarios")
+@Inheritance(strategy =  InheritanceType.JOINED)
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Usuario {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String nombre;
+
+    @Column(nullable = false, unique = true)
     private String email;
+
+    @Column(nullable = false)
     private String contrasena;
-    private String tlefono;
-    private LocalDateTime fechaRegistro;
-    private boolean activo;
-    private Rol rol;
+
+    private String Telefono;
     
-    public Usuario() {
-    }
-    public Usuario(String id, String nombre, String email, String contrasena, String tlefono,
-            LocalDateTime fechaRegistro, boolean activo, Rol rol) {
-        this.id = id;
-        this.nombre = nombre;
-        this.email = email;
-        this.contrasena = contrasena;
-        this.tlefono = tlefono;
-        this.fechaRegistro = fechaRegistro;
-        this.activo = activo;
-        this.rol = rol;
-    }
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-    public String getNombre() {
-        return nombre;
-    }
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
-    public String getContrasena() {
-        return contrasena;
-    }
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
-    }
-    public String getTlefono() {
-        return tlefono;
-    }
-    public void setTlefono(String tlefono) {
-        this.tlefono = tlefono;
-    }
-    public LocalDateTime getFechaRegistro() {
-        return fechaRegistro;
-    }
-    public void setFechaRegistro(LocalDateTime fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-    public boolean isActivo() {
-        return activo;
-    }
-    public void setActivo(boolean activo) {
-        this.activo = activo;
-    }
-    public Rol getRol() {
-        return rol;
-    }
-    public void setRol(Rol rol) {
-        this.rol = rol;
-    }
+    private LocalDateTime fechaRegistro;
+    
+    private boolean activo = true;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Rol rol;
 }

@@ -2,97 +2,65 @@ package com.talvia.talvia.model.proceso;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import jakarta.persistence.Id;
 
 import com.talvia.talvia.model.embedded.RangoSalarial;
 import com.talvia.talvia.model.enums.EstadoSolicitud;
 import com.talvia.talvia.model.usuario.Empresa;
 
-@Document(collection = "solicitudes_compatibilidad")
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "solicitudes_compatibilidad")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class SolicitudCompatibilidad {
 
     @Id
-    private String id;
-    @DBRef
-    private Empresa empresaSolicitante;
-    private String especialidadBuscada;
-    private List<String> habilidadesRequeridas;
-    private RangoSalarial presupuestoDisponible;
-    private Integer experienciaMinima;
-    private LocalDateTime fechaSolicitud;
-    private List<String> trabajadorIdsSugeridos;
-    private EstadoSolicitud estado;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     
-    public SolicitudCompatibilidad() {
-    }
-    public SolicitudCompatibilidad(String id, Empresa empresaSolicitante, String especialidadBuscada,
-            List<String> habilidadesRequeridas, RangoSalarial presupuestoDisponible, Integer experienciaMinima,
-            LocalDateTime fechaSolicitud, List<String> trabajadorIdsSugeridos, EstadoSolicitud estado) {
-        this.id = id;
-        this.empresaSolicitante = empresaSolicitante;
-        this.especialidadBuscada = especialidadBuscada;
-        this.habilidadesRequeridas = habilidadesRequeridas;
-        this.presupuestoDisponible = presupuestoDisponible;
-        this.experienciaMinima = experienciaMinima;
-        this.fechaSolicitud = fechaSolicitud;
-        this.trabajadorIdsSugeridos = trabajadorIdsSugeridos;
-        this.estado = estado;
-    }
-    public String getId() {
-        return id;
-    }
-    public void setId(String id) {
-        this.id = id;
-    }
-    public Empresa getEmpresaSolicitante() {
-        return empresaSolicitante;
-    }
-    public void setEmpresaSolicitante(Empresa empresaSolicitante) {
-        this.empresaSolicitante = empresaSolicitante;
-    }
-    public String getEspecialidadBuscada() {
-        return especialidadBuscada;
-    }
-    public void setEspecialidadBuscada(String especialidadBuscada) {
-        this.especialidadBuscada = especialidadBuscada;
-    }
-    public List<String> getHabilidadesRequeridas() {
-        return habilidadesRequeridas;
-    }
-    public void setHabilidadesRequeridas(List<String> habilidadesRequeridas) {
-        this.habilidadesRequeridas = habilidadesRequeridas;
-    }
-    public RangoSalarial getPresupuestoDisponible() {
-        return presupuestoDisponible;
-    }
-    public void setPresupuestoDisponible(RangoSalarial presupuestoDisponible) {
-        this.presupuestoDisponible = presupuestoDisponible;
-    }
-    public Integer getExperienciaMinima() {
-        return experienciaMinima;
-    }
-    public void setExperienciaMinima(Integer experienciaMinima) {
-        this.experienciaMinima = experienciaMinima;
-    }
-    public LocalDateTime getFechaSolicitud() {
-        return fechaSolicitud;
-    }
-    public void setFechaSolicitud(LocalDateTime fechaSolicitud) {
-        this.fechaSolicitud = fechaSolicitud;
-    }
-    public List<String> getTrabajadorIdsSugeridos() {
-        return trabajadorIdsSugeridos;
-    }
-    public void setTrabajadorIdsSugeridos(List<String> trabajadorIdsSugeridos) {
-        this.trabajadorIdsSugeridos = trabajadorIdsSugeridos;
-    }
-    public EstadoSolicitud getEstado() {
-        return estado;
-    }
-    public void setEstado(EstadoSolicitud estado) {
-        this.estado = estado;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "empresa_id", nullable = false)
+    private Empresa empresaSolicitante;
+
+    private String especialidadBuscada;
+    
+    @ElementCollection
+    @CollectionTable(name = "solicitud_habilidades_requeridas", joinColumns = @JoinColumn(name = "solicitud_id"))
+    @Column(name = "habilidad")
+    private List<String> habilidadesRequeridas;
+
+    @Embedded
+    private RangoSalarial presupuestoDisponible;
+
+    private Integer experienciaMinima;
+
+    private LocalDateTime fechaSolicitud;
+
+    @ElementCollection
+    @CollectionTable(name = "solicitud_trabajadores_sugeridos", joinColumns = @JoinColumn(name = "solicitud_id"))
+    @Column(name = "trabajador_id")
+    private List<String> trabajadorIdsSugeridos;
+    
+    @Enumerated(EnumType.STRING)
+    private EstadoSolicitud estado;
 }

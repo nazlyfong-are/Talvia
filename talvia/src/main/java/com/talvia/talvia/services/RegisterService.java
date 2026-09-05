@@ -1,11 +1,9 @@
 package com.talvia.talvia.services;
 
 import com.talvia.talvia.dto.RegisterEmpresaDTO;
-import com.talvia.talvia.dto.RegisterNaturalDTO;
+import com.talvia.talvia.dto.RegisterTrabajadorDTO;
 
 public interface RegisterService {
-
-    void registerNatural(RegisterNaturalDTO dto);
-
+    void registerTrabajador(RegisterTrabajadorDTO dto);
     void registerEmpresa(RegisterEmpresaDTO dto);
 }

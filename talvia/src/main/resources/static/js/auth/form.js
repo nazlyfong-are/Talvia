@@ -1,6 +1,7 @@
 /* ============================================
    NEXUM REGISTER — JavaScript
    Validaciones colombianas + fetch al backend
+   Incluye CV opcional (formación, experiencia, habilidades, certificaciones)
 ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -108,6 +109,20 @@ document.addEventListener('DOMContentLoaded', () => {
         el.addEventListener('change', () => clearFieldError(el.id));
     });
 
+    // ── FILAS DINÁMICAS: CV OPCIONAL ──
+    document.getElementById('add-formacion')?.addEventListener('click', () => {
+        document.getElementById('formaciones-container').appendChild(crearFilaFormacion());
+    });
+    document.getElementById('add-experiencia')?.addEventListener('click', () => {
+        document.getElementById('experiencias-container').appendChild(crearFilaExperiencia());
+    });
+    document.getElementById('add-habilidad')?.addEventListener('click', () => {
+        document.getElementById('habilidades-container').appendChild(crearFilaHabilidad());
+    });
+    document.getElementById('add-certificacion')?.addEventListener('click', () => {
+        document.getElementById('certificaciones-container').appendChild(crearFilaCertificacion());
+    });
+
     // ── ENVÍO DEL FORMULARIO ──
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -173,9 +188,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // ── VALIDACIONES COMUNES ──
-        const correo     = document.getElementById('correo').value.trim();
-        const telefono   = document.getElementById('telefono').value.trim();
-        const pass       = document.getElementById('password').value;
+        const correo      = document.getElementById('correo').value.trim();
+        const telefono    = document.getElementById('telefono').value.trim();
+        const pass        = document.getElementById('password').value;
         const confirmPass = document.getElementById('confirm-password').value;
 
         if (!correo || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
@@ -207,14 +222,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (hasError) {
             showToast('Corrija los errores marcados antes de continuar.', 'error');
-            // Scroll al primer error
             const firstError = document.querySelector('.input-error');
             if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
             return;
         }
 
         // ── FETCH AL BACKEND ──
-        const endpoint = isJuridica ? '/api/register/empresa' : '/api/register/natural';
+        const endpoint = isJuridica ? '/api/register/empresa' : '/api/register/trabajador';
 
         let body;
         if (isJuridica) {
@@ -235,7 +249,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 numeroDocumento:   document.getElementById('num-documento').value.trim(),
                 correoElectronico: correo,
                 numeroTelefono:    telefono,
-                contrasena:        pass
+                contrasena:        pass,
+
+                // ── Información profesional (opcional) ──
+                especialidad:         document.getElementById('especialidad').value.trim(),
+                resumenProfesional:   document.getElementById('resumen-profesional').value.trim(),
+                ciudad:               document.getElementById('ciudad').value.trim(),
+                anosExperienciaTotal: document.getElementById('anos-experiencia').value
+                                          ? parseInt(document.getElementById('anos-experiencia').value, 10)
+                                          : null,
+
+                formaciones:     recolectarFormaciones(),
+                experiencias:    recolectarExperiencias(),
+                habilidades:     recolectarHabilidades(),
+                certificaciones: recolectarCertificaciones()
             };
         }
 
@@ -332,4 +359,127 @@ function showToast(message, type = 'default') {
     void toast.offsetWidth;
     toast.classList.add('show');
     toastTimer = setTimeout(() => toast.classList.remove('show'), 3800);
+}
+
+/* ============================================
+   CV OPCIONAL — Filas dinámicas
+   (Formación, Experiencia, Habilidades, Certificaciones)
+============================================ */
+
+function crearFilaFormacion() {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row formacion-row';
+    div.innerHTML = `
+        <input type="text" class="f-institucion" placeholder="Institución" />
+        <input type="text" class="f-titulo" placeholder="Título obtenido" />
+        <select class="f-nivel">
+            <option value="">Nivel</option>
+            <option value="BACHILLER">Bachiller</option>
+            <option value="TECNICO">Técnico</option>
+            <option value="TECNOLOGO">Tecnólogo</option>
+            <option value="PROFESIONAL">Profesional</option>
+            <option value="ESPECIALIZACION">Especialización</option>
+            <option value="MAESTRIA">Maestría</option>
+            <option value="DOCTORADO">Doctorado</option>
+        </select>
+        <input type="date" class="f-fecha-inicio" />
+        <input type="date" class="f-fecha-fin" />
+        <label><input type="checkbox" class="f-en-curso" /> En curso</label>
+        <button type="button" class="btn-remove-row">✕</button>
+    `;
+    div.querySelector('.btn-remove-row').addEventListener('click', () => div.remove());
+    return div;
+}
+
+function crearFilaExperiencia() {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row experiencia-row';
+    div.innerHTML = `
+        <input type="text" class="e-empresa" placeholder="Nombre de la empresa" />
+        <input type="text" class="e-cargo" placeholder="Cargo" />
+        <input type="date" class="e-fecha-inicio" />
+        <input type="date" class="e-fecha-fin" />
+        <input type="text" class="e-descripcion" placeholder="Descripción breve" />
+        <label><input type="checkbox" class="e-actual" /> Trabajo actual</label>
+        <button type="button" class="btn-remove-row">✕</button>
+    `;
+    div.querySelector('.btn-remove-row').addEventListener('click', () => div.remove());
+    return div;
+}
+
+function crearFilaHabilidad() {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row habilidad-row';
+    div.innerHTML = `
+        <input type="text" class="h-nombre" placeholder="Ej: Java, Spring Boot" />
+        <select class="h-nivel">
+            <option value="">Nivel</option>
+            <option value="BASICO">Básico</option>
+            <option value="INTERMEDIO">Intermedio</option>
+            <option value="AVANZADO">Avanzado</option>
+            <option value="EXPERTO">Experto</option>
+        </select>
+        <select class="h-categoria">
+            <option value="">Categoría</option>
+            <option value="Técnica">Técnica</option>
+            <option value="Blanda">Blanda</option>
+            <option value="Idioma">Idioma</option>
+        </select>
+        <button type="button" class="btn-remove-row">✕</button>
+    `;
+    div.querySelector('.btn-remove-row').addEventListener('click', () => div.remove());
+    return div;
+}
+
+function crearFilaCertificacion() {
+    const div = document.createElement('div');
+    div.className = 'dynamic-row certificacion-row';
+    div.innerHTML = `
+        <input type="text" class="c-nombre" placeholder="Nombre de la certificación" />
+        <input type="text" class="c-entidad" placeholder="Entidad emisora" />
+        <input type="date" class="c-fecha-obtencion" />
+        <input type="date" class="c-fecha-vencimiento" />
+        <button type="button" class="btn-remove-row">✕</button>
+    `;
+    div.querySelector('.btn-remove-row').addEventListener('click', () => div.remove());
+    return div;
+}
+
+function recolectarFormaciones() {
+    return Array.from(document.querySelectorAll('#formaciones-container .formacion-row')).map(row => ({
+        institucion: row.querySelector('.f-institucion').value.trim(),
+        titulo: row.querySelector('.f-titulo').value.trim(),
+        nivel: row.querySelector('.f-nivel').value,
+        fechaInicio: row.querySelector('.f-fecha-inicio').value,
+        fechaFin: row.querySelector('.f-fecha-fin').value,
+        enCurso: row.querySelector('.f-en-curso').checked
+    })).filter(f => f.institucion);
+}
+
+function recolectarExperiencias() {
+    return Array.from(document.querySelectorAll('#experiencias-container .experiencia-row')).map(row => ({
+        empresaNombre: row.querySelector('.e-empresa').value.trim(),
+        cargo: row.querySelector('.e-cargo').value.trim(),
+        fechaInicio: row.querySelector('.e-fecha-inicio').value,
+        fechaFin: row.querySelector('.e-fecha-fin').value,
+        descripcion: row.querySelector('.e-descripcion').value.trim(),
+        trabajoActual: row.querySelector('.e-actual').checked
+    })).filter(e => e.empresaNombre);
+}
+
+function recolectarHabilidades() {
+    return Array.from(document.querySelectorAll('#habilidades-container .habilidad-row')).map(row => ({
+        nombre: row.querySelector('.h-nombre').value.trim(),
+        nivel: row.querySelector('.h-nivel').value,
+        categoria: row.querySelector('.h-categoria').value
+    })).filter(h => h.nombre);
+}
+
+function recolectarCertificaciones() {
+    return Array.from(document.querySelectorAll('#certificaciones-container .certificacion-row')).map(row => ({
+        nombre: row.querySelector('.c-nombre').value.trim(),
+        entidadEmisora: row.querySelector('.c-entidad').value.trim(),
+        fechaObtencion: row.querySelector('.c-fecha-obtencion').value,
+        fechaVencimiento: row.querySelector('.c-fecha-vencimiento').value
+    })).filter(c => c.nombre);
 }

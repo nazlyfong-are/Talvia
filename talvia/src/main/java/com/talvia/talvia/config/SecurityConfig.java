@@ -1,0 +1,67 @@
+package com.talvia.talvia.config;
+
+import com.talvia.talvia.security.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+public DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+    provider.setPasswordEncoder(passwordEncoder());
+    return provider;
+}
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+            // El login se maneja manualmente vía /api/auth/login (fetch + JSON),
+            // no con el formLogin tradicional de Spring.
+            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/auth/**", "/api/register/**")
+            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+            )
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/", "/public/**", "/css/**", "/js/**", "/img/**",
+                    "/api/auth/**", "/api/register/**"
+                ).permitAll()
+                .requestMatchers("/private/admin/**").hasRole("ADMIN")
+                .requestMatchers("/private/worker/**").hasRole("TRABAJADOR")
+                .requestMatchers("/private/empresa/**").hasRole("EMPRESA")
+                .anyRequest().authenticated()
+            )
+            .formLogin(form -> form.disable())
+            .httpBasic(basic -> basic.disable());
+
+        return http.build();
+    }
+}

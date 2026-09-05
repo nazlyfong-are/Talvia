@@ -2,43 +2,39 @@ package com.talvia.talvia.model.embedded;
 
 import java.time.LocalDate;
 
+import com.talvia.talvia.model.usuario.Trabajador;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "certificaciones")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Certificacion {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String nombre;
     private String entidadEmisora;
     private LocalDate fechaObtencion;
-    private LocalDate fechaVencimiento;
-    
-    public Certificacion() {
-    }
-    public Certificacion(String nombre, String entidadEmisora, LocalDate fechaObtencion, LocalDate fechaVencimiento) {
-        this.nombre = nombre;
-        this.entidadEmisora = entidadEmisora;
-        this.fechaObtencion = fechaObtencion;
-        this.fechaVencimiento = fechaVencimiento;
-    }
-    public String getNombre() {
-        return nombre;
-    }
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-    public String getEntidadEmisora() {
-        return entidadEmisora;
-    }
-    public void setEntidadEmisora(String entidadEmisora) {
-        this.entidadEmisora = entidadEmisora;
-    }
-    public LocalDate getFechaObtencion() {
-        return fechaObtencion;
-    }
-    public void setFechaObtencion(LocalDate fechaObtencion) {
-        this.fechaObtencion = fechaObtencion;
-    }
-    public LocalDate getFechaVencimiento() {
-        return fechaVencimiento;
-    }
-    public void setFechaVencimiento(LocalDate fechaVencimiento) {
-        this.fechaVencimiento = fechaVencimiento;
-    }
+    private LocalDate fechaVencimiento; //opcional
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "trabajador_id", nullable = false)
+    private Trabajador trabajador;
 }

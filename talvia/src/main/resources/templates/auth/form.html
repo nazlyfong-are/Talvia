@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crear Cuenta — NEXUM</title>
+  <title>Crear Cuenta — Talvia</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" th:href="@{/css/form_style.css}" />
+  <link rel="stylesheet" th:href="@{/css/auth/form_style.css}" />
 </head>
 <body>
 
@@ -18,7 +18,7 @@
 
       <div class="type-panel-brand">
         <div class="logo-mark"><span>N</span></div>
-        <span class="logo-text">NEXUM</span>
+        <span class="logo-text">TALVIA</span>
       </div>
 
       <div class="type-panel-heading">
@@ -131,6 +131,51 @@
               </div>
 
             </div>
+          </div>
+
+          <!-- ── SECCIÓN: INFORMACIÓN PROFESIONAL (OPCIONAL, solo Natural) ── -->
+          <div class="form-section block-natural">
+            <p class="section-label">Información profesional (opcional)</p>
+            <p class="section-hint">Puedes completar esto ahora o después desde tu perfil.</p>
+
+            <div class="fields-grid">
+              <div class="field-group">
+                <label for="especialidad">Especialidad / Perfil profesional</label>
+                <input type="text" id="especialidad" name="especialidad" placeholder="Ej: Ingeniería de Sistemas" />
+              </div>
+              <div class="field-group">
+                <label for="anos-experiencia">Años de experiencia</label>
+                <input type="number" id="anos-experiencia" name="anos-experiencia" min="0" placeholder="Ej: 1" />
+              </div>
+              <div class="field-group">
+                <label for="ciudad">Ciudad</label>
+                <input type="text" id="ciudad" name="ciudad" placeholder="Ej: Cartagena" />
+              </div>
+              <div class="field-group full-width">
+                <label for="resumen-profesional">Resumen profesional</label>
+                <input type="text" id="resumen-profesional" name="resumen-profesional" placeholder="Ej: 1 año de experiencia en desarrollo de software" />
+              </div>
+            </div>
+
+            <!-- FORMACIÓN -->
+            <p class="subsection-label">Formación</p>
+            <div id="formaciones-container"></div>
+            <button type="button" class="btn-secondary-small" id="add-formacion">+ Agregar formación</button>
+
+            <!-- EXPERIENCIA -->
+            <p class="subsection-label">Experiencia</p>
+            <div id="experiencias-container"></div>
+            <button type="button" class="btn-secondary-small" id="add-experiencia">+ Agregar experiencia</button>
+
+            <!-- HABILIDADES -->
+            <p class="subsection-label">Habilidades</p>
+            <div id="habilidades-container"></div>
+            <button type="button" class="btn-secondary-small" id="add-habilidad">+ Agregar habilidad</button>
+
+            <!-- CERTIFICACIONES -->
+            <p class="subsection-label">Certificaciones</p>
+            <div id="certificaciones-container"></div>
+            <button type="button" class="btn-secondary-small" id="add-certificacion">+ Agregar certificación</button>
           </div>
 
           <!-- ── SECCIÓN: DATOS EMPRESA (solo Jurídica) ── -->
@@ -257,6 +302,6 @@
   <!-- Toast -->
   <div class="toast" id="toast"></div>
 
-  <script th:src="@{/js/form.js}"></script>
+  <script th:src="@{/js/auth/form.js}"></script>
 </body>
 </html>

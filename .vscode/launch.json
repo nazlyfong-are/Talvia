@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+        "type": "java",
+        "name": "TalviaApplication",
+        "request": "launch",
+        "mainClass": "com.talvia.talvia.TalviaApplication",
+        "vmArgs": "--add-opens java.base/java.lang=ALL-UNNAMED"
+    },
+    {
+        "type": "java",
+        "name": "Spring Boot-TalviaApplication<talvia>",
+        "request": "launch",
+        "cwd": "${workspaceFolder}",
+        "mainClass": "com.talvia.talvia.TalviaApplication",
+        "projectName": "talvia",
+        "args": "",
+        "envFile": "${workspaceFolder}/.env"
+    }
+]
+}
