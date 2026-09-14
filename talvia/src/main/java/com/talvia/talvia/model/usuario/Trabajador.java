@@ -1,17 +1,15 @@
 package com.talvia.talvia.model.usuario;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 
 import com.talvia.talvia.model.embedded.Certificacion;
+import com.talvia.talvia.model.embedded.CvDocumento;
 import com.talvia.talvia.model.embedded.ExpLaboral;
 import com.talvia.talvia.model.embedded.Formacion;
 import com.talvia.talvia.model.embedded.Habilidad;
 import com.talvia.talvia.model.embedded.ImagenCloudinary;
-import com.talvia.talvia.model.embedded.RangoSalarial;
-import com.talvia.talvia.model.enums.Rol;
 import com.talvia.talvia.model.enums.TipoDocumento;
 
 import jakarta.persistence.CascadeType;
@@ -39,7 +37,6 @@ import lombok.Setter;
 public class Trabajador extends Usuario {
 
     private String especilidad;
-
     private String primerApellido;
     private String segundoApellido;
 
@@ -47,37 +44,31 @@ public class Trabajador extends Usuario {
     private TipoDocumento tipoDocumento;
 
     @Column(unique = true)
-    private String numeroDocumento; 
-    
+    private String numeroDocumento;
+
     @Column(length = 2000)
     private String resumenProfesional;
 
-    private Integer aniosExpTotal;
-
     private String ciudad;
-    
     private boolean disponibleInmediato;
-    
-    private String cvArchivoUrl;
+    private Double anosExperienciaTotal;
 
     @Embedded
     private ImagenCloudinary foto;
 
-    @Embedded
-    private RangoSalarial pretensionSalarial;
-    
-    //Lista con identidad propia -> entidades independientes (uno a muchos)
     @OneToMany(mappedBy = "trabajador", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ExpLaboral> experiencias = new ArrayList<>();
-    
-    //Lista de valores simples
+
     @ElementCollection
     @CollectionTable(name = "trabajador_habilidades", joinColumns = @JoinColumn(name = "trabajador_id"))
     private List<Habilidad> habilidades = new ArrayList<>();
-    
+
     @OneToMany(mappedBy = "trabajador", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Formacion> formaciones = new ArrayList<>();
-    
+
     @OneToMany(mappedBy = "trabajador", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Certificacion> certificaciones = new ArrayList<>();
+
+    @OneToMany(mappedBy = "trabajador", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<CvDocumento> cvs = new ArrayList<>();
 }

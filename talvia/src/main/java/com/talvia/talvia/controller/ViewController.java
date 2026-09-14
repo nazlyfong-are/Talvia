@@ -1,19 +1,8 @@
 package com.talvia.talvia.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.talvia.talvia.dto.LoginRequestDTO;
-import com.talvia.talvia.dto.LoginResponseDTO;
-import com.talvia.talvia.services.AuthService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 
 @Controller
 public class ViewController {
@@ -27,9 +16,40 @@ public class ViewController {
     public String login() {
         return "auth/login";
     }
-    
+
     @GetMapping("/public/form")
     public String registro() {
         return "auth/form";
     }
+
+    @GetMapping("/private/trabajador/index")
+    public String indexTrabajador() {
+        return "trabajador/index";
+    }
+
+    @GetMapping("/private/trabajador/empresas")
+    public String empresasTrabajador() {
+        return "trabajador/empresas";
+    }
+
+    @GetMapping("/private/trabajador/perfil")
+    public String perfilTrabajador() {
+        return "trabajador/perfil";
+    }
+
+    @GetMapping("/private/empresa/dashboard")
+public String dashboardEmpresa() {
+    return "empresa/dashboard";
+}
+
+@GetMapping("/private/trabajador/vacante")
+public String detalleVacante() {
+    return "trabajador/vacante";
+}
+
+@GetMapping("/private/trabajador/postulaciones")
+public String misPostulaciones() {
+    return "trabajador/postulaciones";
+}
+
 }

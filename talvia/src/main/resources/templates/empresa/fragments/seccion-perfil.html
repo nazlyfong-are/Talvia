@@ -1,0 +1,121 @@
+<div th:fragment="contenido">
+    <section id="sec-perfil" class="tab-content">
+        <div class="form-box">
+            <h2 style="font-family: 'Fraunces', serif; color: var(--ink); margin-bottom: 20px;">🏢 Datos Corporativos de la Empresa</h2>
+
+            <div style="display: flex; align-items: center; gap: 20px; margin-bottom: 25px;">
+                <div id="logo-preview" style="width: 80px; height: 80px; background: var(--ink); color: var(--gold); display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: bold; border-radius: 8px; overflow: hidden; border: 1px solid var(--line);">EMP</div>
+                <div>
+                    <input type="file" id="input-logo-emp" accept="image/*" style="display: none;" disabled>
+                    <label for="input-logo-emp" id="label-logo-emp" style="background: var(--bg); border: 1px solid var(--line); color: var(--slate); padding: 8px 14px; border-radius: 4px; cursor: not-allowed; font-size: 13px;">📷 Subir Logo Corporativo</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Correo (no editable)</label>
+                <input type="text" id="emp-correo" disabled>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label>Nombre de la Empresa (Razón Social)</label>
+                    <input type="text" id="emp-nombre" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Figura Legal</label>
+                    <select id="emp-figura-legal" disabled>
+                        <option value="" disabled selected>Seleccione</option>
+                        <option value="SAS">S.A.S</option>
+                        <option value="LTDA">Ltda</option>
+                        <option value="SA">S.A</option>
+                        <option value="EU">E.U</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label>Ciudad</label>
+                    <select id="emp-ciudad" disabled>
+                        <option value="" disabled selected>Seleccione su ciudad</option>
+                        <option value="Bogotá">Bogotá</option>
+                        <option value="Medellín">Medellín</option>
+                        <option value="Cali">Cali</option>
+                        <option value="Barranquilla">Barranquilla</option>
+                        <option value="Cartagena">Cartagena</option>
+                        <option value="Cúcuta">Cúcuta</option>
+                        <option value="Bucaramanga">Bucaramanga</option>
+                        <option value="Pereira">Pereira</option>
+                        <option value="Santa Marta">Santa Marta</option>
+                        <option value="Ibagué">Ibagué</option>
+                        <option value="Manizales">Manizales</option>
+                        <option value="Pasto">Pasto</option>
+                        <option value="Neiva">Neiva</option>
+                        <option value="Villavicencio">Villavicencio</option>
+                        <option value="Armenia">Armenia</option>
+                        <option value="Valledupar">Valledupar</option>
+                        <option value="Montería">Montería</option>
+                        <option value="Sincelejo">Sincelejo</option>
+                        <option value="Popayán">Popayán</option>
+                        <option value="Tunja">Tunja</option>
+                        <option value="Riohacha">Riohacha</option>
+                        <option value="Quibdó">Quibdó</option>
+                        <option value="Yopal">Yopal</option>
+                        <option value="otra">Otra ciudad...</option>
+                    </select>
+                    <input type="text" id="emp-ciudad-otra" placeholder="Escriba su ciudad" class="oculto" style="margin-top:8px;" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Sector</label>
+                    <select id="emp-sector" disabled>
+                        <option value="" disabled selected>Seleccione un sector</option>
+                        <option value="tecnologia">Tecnología & IT</option>
+                        <option value="ventas">Ventas y Comercial</option>
+                        <option value="logistica">Logística y Transporte</option>
+                        <option value="finanzas">Finanzas y Contabilidad</option>
+                        <option value="salud">Salud y Medicina</option>
+                        <option value="administracion">Administración</option>
+                        <option value="marketing">Marketing y Publicidad</option>
+                        <option value="ingenieria">Ingeniería</option>
+                        <option value="educacion">Educación</option>
+                        <option value="legal">Legal y Jurídico</option>
+                        <option value="recursos-humanos">Recursos Humanos</option>
+                        <option value="construccion">Construcción</option>
+                        <option value="atencion-cliente">Atención al cliente</option>
+                        <option value="produccion">Producción y Manufactura</option>
+                        <option value="diseno">Diseño y Artes</option>
+                        <option value="gastronomia">Gastronomía y Turismo</option>
+                        <option value="otro">Otro</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Descripción de la Empresa</label>
+                <textarea id="emp-descripcion" rows="3" placeholder="Cuéntale a los candidatos a qué se dedica tu empresa, su cultura y lo que la hace atractiva para trabajar..." disabled></textarea>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <div class="form-group">
+                    <label>Sitio Web</label>
+                    <input type="text" id="emp-sitio-web" placeholder="https://www.tuempresa.com" disabled>
+                </div>
+                <div class="form-group">
+                    <label>Número de Empleados</label>
+                    <select id="emp-empleados" disabled>
+                        <option value="1-10">1 - 10</option>
+                        <option value="11-50">11 - 50</option>
+                        <option value="51-200">51 - 200</option>
+                        <option value="201-500">201 - 500</option>
+                        <option value="501-1000">501 - 1000</option>
+                        <option value="+1000">Más de 1000</option>
+                    </select>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px;">
+                <button type="button" id="btn-editar-perfil" class="btn-login" style="background: var(--bg); color: var(--ink); border: 1px solid var(--line); padding: 10px 20px;">✏️ Editar Información</button>
+                <button type="button" id="btn-guardar-perfil" class="btn-login oculto" style="background: var(--ink); color: var(--gold); border: 1px solid var(--gold); padding: 10px 20px;">💾 Guardar Datos de la Empresa</button>
+            </div>
+        </div>
+    </section>
+</div>

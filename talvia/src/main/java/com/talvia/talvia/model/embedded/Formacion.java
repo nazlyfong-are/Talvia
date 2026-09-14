@@ -32,6 +32,9 @@ public class Formacion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String documentoUrl;
+    private String documentoPublicUrl;
+    private String documentoPublicId;
     private String instituto;
     private String titulo;
 

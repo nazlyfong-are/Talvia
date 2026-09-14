@@ -189,7 +189,7 @@ async function handleLogin(event) {
       if (data.role === 'ADMIN') {
         window.location.href = '/private/admin/dashboard';
       } else if (data.role === 'TRABAJADOR') {
-        window.location.href = '/private/worker/dashboard';
+        window.location.href = '/private/trabajador/index';
       } else {
         window.location.href = '/private/empresa/dashboard';
       }

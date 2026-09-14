@@ -1,0 +1,46 @@
+.search-postulaciones-input {
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-family: "IBM Plex Sans", sans-serif;
+    min-width: 240px;
+    background: #fff;
+}
+
+.estado-badge {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.estado-PENDIENTE {
+    background: #fbf3e3;
+    color: var(--gold-deep);
+}
+.estado-EN_PROCESO {
+    background: #e6eef5;
+    color: var(--ink-soft);
+}
+.estado-ACEPTADO {
+    background: var(--green-bg);
+    color: var(--green);
+}
+.estado-RECHAZADO {
+    background: #fdecec;
+    color: #d93838;
+}
+
+.postulacion-empty {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--slate);
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+}

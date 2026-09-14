@@ -1,6 +1,11 @@
-package com.talvia.talvia.dto;
+package com.talvia.talvia.dto.request;
 
 import java.util.List;
+
+import com.talvia.talvia.dto.CertificacionDTO;
+import com.talvia.talvia.dto.ExperienciaDTO;
+import com.talvia.talvia.dto.FormacionDTO;
+import com.talvia.talvia.dto.HabilidadDTO;
 
 public class RegisterTrabajadorDTO {
 
@@ -16,7 +21,7 @@ public class RegisterTrabajadorDTO {
     private String especialidad;
     private String resumenProfesional;
     private String ciudad;
-    private Integer aniosExperienciaTotal;
+    private Double anosExperienciaTotal;
 
     private List<FormacionDTO> formaciones;
     private List<ExperienciaDTO> experiencias;
@@ -73,14 +78,7 @@ public class RegisterTrabajadorDTO {
         this.ciudad = ciudad;
     }
 
-    public Integer getAniosExperienciaTotal() {
-        return aniosExperienciaTotal;
-    }
-
-    public void setAniosExperienciaTotal(Integer aniosExperienciaTotal) {
-        this.aniosExperienciaTotal = aniosExperienciaTotal;
-    }
-
+    
     public List<FormacionDTO> getFormaciones() {
         return formaciones;
     }
@@ -111,5 +109,13 @@ public class RegisterTrabajadorDTO {
 
     public void setCertificaciones(List<CertificacionDTO> certificaciones) {
         this.certificaciones = certificaciones;
+    }
+
+    public Double getAnosExperienciaTotal() {
+        return anosExperienciaTotal;
+    }
+
+    public void setAnosExperienciaTotal(Double anosExperienciaTotal) {
+        this.anosExperienciaTotal = anosExperienciaTotal;
     }
 }

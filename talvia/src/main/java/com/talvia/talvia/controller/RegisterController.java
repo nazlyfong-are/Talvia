@@ -1,11 +1,16 @@
 package com.talvia.talvia.controller;
 
-import com.talvia.talvia.dto.RegisterEmpresaDTO;
-import com.talvia.talvia.dto.RegisterTrabajadorDTO;
+import com.talvia.talvia.dto.request.RegisterEmpresaDTO;
+import com.talvia.talvia.dto.request.RegisterTrabajadorDTO;
 import com.talvia.talvia.services.RegisterService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/register")
@@ -14,13 +19,20 @@ public class RegisterController {
     @Autowired
     private RegisterService registerService;
 
-    @PostMapping("/trabajador")
-    public ResponseEntity<?> registerTrabajador(@RequestBody RegisterTrabajadorDTO dto) {
+    @PostMapping(value = "/trabajador", consumes = "multipart/form-data")
+    public ResponseEntity<?> registerTrabajador(@RequestPart("datos") RegisterTrabajadorDTO dto,
+                                                 HttpServletRequest request) {
         try {
-            registerService.registerTrabajador(dto);
+            Map<String, org.springframework.web.multipart.MultipartFile> archivos = new HashMap<>();
+            if (request instanceof MultipartHttpServletRequest multipartRequest) {
+                archivos = multipartRequest.getFileMap();
+            }
+            registerService.registerTrabajador(dto, archivos);
             return ResponseEntity.ok("Cuenta creada exitosamente.");
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(409).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al registrar la cuenta: " + e.getMessage());
         }
     }
 

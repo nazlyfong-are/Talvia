@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Vacante — Talvia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/shared/variables.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/base.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/header.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/trabajador/vacante_style.css}">
+</head>
+<body>
+
+<header class="top">
+    <div class="top-inner">
+        <div class="brand">
+            <div class="brand-mark">TV</div>
+            <div class="brand-name">Tal<span>via</span></div>
+        </div>
+        <nav class="top-nav">
+            <a th:href="@{/private/trabajador/index}" style="color: #fff; font-weight: 600;">Inicio</a>
+            <a th:href="@{/private/trabajador/index}+'#vacantes'" style="color: #fff; font-weight: 600;">Vacantes</a>
+            <a th:href="@{/private/trabajador/postulaciones}" style="color: #fff; font-weight: 600;">Mis Postulaciones</a>
+            <a th:href="@{/private/trabajador/perfil}" style="color: #fff; font-weight: 600;">Mi Perfil</a>
+        </nav>
+        <button class="btn-publish" style="background: transparent; border: 1px solid #d93838; color: #d93838;" id="logoutBtn">Cerrar Sesión</button>
+    </div>
+</header>
+
+<section class="vacante-hero">
+    <div class="vacante-hero-inner">
+        <div>
+            <div class="vacante-meta" id="v-fecha">PUBLICADO RECIENTEMENTE</div>
+            <h1 class="vacante-title" id="v-titulo">Cargando vacante...</h1>
+
+            <div class="company-line">
+                <span id="v-empresa-logo" class="company-line-logo"></span>
+                <b id="v-empresa-nombre" style="color: #fff;">Empresa</b>
+                <span>|</span>
+                <span id="v-ubicacion">Ubicación</span>
+            </div>
+
+            <div class="tag-box" id="v-tags-container"></div>
+        </div>
+
+        <div style="text-align: right;">
+            <div class="salary-badge" id="v-salario">A convenir</div>
+            <button class="btn-apply-main" id="btn-postular">Enviar Mi Hoja de Vida</button>
+        </div>
+    </div>
+</section>
+
+<main class="vacante-body">
+
+    <div class="section-box section-box-full">
+        <h2 class="section-title">📋 Sobre el Rol</h2>
+        <div class="section-text" id="v-descripcion">No hay información sobre el rol disponible.</div>
+    </div>
+
+    <div class="section-grid">
+        <div class="section-box accent-gold">
+            <h2 class="section-title">✅ Requisitos Clave</h2>
+            <ul class="section-list" id="v-requisitos-lista">
+                <li class="section-list-empty">No se especificaron requisitos.</li>
+            </ul>
+        </div>
+
+        <div class="section-box accent-green">
+            <h2 class="section-title">🎁 ¿Qué Ofrecemos?</h2>
+            <ul class="section-list" id="v-beneficios-lista">
+                <li class="section-list-empty">No se especificaron beneficios.</li>
+            </ul>
+        </div>
+    </div>
+
+</main>
+
+<!-- Modal de Preguntas Previas -->
+<div id="modalPreguntas" class="modal-overlay" style="display: none;">
+    <div class="modal-card">
+        <h3>Preguntas Previas de la Empresa</h3>
+        <p>Por favor responde a estas preguntas antes de enviar tu postulación:</p>
+
+        <form id="form-postulacion">
+            <div class="modal-field">
+                <label>0. ¿Cuál hoja de vida quieres enviar?</label>
+                <select id="preg-cv" required>
+                    <option value="" disabled selected>Cargando tus CVs...</option>
+                </select>
+            </div>
+
+            <div class="modal-field">
+                <label>1. ¿Cuál es tu expectativa salarial mensual?</label>
+                <input type="text" id="preg-salario" placeholder="Ej: $3.500.000 COP" required>
+            </div>
+
+            <div class="modal-field">
+                <label>2. ¿Cuál es tu disponibilidad para iniciar?</label>
+                <select id="preg-disponibilidad" required>
+                    <option value="">Selecciona una opción</option>
+                    <option value="Inmediata">Inmediata</option>
+                    <option value="En 15 días">En 15 días</option>
+                    <option value="En 1 mes">En 1 mes</option>
+                </select>
+            </div>
+
+            <div class="modal-field">
+                <label>3. Resume tu experiencia previa en este rol:</label>
+                <textarea id="preg-exp" rows="3" placeholder="Escribe aquí una breve síntesis..." required></textarea>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" id="btn-cancelar-postulacion" class="btn-modal-cancelar">Cancelar</button>
+                <button type="submit" class="btn-modal-confirmar">Confirmar y Enviar CV</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<footer class="footer">
+    © 2026 Talvia · Tablero de vacantes
+</footer>
+
+<script th:src="@{/js/trabajador/vacante.js}"></script>
+</body>
+</html>

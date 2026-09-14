@@ -1,7 +1,7 @@
 package com.talvia.talvia.servicesIMPL;
 
-import com.talvia.talvia.dto.LoginRequestDTO;
-import com.talvia.talvia.dto.LoginResponseDTO;
+import com.talvia.talvia.dto.request.LoginRequestDTO;
+import com.talvia.talvia.dto.response.LoginResponseDTO;
 import com.talvia.talvia.model.usuario.Admin;
 import com.talvia.talvia.repository.AdminRepository;
 import com.talvia.talvia.security.UserPrincipal;
@@ -10,7 +10,6 @@ import com.talvia.talvia.services.AuthService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-import java.security.Security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;

@@ -33,6 +33,8 @@ public class Certificacion {
     private String entidadEmisora;
     private LocalDate fechaObtencion;
     private LocalDate fechaVencimiento; //opcional
+    private String documentoUrl;
+    private String documentoPublicId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "trabajador_id", nullable = false)

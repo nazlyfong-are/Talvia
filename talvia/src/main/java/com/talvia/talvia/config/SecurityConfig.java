@@ -13,7 +13,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -28,11 +27,11 @@ public class SecurityConfig {
     }
 
     @Bean
-public DaoAuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
-    provider.setPasswordEncoder(passwordEncoder());
-    return provider;
-}
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+        return provider;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -42,21 +41,41 @@ public DaoAuthenticationProvider authenticationProvider() {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // El login se maneja manualmente vía /api/auth/login (fetch + JSON),
-            // no con el formLogin tradicional de Spring.
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/api/auth/**", "/api/register/**")
-            .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+            // CSRF desactivado para las APIs propias del backend (login/registro no tienen
+            // sesión previa aún; trabajador/empresa/postulaciones lo desactivamos por el
+            // comportamiento inconsistente que encontramos con el token en esta versión
+            // de Spring Security). Mismo trade-off consciente en las cuatro rutas.
+            .csrf(csrf -> csrf
+                .ignoringRequestMatchers(
+                    "/api/auth/**",
+                    "/api/register/**",
+                    "/api/trabajador/**",
+                    "/api/empresa/**",
+                    "/api/postulaciones/**"
+                )
+            )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             )
             .authorizeHttpRequests(auth -> auth
+                // Público: assets, auth, registro, vacantes/empresas de solo lectura, y /error
                 .requestMatchers(
                     "/", "/public/**", "/css/**", "/js/**", "/img/**",
-                    "/api/auth/**", "/api/register/**"
+                    "/api/auth/**", "/api/register/**",
+                    "/api/vacantes/**", "/api/empresas/**",
+                    "/error"
                 ).permitAll()
+
+                // Vistas protegidas por rol
                 .requestMatchers("/private/admin/**").hasRole("ADMIN")
-                .requestMatchers("/private/worker/**").hasRole("TRABAJADOR")
+                .requestMatchers("/private/trabajador/**").hasRole("TRABAJADOR")
                 .requestMatchers("/private/empresa/**").hasRole("EMPRESA")
+
+                // APIs protegidas por rol
+                .requestMatchers("/api/trabajador/**").hasRole("TRABAJADOR")
+                .requestMatchers("/api/postulaciones/**").hasRole("TRABAJADOR")
+                .requestMatchers("/api/empresa/**").hasRole("EMPRESA")
+
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())

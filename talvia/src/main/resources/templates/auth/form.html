@@ -7,7 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" th:href="@{/css/auth/form_style.css}" />
+  <link rel="stylesheet" th:href="@{/css/shared/variables.css}">
+  <link rel="stylesheet" th:href="@{/css/auth/form_style.css}">
 </head>
 <body>
 
@@ -141,19 +142,73 @@
             <div class="fields-grid">
               <div class="field-group">
                 <label for="especialidad">Especialidad / Perfil profesional</label>
-                <input type="text" id="especialidad" name="especialidad" placeholder="Ej: Ingeniería de Sistemas" />
+                <select id="especialidad" name="especialidad">
+                  <option value="" disabled selected>Seleccione un área</option>
+                  <option value="tecnologia">Tecnología & IT</option>
+                  <option value="ventas">Ventas y Comercial</option>
+                  <option value="logistica">Logística y Transporte</option>
+                  <option value="finanzas">Finanzas y Contabilidad</option>
+                  <option value="salud">Salud y Medicina</option>
+                  <option value="administracion">Administración</option>
+                  <option value="marketing">Marketing y Publicidad</option>
+                  <option value="ingenieria">Ingeniería</option>
+                  <option value="educacion">Educación</option>
+                  <option value="legal">Legal y Jurídico</option>
+                  <option value="recursos-humanos">Recursos Humanos</option>
+                  <option value="construccion">Construcción</option>
+                  <option value="atencion-cliente">Atención al cliente</option>
+                  <option value="produccion">Producción y Manufactura</option>
+                  <option value="diseno">Diseño y Artes</option>
+                  <option value="gastronomia">Gastronomía y Turismo</option>
+                </select>
               </div>
+
               <div class="field-group">
-                <label for="anos-experiencia">Años de experiencia</label>
-                <input type="number" id="anos-experiencia" name="anos-experiencia" min="0" placeholder="Ej: 1" />
+                <label for="experiencia-valor">Años de experiencia</label>
+                <div class="input-combo">
+                  <input type="text" inputmode="numeric" id="experiencia-valor" placeholder="Ej: 6">
+                  <select id="experiencia-unidad">
+                    <option value="ANIOS">Año/s</option>
+                    <option value="MESES">Mes/es</option>
+                  </select>
+                </div>
               </div>
+
               <div class="field-group">
                 <label for="ciudad">Ciudad</label>
-                <input type="text" id="ciudad" name="ciudad" placeholder="Ej: Cartagena" />
+                <select id="ciudad" name="ciudad">
+                  <option value="" disabled selected>Seleccione su ciudad</option>
+                  <option value="Bogotá">Bogotá</option>
+                  <option value="Medellín">Medellín</option>
+                  <option value="Cali">Cali</option>
+                  <option value="Barranquilla">Barranquilla</option>
+                  <option value="Cartagena">Cartagena</option>
+                  <option value="Cúcuta">Cúcuta</option>
+                  <option value="Bucaramanga">Bucaramanga</option>
+                  <option value="Pereira">Pereira</option>
+                  <option value="Santa Marta">Santa Marta</option>
+                  <option value="Ibagué">Ibagué</option>
+                  <option value="Manizales">Manizales</option>
+                  <option value="Pasto">Pasto</option>
+                  <option value="Neiva">Neiva</option>
+                  <option value="Villavicencio">Villavicencio</option>
+                  <option value="Armenia">Armenia</option>
+                  <option value="Valledupar">Valledupar</option>
+                  <option value="Montería">Montería</option>
+                  <option value="Sincelejo">Sincelejo</option>
+                  <option value="Popayán">Popayán</option>
+                  <option value="Tunja">Tunja</option>
+                  <option value="Riohacha">Riohacha</option>
+                  <option value="Quibdó">Quibdó</option>
+                  <option value="Yopal">Yopal</option>
+                  <option value="otra">Otra ciudad...</option>
+                </select>
+                <input type="text" id="ciudad-otra" placeholder="Escriba su ciudad" class="oculto" style="margin-top:8px;">
               </div>
+
               <div class="field-group full-width">
                 <label for="resumen-profesional">Resumen profesional</label>
-                <input type="text" id="resumen-profesional" name="resumen-profesional" placeholder="Ej: 1 año de experiencia en desarrollo de software" />
+                <input type="text" id="resumen-profesional" name="resumen-profesional" placeholder="Ej: 1 año de experiencia en desarrollo de software">
               </div>
             </div>
 
@@ -205,6 +260,30 @@
                   </select>
                 </div>
               </div>
+
+              <div class="field-group">
+  <label for="sector">Sector</label>
+  <select id="sector" name="sector">
+    <option value="" disabled selected>Seleccione un sector</option>
+    <option value="tecnologia">Tecnología & IT</option>
+    <option value="ventas">Ventas y Comercial</option>
+    <option value="logistica">Logística y Transporte</option>
+    <option value="finanzas">Finanzas y Contabilidad</option>
+    <option value="salud">Salud y Medicina</option>
+    <option value="administracion">Administración</option>
+    <option value="marketing">Marketing y Publicidad</option>
+    <option value="ingenieria">Ingeniería</option>
+    <option value="educacion">Educación</option>
+    <option value="legal">Legal y Jurídico</option>
+    <option value="recursos-humanos">Recursos Humanos</option>
+    <option value="construccion">Construcción</option>
+    <option value="atencion-cliente">Atención al cliente</option>
+    <option value="produccion">Producción y Manufactura</option>
+    <option value="diseno">Diseño y Artes</option>
+    <option value="gastronomia">Gastronomía y Turismo</option>
+    <option value="otro">Otro</option>
+  </select>
+</div>
 
               <div class="field-group">
                 <label for="nit">NIT</label>

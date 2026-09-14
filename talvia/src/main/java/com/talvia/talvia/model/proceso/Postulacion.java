@@ -2,12 +2,15 @@ package com.talvia.talvia.model.proceso;
 
 import java.time.LocalDateTime;
 
-import org.hibernate.annotations.GeneratedColumn;
-
+import com.talvia.talvia.model.enums.EstadoPostulacion;
+import com.talvia.talvia.model.embedded.CvDocumento;
 import com.talvia.talvia.model.usuario.Trabajador;
 import com.talvia.talvia.model.vacante.Vacante;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,8 +25,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "psotulaciones", uniqueConstraints = {
-    @UniqueConstraint(columnNames = {"trabajador_id", "vacantes_id"})
+@Table(name = "postulaciones", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"trabajador_id", "vacante_id"})
 })
 @Getter
 @Setter
@@ -43,7 +46,18 @@ public class Postulacion {
     @JoinColumn(name = "vacante_id", nullable = false)
     private Vacante vacante;
 
-    private LocalDateTime fechaPostulacion; 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cv_documento_id", nullable = false)
+    private CvDocumento cvEnviado;
 
-    private String estado;
+    private LocalDateTime fechaPostulacion;
+
+    @Enumerated(EnumType.STRING)
+    private EstadoPostulacion estado;
+
+    private String salarioEsperado;
+    private String disponibilidad;
+
+    @Column(length = 2000)
+    private String experienciaResumen;
 }

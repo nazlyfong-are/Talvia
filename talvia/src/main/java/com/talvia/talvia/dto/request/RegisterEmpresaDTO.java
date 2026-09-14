@@ -1,4 +1,4 @@
-package com.talvia.talvia.dto;
+package com.talvia.talvia.dto.request;
 
 public class RegisterEmpresaDTO {
 
@@ -8,6 +8,7 @@ public class RegisterEmpresaDTO {
     private String correoElectronico;
     private String numeroTelefono;
     private String contrasena;
+    private String sector;
 
     public RegisterEmpresaDTO() {}
 
@@ -28,4 +29,9 @@ public class RegisterEmpresaDTO {
 
     public String getContrasena() { return contrasena; }
     public void setContrasena(String contrasena) { this.contrasena = contrasena; }
+
+    public String getSector() { return sector; }
+
+    public void setSector(String sector) { this.sector = sector; }
+    
 }

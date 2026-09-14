@@ -1,10 +1,8 @@
 package com.talvia.talvia.model.usuario;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import com.talvia.talvia.model.embedded.ImagenCloudinary;
-import com.talvia.talvia.model.enums.Rol;
 import com.talvia.talvia.model.vacante.Vacante;
 
 import jakarta.persistence.CascadeType;
@@ -27,7 +25,6 @@ import lombok.Setter;
 public class Empresa extends Usuario{
 
     private String razonSocial;
-
     private String figuraLegal;
 
     @Column(unique = true)
@@ -39,8 +36,9 @@ public class Empresa extends Usuario{
     private String descripcion;
 
     private String direccion;
-
     private String ciudad;
+    private String sitioWeb;
+    private String numeroEmpleados;
 
     @Embedded
     private ImagenCloudinary logo;

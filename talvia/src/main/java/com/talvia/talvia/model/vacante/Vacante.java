@@ -9,7 +9,6 @@ import com.talvia.talvia.model.enums.EstadoVacante;
 import com.talvia.talvia.model.enums.NivelEducativo;
 import com.talvia.talvia.model.usuario.Empresa;
 
-import jakarta.annotation.Generated;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
@@ -45,7 +44,8 @@ public class Vacante {
     private Empresa empresa;
 
     private String titulo;
-    private String especialidadRequeridad;
+    private String area;
+    private String nivelCargo;
     
     @Column(length = 3000)
     private String descripcion; 
@@ -64,10 +64,13 @@ public class Vacante {
     
     @Enumerated(EnumType.STRING)
     private EstadoVacante estado;
-
-    private String RangoSalarial;
     
     private LocalDateTime fechaPublicacion;
     
     private String modalidad;
+
+    private String ubicacion;
+
+    @Column(length = 2000)
+    private String beneficios;
 }

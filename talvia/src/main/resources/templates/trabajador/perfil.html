@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Perfil - Talvia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/shared/variables.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/base.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/header.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/hero.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/filters-pagination.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/job-card.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/cta.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/footer.css}">
+    <link rel="stylesheet" th:href="@{/css/trabajador/perfil_style.css}">
+</head>
+<body>
+
+<header class="top">
+    <div class="top-inner">
+        <div class="brand">
+            <div class="brand-mark">V</div>
+            <div class="brand-name">Tal<span>via</span></div>
+        </div>
+        <nav class="top-nav">
+            <a th:href="@{/private/trabajador/index}">Inicio</a>
+            <a th:href="@{/private/trabajador/index}+'#vacantes'">Vacantes</a>
+            <a th:href="@{/private/trabajador/postulaciones}" style="color: #fff; font-weight: 600;">Mis Postulaciones</a>
+            <a th:href="@{/private/trabajador/empresas}">Empresas</a>
+            <a th:href="@{/private/trabajador/perfil}" style="color:#fff;font-weight:600;">Mi Perfil</a>
+        </nav>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-inner" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:24px;">
+
+        <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
+            <div class="foto-container">
+                <img id="img-perfil" src="https://ui-avatars.com/api/?background=dcb871&color=1a1a24&size=150" alt="Foto de perfil" class="foto-perfil">
+                <input type="file" id="input-foto" accept="image/*" style="display:none;">
+                <label for="input-foto" class="btn-cambiar-foto">📷 Cambiar Foto</label>
+            </div>
+
+            <div>
+                <div class="hero-eyebrow">Panel del Candidato</div>
+                <h1 class="hero-title" style="margin-bottom:6px;">
+                    <span class="editable-field" id="campo-nombres" contenteditable="false">Nombre</span>
+                    <span class="editable-field" id="campo-primer-apellido" contenteditable="false">Apellido</span>
+                    <span class="editable-field" id="campo-segundo-apellido" contenteditable="false">Apellido</span>
+                </h1>
+                <p class="editable-field" id="campo-especialidad" contenteditable="false" style="color:var(--gold); font-size:18px; font-family:'IBM Plex Sans',sans-serif; font-weight:500; margin-bottom:10px; display:inline-block;">
+                    Especialidad / cargo
+                </p>
+                <br>
+                <p class="hero-description" style="margin-bottom:0;">
+                    📍 <span class="editable-field" id="campo-ciudad" contenteditable="false">Ciudad</span>
+                    &nbsp;|&nbsp; ✉️ <span id="campo-correo">correo@ejemplo.com</span>
+                    &nbsp;|&nbsp; 📱 <span class="editable-field" id="campo-telefono" contenteditable="false">Teléfono</span>
+                </p>
+            </div>
+        </div>
+
+        <div style="background:rgba(255,255,255,0.05); padding:20px; border-radius:var(--radius); border:1px solid rgba(255,255,255,0.1); min-width:240px;">
+            <div style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--gold); margin-bottom:8px; text-transform:uppercase;">Estado de Cuenta</div>
+            <div style="font-size:15px; font-weight:600; margin-bottom:12px;">Perfil de Trabajador</div>
+            <button class="btn-publish" id="btn-editar" style="width:100%; text-align:center; margin-bottom:8px;">Editar Información</button>
+            <button class="btn-publish oculto" id="btn-guardar" style="width:100%; text-align:center; background:var(--green); border-color:var(--green);">💾 Guardar Cambios</button>
+        </div>
+    </div>
+</section>
+
+<main class="layout" style="grid-template-columns:1fr;">
+
+    <section style="margin-bottom:40px;">
+        <div class="results-head">
+            <div>
+                <h2 class="results-title">Mis Postulaciones Activas</h2>
+                <span class="results-count">Empresas a las que se ha enviado tu hoja de vida</span>
+            </div>
+        </div>
+        <div class="job-list">
+            <div style="text-align:center; padding:40px; color:var(--slate); background:var(--bg); border-radius:var(--radius);">
+                <p style="font-size:16px; margin-bottom:8px;">Aún no te has postulado a ninguna vacante.</p>
+                <p style="font-size:13px;">Explora las ofertas disponibles y envía tu hoja de vida para verlas reflejadas aquí.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="filters" style="position:static; padding:30px; background:var(--panel);">
+        <div class="filters-header" style="margin-bottom:0;">
+            <div>
+                <h2 class="results-title" style="font-size:20px;">Hoja de Vida (CV) Integrada</h2>
+                <p style="font-size:13px; color:var(--slate); margin-top:4px;">Activa el modo edición para modificar tus estudios, experiencia, idiomas, habilidades y documentos.</p>
+            </div>
+        </div>
+
+        <hr style="border:none; border-top:1px solid var(--line); margin:24px 0;">
+
+        <!-- HOJAS DE VIDA (hasta 4) -->
+        <div class="filter-group" style="border:none; margin-bottom:30px;">
+            <label class="filter-label" style="font-size:14px; color:var(--ink); margin-bottom:14px;">
+                Mis Hojas de Vida <span id="cvs-contador" style="color:var(--slate); font-weight:400;">(0/4)</span>
+            </label>
+            <p style="font-size:12px; color:var(--slate); margin-bottom:12px;">Puedes tener hasta 4 CVs distintos (ej: uno por área) y elegir cuál enviar en cada postulación.</p>
+
+            <div id="cvs-container" style="display:grid; gap:10px; margin-bottom:14px;"></div>
+
+            <div id="subir-cv-form" class="cv-item" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                <input type="text" id="nuevo-cv-nombre" placeholder="Nombre del CV (ej: CV Desarrollador)" style="flex:1; min-width:200px; padding:8px 10px; border:1px solid var(--line); border-radius:6px; font-size:13px;">
+                <input type="file" id="input-nuevo-cv" accept=".pdf,.doc,.docx" style="display:none;">
+                <label for="input-nuevo-cv" id="label-nuevo-cv" class="btn-cambiar-foto" style="position:static; transform:none;">📎 Subir CV</label>
+            </div>
+        </div>
+
+        <!-- FORMACIÓN -->
+        <div class="filter-group" style="border:none; margin-bottom:30px;">
+            <label class="filter-label" style="font-size:14px; color:var(--ink); margin-bottom:14px;">Formación Académica</label>
+            <div id="formaciones-container" style="display:grid; gap:16px;"></div>
+            <button type="button" class="btn-apply oculto btn-agregar" id="add-formacion" style="margin-top:12px;">+ Agregar formación</button>
+        </div>
+
+        <!-- EXPERIENCIA -->
+        <div class="filter-group" style="border:none; margin-bottom:30px;">
+            <label class="filter-label" style="font-size:14px; color:var(--ink); margin-bottom:14px;">Experiencia Profesional</label>
+            <div id="experiencias-container" style="display:grid; gap:16px;"></div>
+            <button type="button" class="btn-apply oculto btn-agregar" id="add-experiencia" style="margin-top:12px;">+ Agregar experiencia</button>
+        </div>
+
+        <!-- CERTIFICACIONES -->
+        <div class="filter-group" style="border:none; margin-bottom:30px;">
+            <label class="filter-label" style="font-size:14px; color:var(--ink); margin-bottom:14px;">Certificaciones</label>
+            <div id="certificaciones-container" style="display:grid; gap:16px;"></div>
+            <button type="button" class="btn-apply oculto btn-agregar" id="add-certificacion" style="margin-top:12px;">+ Agregar certificación</button>
+        </div>
+
+        <!-- IDIOMAS Y HABILIDADES -->
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
+            <div>
+                <label class="filter-label" style="font-size:14px; color:var(--ink); margin-bottom:10px;">Idiomas</label>
+                <div class="tag-row" id="idiomas-tags"></div>
+                <div class="tag-input-row oculto" id="idiomas-input-row">
+                    <input type="text" id="idioma-nuevo" placeholder="Ej: Inglés (B2)" class="tag-input">
+                    <button type="button" id="add-idioma" class="btn-add-tag">+</button>
+                </div>
+            </div>
+            <div>
+                <label class="filter-label" style="font-size:14px; color:var(--ink); margin-bottom:10px;">Habilidades Técnicas</label>
+                <div class="tag-row" id="habilidades-tags"></div>
+                <div class="tag-input-row oculto" id="habilidades-input-row">
+                    <input type="text" id="habilidad-nueva" placeholder="Ej: React" class="tag-input">
+                    <button type="button" id="add-habilidad" class="btn-add-tag">+</button>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+</main>
+
+<footer class="footer">
+    <p>&copy; 2026 Talvia - Todos los derechos reservados.</p>
+</footer>
+
+<script th:src="@{/js/trabajador/perfil.js}"></script>
+</body>
+</html>

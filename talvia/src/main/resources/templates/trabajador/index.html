@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablero de Vacantes — Talvia</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/shared/variables.css}">
+<link rel="stylesheet" th:href="@{/css/shared/base.css}">
+<link rel="stylesheet" th:href="@{/css/shared/header.css}">
+<link rel="stylesheet" th:href="@{/css/shared/hero.css}">
+<link rel="stylesheet" th:href="@{/css/shared/layout.css}">
+<link rel="stylesheet" th:href="@{/css/shared/filters_pagination.css}">
+<link rel="stylesheet" th:href="@{/css/shared/job-card.css}">
+<link rel="stylesheet" th:href="@{/css/shared/cta.css}">
+<link rel="stylesheet" th:href="@{/css/shared/footer.css}">
+</head>
+
+<body>
+
+<header class="top">
+    <div class="top-inner">
+        <div class="brand">
+            <div class="brand-mark">TV</div>
+            <div class="brand-name">Tal<span>via</span></div>
+        </div>
+
+        <nav class="top-nav">
+            <a href="#vacantes" class="btn-vacantes">Vacantes</a>
+            <a th:href="@{/private/trabajador/postulaciones}" style="color: #fff; font-weight: 600;">Mis Postulaciones</a>
+            <a th:href="@{/private/trabajador/empresas}" style="color: #fff; font-weight: 600;">Empresas</a>
+            <a th:href="@{/private/trabajador/perfil}" style="color: #fff; font-weight: 600;">Mi Perfil</a>
+        </nav>
+
+        <button class="btn-publish" style="background: transparent; border: 1px solid #d93838; color: #d93838;" id="logoutBtn">Cerrar Sesión</button>
+    </div>
+</header>
+
+<section class="hero">
+    <div class="hero-inner">
+        <div class="hero-eyebrow">Bolsa de empleo para empresas aliadas</div>
+
+        <h1 class="hero-title">LA VIA QUE CONECTA UNA NECESIDAD CON UNA PERSONA</h1>
+
+        <p class="hero-description">
+            Las empresas publican aquí sus vacantes activas. Filtra por profesión,
+            experiencia y habilidades para encontrar la oportunidad que buscas.
+        </p>
+
+        <div class="search-bar">
+            <input class="search-input search-input-keyword" type="text" id="searchInput" placeholder="Cargo, profesión o palabra clave…">
+            <input class="search-input search-input-city" type="text" id="locationInput" placeholder="Ciudad">
+            <button class="search-button" id="searchBtn">Buscar</button>
+        </div>
+
+        <div class="hero-stats">
+            <div class="stat">
+                <div class="stat-number" id="statVacantes">–</div>
+                <div class="stat-label">Vacantes activas</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="statEmpresas">–</div>
+                <div class="stat-label">Empresas aliadas</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number">312</div>
+                <div class="stat-label">Contrataciones 2026</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<main class="layout" id="vacantes">
+
+    <aside class="filters">
+        <div class="filters-header">
+            <h3 class="filters-title">Filtrar vacantes</h3>
+            <button class="clear-filters" id="clearFilters">Limpiar</button>
+        </div>
+
+        <div class="filter-group">
+            <label class="filter-label" for="areaSelect">Área / Profesión</label>
+            <select id="areaSelect" class="filter-select">
+                <option value="todas">Todas las áreas</option>
+                <option value="tecnologia">Tecnología & IT</option>
+                <option value="ventas">Ventas y Comercial</option>
+                <option value="logistica">Logística y Transporte</option>
+                <option value="finanzas">Finanzas y Contabilidad</option>
+                <option value="salud">Salud y Medicina</option>
+                <option value="administracion">Administración</option>
+                <option value="marketing">Marketing y Publicidad</option>
+                <option value="ingenieria">Ingeniería</option>
+                <option value="educacion">Educación</option>
+                <option value="legal">Legal y Jurídico</option>
+                <option value="recursos-humanos">Recursos Humanos</option>
+                <option value="construccion">Construcción</option>
+                <option value="atencion-cliente">Atención al cliente</option>
+                <option value="produccion">Producción y Manufactura</option>
+                <option value="diseno">Diseño y Artes</option>
+                <option value="gastronomia">Gastronomía y Turismo</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label class="filter-label" for="expSelect">Años de experiencia min.</label>
+            <select id="expSelect" class="filter-select">
+                <option value="0">Sin experiencia requerida</option>
+                <option value="1">1+ año</option>
+                <option value="2">2+ años</option>
+                <option value="3">3+ años</option>
+                <option value="4">4+ años</option>
+                <option value="5">5+ años</option>
+                <option value="7">7+ años</option>
+                <option value="10">10+ años</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label class="filter-label" for="modalitySelect">Modalidad</label>
+            <select id="modalitySelect" class="filter-select">
+                <option value="todas">Todas las modalidades</option>
+                <option value="presencial">Presencial</option>
+                <option value="remoto">Remoto</option>
+                <option value="hibrido">Híbrido</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label class="filter-label" for="levelSelect">Nivel del cargo</label>
+            <select id="levelSelect" class="filter-select">
+    <option value="todos">Todos los niveles</option>
+    <option value="entrada">Nivel de entrada</option>
+    <option value="intermedio">Nivel intermedio</option>
+    <option value="avanzado">Avanzado / Especializado</option>
+    <option value="coordinacion">Coordinación / Supervisión</option>
+    <option value="gerencia">Gerencia / Dirección</option>
+</select>
+        </div>
+    </aside>
+
+    <section class="results">
+        <div class="results-head">
+            <div class="results-heading">
+                <h2 class="results-title">Vacantes disponibles</h2>
+                <span class="results-count" id="resultsCount">Cargando resultados...</span>
+            </div>
+
+            <select class="sort-select" id="sortSelect">
+                <option value="recientes">Más recientes</option>
+                <option value="salario-mayor">Mayor salario</option>
+                <option value="salario-menor">Menor salario</option>
+            </select>
+        </div>
+
+        <div class="job-list" id="jobList"></div>
+
+        <div class="pagination-container" id="paginationContainer">
+            <button class="page-btn" id="prevPageBtn" disabled>&laquo; Anterior</button>
+            <div class="page-numbers" id="pageNumbers"></div>
+            <button class="page-btn" id="nextPageBtn">Siguiente &raquo;</button>
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    © 2026 Talvia · Tablero de vacantes para empresas aliadas
+</footer>
+
+<script th:src="@{/js/trabajador/filtros_paginacion.js}"></script>
+<script th:src="@{/js/trabajador/index.js}"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-package com.talvia.talvia.dto;
+package com.talvia.talvia.dto.request;
 
 public class LoginRequestDTO {
 

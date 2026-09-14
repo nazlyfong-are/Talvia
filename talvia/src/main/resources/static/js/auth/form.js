@@ -1,7 +1,9 @@
 /* ============================================
-   NEXUM REGISTER — JavaScript
+   TALVIA REGISTER — JavaScript
    Validaciones colombianas + fetch al backend
-   Incluye CV opcional (formación, experiencia, habilidades, certificaciones)
+   Incluye: especialidad/ciudad/sector como select, experiencia
+   con unidad meses/años, y adjuntar documentos (formación
+   y certificaciones) subidos directo a Cloudinary vía multipart
 ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -99,6 +101,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // ── RESTRICCIÓN AÑOS/MESES DE EXPERIENCIA: solo números ──
+    const experienciaValorInput = document.getElementById('experiencia-valor');
+    if (experienciaValorInput) {
+        experienciaValorInput.addEventListener('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 2);
+        });
+    }
+
+    // ── CIUDAD "OTRA" ──
+    const ciudadSelect = document.getElementById('ciudad');
+    const ciudadOtraInput = document.getElementById('ciudad-otra');
+    if (ciudadSelect && ciudadOtraInput) {
+        ciudadSelect.addEventListener('change', function () {
+            ciudadOtraInput.classList.toggle('oculto', this.value !== 'otra');
+            if (this.value !== 'otra') ciudadOtraInput.value = '';
+        });
+    }
+
     // ── TOGGLE CONTRASEÑAS ──
     setupPasswordToggle('password', 'togglePwd1');
     setupPasswordToggle('confirm-password', 'togglePwd2');
@@ -165,12 +185,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     hasError = true;
                 }
             }
+
+            // Validar ciudad "otra"
+            if (ciudadSelect.value === 'otra' && !ciudadOtraInput.value.trim()) {
+                showFieldError('ciudad-otra', 'Escriba el nombre de su ciudad.');
+                hasError = true;
+            }
         }
 
         // ── VALIDACIONES EMPRESA ──
         if (isJuridica) {
             const razonSocial = document.getElementById('razon-social').value.trim();
             const figuraLegal = document.getElementById('figura-legal').value;
+            const sector      = document.getElementById('sector').value;
             const nit         = document.getElementById('nit').value.trim();
 
             if (!razonSocial) {
@@ -179,6 +206,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             if (!figuraLegal) {
                 showFieldError('figura-legal', 'Seleccione la figura legal.');
+                hasError = true;
+            }
+            if (!sector) {
+                showFieldError('sector', 'Seleccione un sector.');
                 hasError = true;
             }
             if (!/^[0-9]{9}-[0-9]{1}$/.test(nit)) {
@@ -227,21 +258,70 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // ── VALIDAR CIUDAD "OTRA" (valor final a enviar) ──
+        let ciudadFinal = '';
+        if (!isJuridica) {
+            ciudadFinal = document.getElementById('ciudad').value;
+            if (ciudadFinal === 'otra') {
+                ciudadFinal = document.getElementById('ciudad-otra').value.trim();
+            }
+        }
+
+        // ── CALCULAR EXPERIENCIA (solo si se ingresó algo) ──
+        let anosExperienciaTotal = null;
+        if (!isJuridica) {
+            const expValor  = document.getElementById('experiencia-valor').value.trim();
+            const expUnidad = document.getElementById('experiencia-unidad').value;
+            if (expValor) {
+                const num = parseInt(expValor, 10);
+                anosExperienciaTotal = expUnidad === 'MESES' ? Math.round((num / 12) * 100) / 100 : num;
+            }
+        }
+
         // ── FETCH AL BACKEND ──
         const endpoint = isJuridica ? '/api/register/empresa' : '/api/register/trabajador';
 
-        let body;
+        registerBtn.classList.add('loading');
+
         if (isJuridica) {
-            body = {
+            // ── EMPRESA: JSON normal, sin archivos ──
+            const body = {
                 razonSocial:       document.getElementById('razon-social').value.trim(),
                 figuraLegal:       document.getElementById('figura-legal').value,
+                sector:            document.getElementById('sector').value,
                 nit:               document.getElementById('nit').value.trim(),
                 correoElectronico: correo,
                 numeroTelefono:    telefono,
                 contrasena:        pass
             };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Error al registrar la cuenta.');
+                }
+
+                showToast('✓ Cuenta empresarial creada exitosamente. Redirigiendo…', 'success');
+                setTimeout(() => { window.location.href = '/public/login'; }, 2000);
+
+            } catch (err) {
+                showToast(err.message || 'Error al conectar con el servidor.', 'error');
+            } finally {
+                registerBtn.classList.remove('loading');
+            }
+
         } else {
-            body = {
+            // ── TRABAJADOR: multipart/form-data, con archivos adjuntos si los hay ──
+            const { datos: formaciones, archivos: archivosFormacion }         = recolectarFormaciones();
+            const { datos: certificaciones, archivos: archivosCertificacion } = recolectarCertificaciones();
+
+            const datosJson = {
                 nombres:           document.getElementById('nombres').value.trim(),
                 primerApellido:    document.getElementById('primer-apellido').value.trim(),
                 segundoApellido:   document.getElementById('segundo-apellido').value.trim(),
@@ -251,42 +331,47 @@ document.addEventListener('DOMContentLoaded', () => {
                 numeroTelefono:    telefono,
                 contrasena:        pass,
 
-                // ── Información profesional (opcional) ──
-                especialidad:         document.getElementById('especialidad').value.trim(),
-                resumenProfesional:   document.getElementById('resumen-profesional').value.trim(),
-                ciudad:               document.getElementById('ciudad').value.trim(),
-                anosExperienciaTotal: document.getElementById('anos-experiencia').value
-                                          ? parseInt(document.getElementById('anos-experiencia').value, 10)
-                                          : null,
+                especialidad:          document.getElementById('especialidad').value,
+                resumenProfesional:    document.getElementById('resumen-profesional').value.trim(),
+                ciudad:                ciudadFinal,
+                anosExperienciaTotal:  anosExperienciaTotal,
 
-                formaciones:     recolectarFormaciones(),
+                formaciones:     formaciones,
                 experiencias:    recolectarExperiencias(),
                 habilidades:     recolectarHabilidades(),
-                certificaciones: recolectarCertificaciones()
+                certificaciones: certificaciones
             };
-        }
 
-        registerBtn.classList.add('loading');
+            const formData = new FormData();
+            formData.append('datos', new Blob([JSON.stringify(datosJson)], { type: 'application/json' }));
 
-        try {
-            const response = await fetch(endpoint, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
+            archivosFormacion.forEach((archivo, i) => {
+                if (archivo) formData.append(`formacionDoc_${i}`, archivo);
+            });
+            archivosCertificacion.forEach((archivo, i) => {
+                if (archivo) formData.append(`certificacionDoc_${i}`, archivo);
             });
 
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || 'Error al registrar la cuenta.');
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    body: formData
+                    // Sin header Content-Type: el navegador lo arma solo con el boundary correcto para multipart
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(errorText || 'Error al registrar la cuenta.');
+                }
+
+                showToast('✓ Cuenta creada exitosamente. Redirigiendo…', 'success');
+                setTimeout(() => { window.location.href = '/public/login'; }, 2000);
+
+            } catch (err) {
+                showToast(err.message || 'Error al conectar con el servidor.', 'error');
+            } finally {
+                registerBtn.classList.remove('loading');
             }
-
-            showToast('✓ Cuenta creada exitosamente. Redirigiendo…', 'success');
-            setTimeout(() => { window.location.href = '/public/login'; }, 2000);
-
-        } catch (err) {
-            showToast(err.message || 'Error al conectar con el servidor.', 'error');
-        } finally {
-            registerBtn.classList.remove('loading');
         }
     });
 });
@@ -294,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── CONTROL DE required SEGÚN MODO ──
 function toggleRequirements(isJuridica) {
     const fieldsNatural  = ['nombres', 'primer-apellido', 'segundo-apellido', 'tipo-documento', 'num-documento'];
-    const fieldsJuridica = ['razon-social', 'figura-legal', 'nit'];
+    const fieldsJuridica = ['razon-social', 'figura-legal', 'sector', 'nit'];
     fieldsNatural.forEach(id => {
         const el = document.getElementById(id);
         if (el) el.required = !isJuridica;
@@ -385,8 +470,21 @@ function crearFilaFormacion() {
         <input type="date" class="f-fecha-inicio" />
         <input type="date" class="f-fecha-fin" />
         <label><input type="checkbox" class="f-en-curso" /> En curso</label>
+        <div class="file-attach-row">
+            <input type="file" class="f-documento" accept=".pdf,image/*" style="display:none;" />
+            <label class="btn-attach">📎 Adjuntar título</label>
+            <span class="file-attach-hint">Opcional — puedes hacerlo después desde tu perfil.</span>
+            <span class="file-attach-name"></span>
+        </div>
         <button type="button" class="btn-remove-row">✕</button>
     `;
+    const inputArchivo = div.querySelector('.f-documento');
+    const labelAttach  = div.querySelector('.btn-attach');
+    const nombreArchivo = div.querySelector('.file-attach-name');
+    labelAttach.addEventListener('click', () => inputArchivo.click());
+    inputArchivo.addEventListener('change', () => {
+        nombreArchivo.textContent = inputArchivo.files[0] ? `✓ ${inputArchivo.files[0].name}` : '';
+    });
     div.querySelector('.btn-remove-row').addEventListener('click', () => div.remove());
     return div;
 }
@@ -439,21 +537,45 @@ function crearFilaCertificacion() {
         <input type="text" class="c-entidad" placeholder="Entidad emisora" />
         <input type="date" class="c-fecha-obtencion" />
         <input type="date" class="c-fecha-vencimiento" />
+        <div class="file-attach-row">
+            <input type="file" class="c-documento" accept=".pdf,image/*" style="display:none;" />
+            <label class="btn-attach">📎 Adjuntar certificado</label>
+            <span class="file-attach-hint">Opcional — puedes hacerlo después desde tu perfil.</span>
+            <span class="file-attach-name"></span>
+        </div>
         <button type="button" class="btn-remove-row">✕</button>
     `;
+    const inputArchivo = div.querySelector('.c-documento');
+    const labelAttach  = div.querySelector('.btn-attach');
+    const nombreArchivo = div.querySelector('.file-attach-name');
+    labelAttach.addEventListener('click', () => inputArchivo.click());
+    inputArchivo.addEventListener('change', () => {
+        nombreArchivo.textContent = inputArchivo.files[0] ? `✓ ${inputArchivo.files[0].name}` : '';
+    });
     div.querySelector('.btn-remove-row').addEventListener('click', () => div.remove());
     return div;
 }
 
+/* ============================================
+   RECOLECCIÓN DE DATOS DE LAS FILAS DINÁMICAS
+============================================ */
+
 function recolectarFormaciones() {
-    return Array.from(document.querySelectorAll('#formaciones-container .formacion-row')).map(row => ({
+    const filas = Array.from(document.querySelectorAll('#formaciones-container .formacion-row'))
+        .filter(row => row.querySelector('.f-institucion').value.trim());
+
+    const datos = filas.map(row => ({
         institucion: row.querySelector('.f-institucion').value.trim(),
         titulo: row.querySelector('.f-titulo').value.trim(),
         nivel: row.querySelector('.f-nivel').value,
         fechaInicio: row.querySelector('.f-fecha-inicio').value,
         fechaFin: row.querySelector('.f-fecha-fin').value,
         enCurso: row.querySelector('.f-en-curso').checked
-    })).filter(f => f.institucion);
+    }));
+
+    const archivos = filas.map(row => row.querySelector('.f-documento').files[0] || null);
+
+    return { datos, archivos };
 }
 
 function recolectarExperiencias() {
@@ -476,10 +598,17 @@ function recolectarHabilidades() {
 }
 
 function recolectarCertificaciones() {
-    return Array.from(document.querySelectorAll('#certificaciones-container .certificacion-row')).map(row => ({
+    const filas = Array.from(document.querySelectorAll('#certificaciones-container .certificacion-row'))
+        .filter(row => row.querySelector('.c-nombre').value.trim());
+
+    const datos = filas.map(row => ({
         nombre: row.querySelector('.c-nombre').value.trim(),
         entidadEmisora: row.querySelector('.c-entidad').value.trim(),
         fechaObtencion: row.querySelector('.c-fecha-obtencion').value,
         fechaVencimiento: row.querySelector('.c-fecha-vencimiento').value
-    })).filter(c => c.nombre);
+    }));
+
+    const archivos = filas.map(row => row.querySelector('.c-documento').files[0] || null);
+
+    return { datos, archivos };
 }
