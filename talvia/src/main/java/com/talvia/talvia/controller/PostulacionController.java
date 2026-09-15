@@ -14,19 +14,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.talvia.talvia.dto.request.PostulacionCreateDTO;
-import com.talvia.talvia.security.UserPrincipal; 
+import com.talvia.talvia.security.UserPrincipal;
 import com.talvia.talvia.services.PostulacionService;
 
 @RestController
 @RequestMapping("/api/postulaciones")
 public class PostulacionController {
 
-    @Autowired 
+    @Autowired
     private PostulacionService postulacionService;
 
     @PostMapping
-    public ResponseEntity<?> postularse(@AuthenticationPrincipal UserPrincipal principal, // <-- UserPrincipal en vez de Usuario
-                                        @RequestBody PostulacionCreateDTO dto) {
+    public ResponseEntity<?> postularse(@AuthenticationPrincipal UserPrincipal principal, // <-- UserPrincipal en vez de
+                                                                                          // Usuario
+            @RequestBody PostulacionCreateDTO dto) {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no autenticado.");
         }
@@ -42,8 +43,9 @@ public class PostulacionController {
     }
 
     @GetMapping("/verificar/{vacanteId}")
-    public ResponseEntity<?> verificar(@AuthenticationPrincipal UserPrincipal principal, // <-- UserPrincipal en vez de Usuario
-                                        @PathVariable Long vacanteId) {
+    public ResponseEntity<?> verificar(@AuthenticationPrincipal UserPrincipal principal, // <-- UserPrincipal en vez de
+                                                                                         // Usuario
+            @PathVariable Long vacanteId) {
         if (principal == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario no autenticado.");
         }
@@ -53,7 +55,7 @@ public class PostulacionController {
     }
 
     @GetMapping("/mias")
-public ResponseEntity<?> listarMias(@AuthenticationPrincipal UserPrincipal principal) {
-    return ResponseEntity.ok(postulacionService.listarPorTrabajador(principal.getId()));
-}
+    public ResponseEntity<?> listarMias(@AuthenticationPrincipal UserPrincipal principal) {
+        return ResponseEntity.ok(postulacionService.listarPorTrabajador(principal.getId()));
+    }
 }

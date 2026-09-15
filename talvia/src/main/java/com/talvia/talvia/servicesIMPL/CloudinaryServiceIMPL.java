@@ -12,29 +12,30 @@ import com.talvia.talvia.dto.request.CloudinaryUploadResultDTO;
 import com.talvia.talvia.services.CloudinaryService;
 
 @Service
-public class CloudinaryServiceIMPL implements CloudinaryService{
+public class CloudinaryServiceIMPL implements CloudinaryService {
 
     @Autowired
     private Cloudinary cloudinary;
 
     @Override
-public CloudinaryUploadResultDTO subir(MultipartFile archivo, String carpeta) throws Exception {
-    String resourceType = determinarResourceType(archivo);
+    public CloudinaryUploadResultDTO subir(MultipartFile archivo, String carpeta) throws Exception {
+        String resourceType = determinarResourceType(archivo);
 
-    Map<?, ?> resultado = cloudinary.uploader().upload(
-            archivo.getBytes(),
-            ObjectUtils.asMap("folder", carpeta, "resource_type", resourceType)
-    );
+        Map<?, ?> resultado = cloudinary.uploader().upload(
+                archivo.getBytes(),
+                ObjectUtils.asMap("folder", carpeta, "resource_type", resourceType));
 
-    System.out.println(">>> RESPUESTA CRUDA DE CLOUDINARY: " + resultado); // ← temporal, para diagnosticar
+        System.out.println(">>> RESPUESTA CRUDA DE CLOUDINARY: " + resultado); // ← temporal, para diagnosticar
 
-    return new CloudinaryUploadResultDTO((String) resultado.get("secure_url"), (String) resultado.get("public_id"));
-}
+        return new CloudinaryUploadResultDTO((String) resultado.get("secure_url"), (String) resultado.get("public_id"));
+    }
 
-   @Override
+    @Override
     public void eliminar(String publicId) throws Exception {
-        if (publicId == null || publicId.isBlank()) return;
-        // "raw" cubre PDFs/documentos; si el recurso era imagen, Cloudinary igual permite destroy con resource_type explícito.
+        if (publicId == null || publicId.isBlank())
+            return;
+        // "raw" cubre PDFs/documentos; si el recurso era imagen, Cloudinary igual
+        // permite destroy con resource_type explícito.
         // Para simplificar, probamos primero como "image" y si falla, como "raw".
         try {
             cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("resource_type", "image"));

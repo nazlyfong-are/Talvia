@@ -8,6 +8,7 @@ import com.talvia.talvia.model.embedded.Habilidad;
 import com.talvia.talvia.model.enums.NivelEducativo;
 import com.talvia.talvia.model.enums.NivelHabilidad;
 import com.talvia.talvia.model.enums.Rol;
+import com.talvia.talvia.model.enums.TipoCodigo;
 import com.talvia.talvia.model.enums.TipoDocumento;
 import com.talvia.talvia.model.embedded.Certificacion;
 import com.talvia.talvia.model.embedded.ExpLaboral;
@@ -17,6 +18,7 @@ import com.talvia.talvia.model.usuario.Trabajador;
 import com.talvia.talvia.repository.EmpresaRepository;
 import com.talvia.talvia.repository.TrabajadorRepository;
 import com.talvia.talvia.services.CloudinaryService;
+import com.talvia.talvia.services.CodigoVerificacionService;
 import com.talvia.talvia.services.EmailService;
 import com.talvia.talvia.services.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +35,18 @@ import java.util.Map;
 @Service
 public class RegisterServiceIMPL implements RegisterService {
 
-    @Autowired private TrabajadorRepository trabajadorRepository;
-    @Autowired private EmpresaRepository empresaRepository;
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private CloudinaryService cloudinaryService;
-    @Autowired private EmailService emailService;
+    @Autowired
+    private TrabajadorRepository trabajadorRepository;
+    @Autowired
+    private EmpresaRepository empresaRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private CloudinaryService cloudinaryService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private CodigoVerificacionService codigoVerificacionService;
 
     @Override
     public void registerTrabajador(RegisterTrabajadorDTO dto, Map<String, MultipartFile> archivos) {
@@ -65,7 +74,7 @@ public class RegisterServiceIMPL implements RegisterService {
         trabajador.setNumeroDocumento(dto.getNumeroDocumento());
         trabajador.setRol(Rol.TRABAJADOR);
         trabajador.setFechaRegistro(LocalDateTime.now());
-        trabajador.setActivo(true);
+        trabajador.setActivo(false);
 
         trabajador.setEspecilidad(dto.getEspecialidad());
         trabajador.setResumenProfesional(dto.getResumenProfesional());
@@ -76,13 +85,15 @@ public class RegisterServiceIMPL implements RegisterService {
         List<Habilidad> habilidades = new ArrayList<>();
         if (dto.getHabilidades() != null) {
             for (HabilidadDTO h : dto.getHabilidades()) {
-                if (h.getNombre() == null || h.getNombre().isBlank()) continue;
+                if (h.getNombre() == null || h.getNombre().isBlank())
+                    continue;
                 Habilidad habilidad = new Habilidad();
                 habilidad.setNombre(h.getNombre());
                 habilidad.setCategoria(h.getCategoria());
                 try {
                     habilidad.setNivel(h.getNivel() != null ? NivelHabilidad.valueOf(h.getNivel()) : null);
-                } catch (IllegalArgumentException ignored) {}
+                } catch (IllegalArgumentException ignored) {
+                }
                 habilidades.add(habilidad);
             }
         }
@@ -93,14 +104,16 @@ public class RegisterServiceIMPL implements RegisterService {
         if (dto.getFormaciones() != null) {
             int index = 0;
             for (FormacionDTO f : dto.getFormaciones()) {
-                if (f.getInstitucion() == null || f.getInstitucion().isBlank()) continue;
+                if (f.getInstitucion() == null || f.getInstitucion().isBlank())
+                    continue;
 
                 Formacion formacion = new Formacion();
                 formacion.setInstituto(f.getInstitucion());
                 formacion.setTitulo(f.getTitulo());
                 try {
                     formacion.setNivel(f.getNivel() != null ? NivelEducativo.valueOf(f.getNivel()) : null);
-                } catch (IllegalArgumentException ignored) {}
+                } catch (IllegalArgumentException ignored) {
+                }
                 formacion.setFechaInicio(parseFecha(f.getFechaInicio()));
                 formacion.setFechaFin(parseFecha(f.getFechaFin()));
                 formacion.setEnCurso(f.isEnCurso());
@@ -109,11 +122,13 @@ public class RegisterServiceIMPL implements RegisterService {
                 MultipartFile archivo = archivos != null ? archivos.get("formacionDoc_" + index) : null;
                 if (archivo != null && !archivo.isEmpty()) {
                     try {
-                        CloudinaryUploadResultDTO resultado = cloudinaryService.subir(archivo, "talvia/titulos_academicos");
+                        CloudinaryUploadResultDTO resultado = cloudinaryService.subir(archivo,
+                                "talvia/titulos_academicos");
                         formacion.setDocumentoUrl(resultado.getUrl());
                         formacion.setDocumentoPublicId(resultado.getPublicId());
                     } catch (Exception ignored) {
-                        // Si falla la subida, el registro continúa igual — el usuario podrá adjuntarlo después
+                        // Si falla la subida, el registro continúa igual — el usuario podrá adjuntarlo
+                        // después
                     }
                 }
 
@@ -127,7 +142,8 @@ public class RegisterServiceIMPL implements RegisterService {
         List<ExpLaboral> experiencias = new ArrayList<>();
         if (dto.getExperiencias() != null) {
             for (ExperienciaDTO e : dto.getExperiencias()) {
-                if (e.getEmpresaNombre() == null || e.getEmpresaNombre().isBlank()) continue;
+                if (e.getEmpresaNombre() == null || e.getEmpresaNombre().isBlank())
+                    continue;
                 ExpLaboral experiencia = new ExpLaboral();
                 experiencia.setEmpresaNombre(e.getEmpresaNombre());
                 experiencia.setCargo(e.getCargo());
@@ -146,7 +162,8 @@ public class RegisterServiceIMPL implements RegisterService {
         if (dto.getCertificaciones() != null) {
             int index = 0;
             for (CertificacionDTO c : dto.getCertificaciones()) {
-                if (c.getNombre() == null || c.getNombre().isBlank()) continue;
+                if (c.getNombre() == null || c.getNombre().isBlank())
+                    continue;
 
                 Certificacion certificacion = new Certificacion();
                 certificacion.setNombre(c.getNombre());
@@ -158,10 +175,12 @@ public class RegisterServiceIMPL implements RegisterService {
                 MultipartFile archivo = archivos != null ? archivos.get("certificacionDoc_" + index) : null;
                 if (archivo != null && !archivo.isEmpty()) {
                     try {
-                        CloudinaryUploadResultDTO resultado = cloudinaryService.subir(archivo, "talvia/certificaciones");
+                        CloudinaryUploadResultDTO resultado = cloudinaryService.subir(archivo,
+                                "talvia/certificaciones");
                         certificacion.setDocumentoUrl(resultado.getUrl());
                         certificacion.setDocumentoPublicId(resultado.getPublicId());
-                    } catch (Exception ignored) {}
+                    } catch (Exception ignored) {
+                    }
                 }
 
                 certificaciones.add(certificacion);
@@ -172,10 +191,11 @@ public class RegisterServiceIMPL implements RegisterService {
 
         trabajadorRepository.save(trabajador);
 
+        String codigo = codigoVerificacionService.generarCodigo(trabajador.getEmail(), TipoCodigo.VERIFICAR_CORREO);
         emailService.enviarCorreoSimple(
-            trabajador.getEmail(),
-            "¡Bienvenido a Talvia!",
-            PlantillasEmail.bienvenidaTrabajador(trabajador.getNombre()));
+                trabajador.getEmail(),
+                "Verifica tu correo en Talvia",
+                PlantillasEmail.codigoVerificacionCorreo(trabajador.getNombre(), codigo));
     }
 
     @Override
@@ -199,18 +219,24 @@ public class RegisterServiceIMPL implements RegisterService {
         empresa.setNit(dto.getNit());
         empresa.setRol(Rol.EMPRESA);
         empresa.setFechaRegistro(LocalDateTime.now());
-        empresa.setActivo(true);
+        empresa.setActivo(false);
 
         empresaRepository.save(empresa);
 
+        String codigo = codigoVerificacionService.generarCodigo(empresa.getEmail(), TipoCodigo.VERIFICAR_CORREO);
         emailService.enviarCorreoSimple(
-            empresa.getEmail(), 
-            "¡Bienvenido a Talvia!",
-            PlantillasEmail.bienvenidaEmpresa(empresa.getRazonSocial()));
+                empresa.getEmail(),
+                "Verifica tu correo en Talvia",
+                PlantillasEmail.codigoVerificacionCorreo(empresa.getRazonSocial(), codigo));
     }
 
     private LocalDate parseFecha(String fecha) {
-        if (fecha == null || fecha.isBlank()) return null;
-        try { return LocalDate.parse(fecha); } catch (Exception e) { return null; }
+        if (fecha == null || fecha.isBlank())
+            return null;
+        try {
+            return LocalDate.parse(fecha);
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

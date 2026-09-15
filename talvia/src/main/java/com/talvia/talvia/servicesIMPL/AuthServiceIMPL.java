@@ -5,6 +5,8 @@ import com.talvia.talvia.dto.response.LoginResponseDTO;
 import com.talvia.talvia.model.enums.TipoCodigo;
 import com.talvia.talvia.model.proceso.Postulacion;
 import com.talvia.talvia.model.usuario.Admin;
+import com.talvia.talvia.model.usuario.Empresa;
+import com.talvia.talvia.model.usuario.Trabajador;
 import com.talvia.talvia.model.usuario.Usuario;
 import com.talvia.talvia.model.vacante.Vacante;
 import com.talvia.talvia.repository.AdminRepository;
@@ -21,6 +23,7 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -37,17 +40,27 @@ public class AuthServiceIMPL implements AuthService {
 
     private static final String GENERIC_ERROR = "Correo, contraseña o código incorrectos.";
 
-    @Autowired private AuthenticationManager authenticationManager;
-    @Autowired private HttpServletRequest request;
-    @Autowired private AdminRepository adminRepository;
-    @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private LoginAttempService loginAttemptService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private HttpServletRequest request;
+    @Autowired
+    private AdminRepository adminRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private LoginAttempService loginAttemptService;
 
-    @Autowired private UsuarioRepository usuarioRepository;
-    @Autowired private CodigoVerificacionService codigoVerificacionService;
-    @Autowired private EmailService emailService;
-    @Autowired private PostulacionRepository postulacionRepository;
-    @Autowired private VacanteRepository vacanteRepository;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+    @Autowired
+    private CodigoVerificacionService codigoVerificacionService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private PostulacionRepository postulacionRepository;
+    @Autowired
+    private VacanteRepository vacanteRepository;
 
     @Override
     public LoginResponseDTO login(LoginRequestDTO loginRequest) {
@@ -61,15 +74,16 @@ public class AuthServiceIMPL implements AuthService {
         if (loginAttemptService.estaBloqueado(correo)) {
             long minutos = loginAttemptService.minutosRestantesDeBloqueo(correo);
             throw new BadCredentialsException(
-                "Demasiados intentos fallidos. Intenta de nuevo en " + minutos + " minuto(s)."
-            );
+                    "Demasiados intentos fallidos. Intenta de nuevo en " + minutos + " minuto(s).");
         }
 
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(correo, loginRequest.getContrasena())
-            );
+                    new UsernamePasswordAuthenticationToken(correo, loginRequest.getContrasena()));
+        } catch (DisabledException e) {
+            throw new BadCredentialsException(
+                    "Debes verificar tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada.");
         } catch (AuthenticationException e) {
             loginAttemptService.registrarFallo(correo);
             throw new BadCredentialsException(GENERIC_ERROR);
@@ -110,8 +124,7 @@ public class AuthServiceIMPL implements AuthService {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         session.setAttribute(
                 HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY,
-                SecurityContextHolder.getContext()
-        );
+                SecurityContextHolder.getContext());
         session.setAttribute("userId", principal.getId());
         session.setAttribute("userEmail", principal.getUsername());
         session.setAttribute("userRole", role);
@@ -120,14 +133,14 @@ public class AuthServiceIMPL implements AuthService {
                 String.valueOf(principal.getId()),
                 principal.getUsername(),
                 role,
-                "Inicio de sesión exitoso."
-        );
+                "Inicio de sesión exitoso.");
     }
 
     @Override
     public void logout() {
         HttpSession session = request.getSession(false);
-        if (session != null) session.invalidate();
+        if (session != null)
+            session.invalidate();
         SecurityContextHolder.clearContext();
     }
 
@@ -139,7 +152,8 @@ public class AuthServiceIMPL implements AuthService {
             return; // No revelamos si el correo existe o no
         }
         String codigo = codigoVerificacionService.generarCodigo(email, TipoCodigo.RECUPERAR_CONTRASENA);
-        emailService.enviarCorreoSimple(email, "Recupera tu contraseña en Talvia", PlantillasEmail.codigoRecuperarContrasena(codigo));
+        emailService.enviarCorreoSimple(email, "Recupera tu contraseña en Talvia",
+                PlantillasEmail.codigoRecuperarContrasena(codigo));
     }
 
     @Override
@@ -161,7 +175,8 @@ public class AuthServiceIMPL implements AuthService {
     @Override
     public void solicitarEliminacionCuenta(Long usuarioId, String email) {
         String codigo = codigoVerificacionService.generarCodigo(email, TipoCodigo.ELIMINAR_CUENTA);
-        emailService.enviarCorreoSimple(email, "Confirma la eliminación de tu cuenta", PlantillasEmail.codigoEliminarCuenta(codigo));
+        emailService.enviarCorreoSimple(email, "Confirma la eliminación de tu cuenta",
+                PlantillasEmail.codigoEliminarCuenta(codigo));
     }
 
     @Override
@@ -186,5 +201,39 @@ public class AuthServiceIMPL implements AuthService {
 
         usuarioRepository.delete(usuario);
         SecurityContextHolder.clearContext();
+    }
+
+    @Override
+    public void verificarCorreo(String email, String codigo) {
+        boolean valido = codigoVerificacionService.validarCodigo(email, TipoCodigo.VERIFICAR_CORREO, codigo);
+        if (!valido) {
+            throw new BadCredentialsException("Código inválido o expirado.");
+        }
+
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new BadCredentialsException("Usuario no encontrado."));
+
+        usuario.setActivo(true);
+        usuarioRepository.save(usuario);
+
+        // Correo de bienvenida, ahora que la cuenta ya quedó verificada
+        if (usuario instanceof Trabajador t) {
+            emailService.enviarCorreoSimple(email, "¡Bienvenido a Talvia!",
+                    PlantillasEmail.bienvenidaTrabajador(t.getNombre()));
+        } else if (usuario instanceof Empresa e) {
+            emailService.enviarCorreoSimple(email, "¡Bienvenido a Talvia!",
+                    PlantillasEmail.bienvenidaEmpresa(e.getRazonSocial()));
+        }
+    }
+
+    @Override
+    public void reenviarCodigoVerificacion(String email) {
+        Usuario usuario = usuarioRepository.findByEmail(email).orElse(null);
+        if (usuario == null || usuario.isActivo()) {
+            return; // no revelamos si el correo existe; si ya está activo, no hacemos nada
+        }
+        String codigo = codigoVerificacionService.generarCodigo(email, TipoCodigo.VERIFICAR_CORREO);
+        emailService.enviarCorreoSimple(email, "Verifica tu correo en Talvia",
+                PlantillasEmail.codigoVerificacionCorreo(usuario.getNombre(), codigo));
     }
 }

@@ -13,7 +13,6 @@ import com.talvia.talvia.services.VacanteService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-
 @RestController
 @RequestMapping("/api/vacantes")
 public class VacanteController {
@@ -25,13 +24,13 @@ public class VacanteController {
     public List<VacantesResponseDTO> listarActivas() {
         return vacanteService.listarActivas();
     }
-    
+
     @GetMapping("/{id}")
-public ResponseEntity<?> obtenerPorId(@PathVariable Long id) {
-    try {
-        return ResponseEntity.ok(vacanteService.obtenerPorId(id));
-    } catch (IllegalArgumentException e) {
-        return ResponseEntity.status(404).body(e.getMessage());
+    public ResponseEntity<?> obtenerPorId(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(vacanteService.obtenerPorId(id));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
     }
-}
 }

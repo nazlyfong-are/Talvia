@@ -21,11 +21,14 @@ import com.talvia.talvia.services.CloudinaryService;
 import com.talvia.talvia.services.EmpresaService;
 
 @Service
-public class EmpresaServiceIMPL implements EmpresaService{
+public class EmpresaServiceIMPL implements EmpresaService {
 
-    @Autowired private EmpresaRepository empresaRepository;
-    @Autowired private VacanteRepository vacanteRepository;
-    @Autowired private CloudinaryService cloudinaryService;
+    @Autowired
+    private EmpresaRepository empresaRepository;
+    @Autowired
+    private VacanteRepository vacanteRepository;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Override
     public List<EmpresaResponseDTO> listarEmpresas() {
@@ -44,29 +47,35 @@ public class EmpresaServiceIMPL implements EmpresaService{
                 e.getDescripcion(),
                 e.getCiudad(),
                 logoUrl,
-                vacantesActivas
-        );
+                vacantesActivas);
     }
 
     @Override
-    public EmpresaPerfilResponseDTO obtenerPerfil(Long empresaId){
+    public EmpresaPerfilResponseDTO obtenerPerfil(Long empresaId) {
         Empresa e = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new IllegalArgumentException("Empresa no encontrada."));
         return toPerfilDTO(e);
     }
 
     @Override
-    public EmpresaPerfilResponseDTO actualizarPerfil(Long empresaId, EmpresaPerfilUpdateDTO dto){
+    public EmpresaPerfilResponseDTO actualizarPerfil(Long empresaId, EmpresaPerfilUpdateDTO dto) {
         Empresa e = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new IllegalArgumentException("Empresa no encontrada."));
-        
-        if(dto.getRazonSocial() != null) e.setRazonSocial(dto.getRazonSocial());
-        if(dto.getCiudad() != null) e.setCiudad(dto.getCiudad());
-        if(dto.getSector() != null) e.setSector(dto.getSector());
-        if(dto.getDescripcion() != null) e.setDescripcion(dto.getDescripcion());
-        if(dto.getSitioWeb() != null) e.setSitioWeb(dto.getSitioWeb());
-        if(dto.getNumeroEmpleados() != null) e.setNumeroEmpleados(dto.getNumeroEmpleados());
-        if (dto.getFiguraLegal() != null) e.setFiguraLegal(dto.getFiguraLegal());
+
+        if (dto.getRazonSocial() != null)
+            e.setRazonSocial(dto.getRazonSocial());
+        if (dto.getCiudad() != null)
+            e.setCiudad(dto.getCiudad());
+        if (dto.getSector() != null)
+            e.setSector(dto.getSector());
+        if (dto.getDescripcion() != null)
+            e.setDescripcion(dto.getDescripcion());
+        if (dto.getSitioWeb() != null)
+            e.setSitioWeb(dto.getSitioWeb());
+        if (dto.getNumeroEmpleados() != null)
+            e.setNumeroEmpleados(dto.getNumeroEmpleados());
+        if (dto.getFiguraLegal() != null)
+            e.setFiguraLegal(dto.getFiguraLegal());
 
         return toPerfilDTO(empresaRepository.save(e));
     }
@@ -75,8 +84,8 @@ public class EmpresaServiceIMPL implements EmpresaService{
     public String actualizarLogo(Long empresaId, MultipartFile archivo) throws Exception {
         Empresa e = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new IllegalArgumentException("Empresa no encontrada."));
-        
-        if(e.getLogo() != null && e.getLogo().getPublicId() != null){
+
+        if (e.getLogo() != null && e.getLogo().getPublicId() != null) {
             cloudinaryService.eliminar(e.getLogo().getPublicId());
         }
 
@@ -91,7 +100,7 @@ public class EmpresaServiceIMPL implements EmpresaService{
         return resultado.getUrl();
     }
 
-    private EmpresaPerfilResponseDTO toPerfilDTO(Empresa e){
+    private EmpresaPerfilResponseDTO toPerfilDTO(Empresa e) {
         EmpresaPerfilResponseDTO dto = new EmpresaPerfilResponseDTO();
         dto.setId(e.getId());
         dto.setRazonSocial(e.getRazonSocial());

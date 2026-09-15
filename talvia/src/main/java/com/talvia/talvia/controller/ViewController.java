@@ -7,11 +7,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class ViewController {
 
-    @GetMapping("/")
-    public String home() {
-        return "redirect:/public/login";
-    }
-
     @GetMapping("/public/login")
     public String login() {
         return "auth/login";
@@ -38,21 +33,32 @@ public class ViewController {
     }
 
     @GetMapping("/private/empresa/dashboard")
-public String dashboardEmpresa() {
-    return "empresa/dashboard";
-}
+    public String dashboardEmpresa() {
+        return "empresa/dashboard";
+    }
 
-@GetMapping("/private/trabajador/vacante")
-public String detalleVacante() {
-    return "trabajador/vacante";
-}
+    @GetMapping("/private/trabajador/vacante")
+    public String detalleVacante() {
+        return "trabajador/vacante";
+    }
 
-@GetMapping("/private/trabajador/postulaciones")
-public String misPostulaciones() {
-    return "trabajador/postulaciones";
-}
-@GetMapping("/public/forgot-password")
-public String forgotPassword() {
-    return "auth/forgot-password";
-}
+    @GetMapping("/private/trabajador/postulaciones")
+    public String misPostulaciones() {
+        return "trabajador/postulaciones";
+    }
+
+    @GetMapping("/public/forgot-password")
+    public String forgotPassword() {
+        return "auth/forgot-password";
+    }
+
+    @GetMapping("/public/verify-email")
+    public String verifyEmail() {
+        return "auth/verify-email";
+    }
+
+    @GetMapping("/")
+    public String home() {
+        return "landing_page";
+    }
 }

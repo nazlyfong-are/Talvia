@@ -28,15 +28,22 @@ import com.talvia.talvia.services.TrabajadorService;
 import com.talvia.talvia.services.VacanteService;
 
 @Service
-public class PostulacionServiceIMPL implements PostulacionService{
+public class PostulacionServiceIMPL implements PostulacionService {
 
-    @Autowired private PostulacionRepository postulacionRepository;
-    @Autowired private TrabajadorRepository trabajadorRepository;
-    @Autowired private VacanteRepository vacanteRepository;
-    @Autowired private CvDocumentoRepository cvDocumentoRepository;
-    @Autowired private TrabajadorService trabajadorService;
-    @Autowired private VacanteService vacanteService;
-    @Autowired private EmailService emailService;
+    @Autowired
+    private PostulacionRepository postulacionRepository;
+    @Autowired
+    private TrabajadorRepository trabajadorRepository;
+    @Autowired
+    private VacanteRepository vacanteRepository;
+    @Autowired
+    private CvDocumentoRepository cvDocumentoRepository;
+    @Autowired
+    private TrabajadorService trabajadorService;
+    @Autowired
+    private VacanteService vacanteService;
+    @Autowired
+    private EmailService emailService;
 
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -71,14 +78,15 @@ public class PostulacionServiceIMPL implements PostulacionService{
 
         postulacionRepository.save(postulacion);
 
-        //Notificar empresa x correo
+        // Notificar empresa x correo
         String nombreCandidato = (trabajador.getNombre() + " " +
-            (trabajador.getPrimerApellido() != null ? trabajador.getPrimerApellido() : "")).trim();
+                (trabajador.getPrimerApellido() != null ? trabajador.getPrimerApellido() : "")).trim();
 
         emailService.enviarCorreoSimple(
-            vacante.getEmpresa().getEmail(), 
-            "Nuevo candidato para " + vacante.getTitulo(),
-            PlantillasEmail.nuevoCandidato(vacante.getEmpresa().getRazonSocial(), nombreCandidato, vacante.getTitulo()));
+                vacante.getEmpresa().getEmail(),
+                "Nuevo candidato para " + vacante.getTitulo(),
+                PlantillasEmail.nuevoCandidato(vacante.getEmpresa().getRazonSocial(), nombreCandidato,
+                        vacante.getTitulo()));
     }
 
     @Override
@@ -101,7 +109,8 @@ public class PostulacionServiceIMPL implements PostulacionService{
         PostulacionDetalleDTO dto = new PostulacionDetalleDTO();
         dto.setId(p.getId());
         dto.setVacanteTitulo(p.getVacante().getTitulo());
-        dto.setFecha(p.getFechaPostulacion() != null ? p.getFechaPostulacion().toLocalDate().format(FORMATO_FECHA) : "");
+        dto.setFecha(
+                p.getFechaPostulacion() != null ? p.getFechaPostulacion().toLocalDate().format(FORMATO_FECHA) : "");
         dto.setEstado(p.getEstado() != null ? p.getEstado().name() : null);
         dto.setSalarioEsperado(p.getSalarioEsperado());
         dto.setDisponibilidad(p.getDisponibilidad());
@@ -125,15 +134,15 @@ public class PostulacionServiceIMPL implements PostulacionService{
         }
         postulacionRepository.save(p);
 
-        //Notificar trabajador x correo
-    String nombreTrabajador = p.getTrabajador().getNombre();
-    String razonSocial = p.getVacante().getEmpresa().getRazonSocial();
+        // Notificar trabajador x correo
+        String nombreTrabajador = p.getTrabajador().getNombre();
+        String razonSocial = p.getVacante().getEmpresa().getRazonSocial();
 
-    emailService.enviarCorreoSimple(
-        p.getTrabajador().getEmail(),
-        "Actualización sobre tu postulación a " + p.getVacante().getTitulo(),
-        PlantillasEmail.cambioEstadoPostulacion(nombreTrabajador, p.getVacante().getTitulo(), razonSocial, nuevoEstado)
-    );
+        emailService.enviarCorreoSimple(
+                p.getTrabajador().getEmail(),
+                "Actualización sobre tu postulación a " + p.getVacante().getTitulo(),
+                PlantillasEmail.cambioEstadoPostulacion(nombreTrabajador, p.getVacante().getTitulo(), razonSocial,
+                        nuevoEstado));
     }
 
     private void verificarPertenece(Postulacion p, Long empresaId) {
@@ -144,37 +153,37 @@ public class PostulacionServiceIMPL implements PostulacionService{
     }
 
     @Override
-public List<PostulacionTrabajadorResponseDTO> listarPorTrabajador(Long trabajadorId) {
-    return postulacionRepository.findByTrabajadorId(trabajadorId).stream()
-            .map(this::toTrabajadorDTO)
-            .collect(Collectors.toList());
-}
+    public List<PostulacionTrabajadorResponseDTO> listarPorTrabajador(Long trabajadorId) {
+        return postulacionRepository.findByTrabajadorId(trabajadorId).stream()
+                .map(this::toTrabajadorDTO)
+                .collect(Collectors.toList());
+    }
 
-private PostulacionTrabajadorResponseDTO toTrabajadorDTO(Postulacion p) {
-    VacantesResponseDTO v = vacanteService.toDTO(p.getVacante());
+    private PostulacionTrabajadorResponseDTO toTrabajadorDTO(Postulacion p) {
+        VacantesResponseDTO v = vacanteService.toDTO(p.getVacante());
 
-    PostulacionTrabajadorResponseDTO dto = new PostulacionTrabajadorResponseDTO();
-    dto.setId(p.getId());
-    dto.setVacanteId(p.getVacante().getId());
-    dto.setTitulo(v.getTitulo());
-    dto.setEmpresa(v.getEmpresa());
-    dto.setLogoUrl(v.getLogoUrl());
-    dto.setUbicacion(v.getUbicacion());
-    dto.setSalario(v.getSalario());
-    dto.setFechaIso(p.getFechaPostulacion() != null ? p.getFechaPostulacion().toString() : null);
-    dto.setFechaTexto(p.getFechaPostulacion() != null ? p.getFechaPostulacion().toLocalDate().format(FORMATO_FECHA) : "");
-    dto.setEstado(p.getEstado() != null ? p.getEstado().name() : null);
-    return dto;
-}
+        PostulacionTrabajadorResponseDTO dto = new PostulacionTrabajadorResponseDTO();
+        dto.setId(p.getId());
+        dto.setVacanteId(p.getVacante().getId());
+        dto.setTitulo(v.getTitulo());
+        dto.setEmpresa(v.getEmpresa());
+        dto.setLogoUrl(v.getLogoUrl());
+        dto.setUbicacion(v.getUbicacion());
+        dto.setSalario(v.getSalario());
+        dto.setFechaIso(p.getFechaPostulacion() != null ? p.getFechaPostulacion().toString() : null);
+        dto.setFechaTexto(
+                p.getFechaPostulacion() != null ? p.getFechaPostulacion().toLocalDate().format(FORMATO_FECHA) : "");
+        dto.setEstado(p.getEstado() != null ? p.getEstado().name() : null);
+        return dto;
+    }
 
     private PostulacionResponseDTO toResponseDTO(Postulacion p) {
         String nombreCompleto = (p.getTrabajador().getNombre() + " " +
-            (p.getTrabajador().getPrimerApellido() != null ? p.getTrabajador().getPrimerApellido() : "")).trim();
-    return new PostulacionResponseDTO(
-            p.getId(), p.getTrabajador().getId(), nombreCompleto, p.getVacante().getTitulo(),
-            p.getFechaPostulacion() != null ? p.getFechaPostulacion().toLocalDate().format(FORMATO_FECHA) : "",
-            p.getEstado() != null ? p.getEstado().name() : null,
-            p.getVacante().getId()
-    );
+                (p.getTrabajador().getPrimerApellido() != null ? p.getTrabajador().getPrimerApellido() : "")).trim();
+        return new PostulacionResponseDTO(
+                p.getId(), p.getTrabajador().getId(), nombreCompleto, p.getVacante().getTitulo(),
+                p.getFechaPostulacion() != null ? p.getFechaPostulacion().toLocalDate().format(FORMATO_FECHA) : "",
+                p.getEstado() != null ? p.getEstado().name() : null,
+                p.getVacante().getId());
     }
 }

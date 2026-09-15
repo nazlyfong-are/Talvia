@@ -4,6 +4,7 @@ import com.talvia.talvia.dto.ForgotPasswordDTO;
 import com.talvia.talvia.dto.request.LoginRequestDTO;
 import com.talvia.talvia.dto.response.LoginResponseDTO;
 import com.talvia.talvia.dto.ResetPasswordDTO;
+import com.talvia.talvia.dto.VerificarCorreoDTO;
 import com.talvia.talvia.services.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -50,5 +51,21 @@ public class AuthController {
         } catch (BadCredentialsException e) {
             return ResponseEntity.status(400).body(e.getMessage());
         }
+    }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<?> verifyEmail(@RequestBody VerificarCorreoDTO dto) {
+        try {
+            authService.verificarCorreo(dto.getCorreoElectronico(), dto.getCodigo());
+            return ResponseEntity.ok("Correo verificado exitosamente.");
+        } catch (BadCredentialsException e) {
+            return ResponseEntity.status(400).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/resend-verification")
+    public ResponseEntity<?> resendVerification(@RequestBody ForgotPasswordDTO dto) {
+        authService.reenviarCodigoVerificacion(dto.getCorreoElectronico());
+        return ResponseEntity.ok("Si la cuenta existe y no ha sido verificada, se reenviará un código.");
     }
 }

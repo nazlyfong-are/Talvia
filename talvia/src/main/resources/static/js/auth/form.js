@@ -2,21 +2,33 @@
    TALVIA REGISTER — JavaScript
    Validaciones colombianas + fetch al backend
    Incluye: especialidad/ciudad/sector como select, experiencia
-   con unidad meses/años, y adjuntar documentos (formación
-   y certificaciones) subidos directo a Cloudinary vía multipart
+   con unidad meses/años, adjuntar documentos (formación
+   y certificaciones) subidos directo a Cloudinary vía multipart,
+   y redirección a verificación de correo tras registro exitoso
 ============================================ */
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    const wrapper          = document.getElementById('register-wrapper');
-    const tabNatural       = document.getElementById('tab-natural');
-    const tabJuridica      = document.getElementById('tab-juridica');
-    const registerTitle    = document.getElementById('register-title');
+    const wrapper = document.getElementById('register-wrapper');
+    const tabNatural = document.getElementById('tab-natural');
+    const tabJuridica = document.getElementById('tab-juridica');
+    const registerTitle = document.getElementById('register-title');
     const registerSubtitle = document.getElementById('register-subtitle');
-    const modePillLabel    = document.getElementById('mode-pill-label');
-    const form             = document.getElementById('registration-form');
-    const registerBtn      = document.getElementById('register-btn');
+    const modePillLabel = document.getElementById('mode-pill-label');
+    const form = document.getElementById('registration-form');
+    const registerBtn = document.getElementById('register-btn');
 
+    // ── PRE-SELECCIÓN DESDE LA LANDING (?tipo=empresa|natural, ?correo=...) ──
+    const paramsUrl = new URLSearchParams(window.location.search);
+    const tipoParam = paramsUrl.get('tipo');
+    const correoParam = paramsUrl.get('correo');
+
+    if (tipoParam === 'empresa') {
+        tabJuridica.click();
+    }
+    if (correoParam) {
+        document.getElementById('correo').value = correoParam;
+    }
     // Estado inicial
     wrapper.classList.add('mode-natural');
     toggleRequirements(false);
@@ -27,9 +39,9 @@ document.addEventListener('DOMContentLoaded', () => {
         tabNatural.classList.add('active');
         wrapper.classList.remove('mode-juridica');
         wrapper.classList.add('mode-natural');
-        registerTitle.textContent    = 'Crear cuenta';
+        registerTitle.textContent = 'Crear cuenta';
         registerSubtitle.textContent = 'Complete todos los campos para registrar su usuario.';
-        modePillLabel.textContent    = 'Persona Natural';
+        modePillLabel.textContent = 'Persona Natural';
         toggleRequirements(false);
         clearErrors();
     });
@@ -39,9 +51,9 @@ document.addEventListener('DOMContentLoaded', () => {
         tabJuridica.classList.add('active');
         wrapper.classList.remove('mode-natural');
         wrapper.classList.add('mode-juridica');
-        registerTitle.textContent    = 'Crear cuenta empresarial';
+        registerTitle.textContent = 'Crear cuenta empresarial';
         registerSubtitle.textContent = 'Complete todos los campos para registrar su empresa.';
-        modePillLabel.textContent    = 'Persona Jurídica';
+        modePillLabel.textContent = 'Persona Jurídica';
         toggleRequirements(true);
         clearErrors();
     });
@@ -68,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── RESTRICCIÓN EN TIEMPO REAL: DOCUMENTO NATURAL ──
     const tipoDocSelect = document.getElementById('tipo-documento');
-    const numDocInput   = document.getElementById('num-documento');
+    const numDocInput = document.getElementById('num-documento');
     if (numDocInput && tipoDocSelect) {
         tipoDocSelect.addEventListener('change', () => {
             numDocInput.value = '';
@@ -125,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── LIMPIAR ERROR AL EDITAR ──
     document.querySelectorAll('input, select').forEach(el => {
-        el.addEventListener('input',  () => clearFieldError(el.id));
+        el.addEventListener('input', () => clearFieldError(el.id));
         el.addEventListener('change', () => clearFieldError(el.id));
     });
 
@@ -153,11 +165,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // ── VALIDACIONES PERSONA NATURAL ──
         if (!isJuridica) {
-            const nombres         = document.getElementById('nombres').value.trim();
-            const primerApellido  = document.getElementById('primer-apellido').value.trim();
+            const nombres = document.getElementById('nombres').value.trim();
+            const primerApellido = document.getElementById('primer-apellido').value.trim();
             const segundoApellido = document.getElementById('segundo-apellido').value.trim();
-            const tipoDoc         = document.getElementById('tipo-documento').value;
-            const numDoc          = document.getElementById('num-documento').value.trim();
+            const tipoDoc = document.getElementById('tipo-documento').value;
+            const numDoc = document.getElementById('num-documento').value.trim();
 
             if (!nombres || nombres.length < 2) {
                 showFieldError('nombres', 'Ingrese un nombre válido (mínimo 2 caracteres).');
@@ -197,8 +209,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isJuridica) {
             const razonSocial = document.getElementById('razon-social').value.trim();
             const figuraLegal = document.getElementById('figura-legal').value;
-            const sector      = document.getElementById('sector').value;
-            const nit         = document.getElementById('nit').value.trim();
+            const sector = document.getElementById('sector').value;
+            const nit = document.getElementById('nit').value.trim();
 
             if (!razonSocial) {
                 showFieldError('razon-social', 'La razón social es obligatoria.');
@@ -219,9 +231,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         // ── VALIDACIONES COMUNES ──
-        const correo      = document.getElementById('correo').value.trim();
-        const telefono    = document.getElementById('telefono').value.trim();
-        const pass        = document.getElementById('password').value;
+        const correo = document.getElementById('correo').value.trim();
+        const telefono = document.getElementById('telefono').value.trim();
+        const pass = document.getElementById('password').value;
         const confirmPass = document.getElementById('confirm-password').value;
 
         if (!correo || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo)) {
@@ -270,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // ── CALCULAR EXPERIENCIA (solo si se ingresó algo) ──
         let anosExperienciaTotal = null;
         if (!isJuridica) {
-            const expValor  = document.getElementById('experiencia-valor').value.trim();
+            const expValor = document.getElementById('experiencia-valor').value.trim();
             const expUnidad = document.getElementById('experiencia-unidad').value;
             if (expValor) {
                 const num = parseInt(expValor, 10);
@@ -286,13 +298,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isJuridica) {
             // ── EMPRESA: JSON normal, sin archivos ──
             const body = {
-                razonSocial:       document.getElementById('razon-social').value.trim(),
-                figuraLegal:       document.getElementById('figura-legal').value,
-                sector:            document.getElementById('sector').value,
-                nit:               document.getElementById('nit').value.trim(),
+                razonSocial: document.getElementById('razon-social').value.trim(),
+                figuraLegal: document.getElementById('figura-legal').value,
+                sector: document.getElementById('sector').value,
+                nit: document.getElementById('nit').value.trim(),
                 correoElectronico: correo,
-                numeroTelefono:    telefono,
-                contrasena:        pass
+                numeroTelefono: telefono,
+                contrasena: pass
             };
 
             try {
@@ -307,8 +319,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error(errorText || 'Error al registrar la cuenta.');
                 }
 
-                showToast('✓ Cuenta empresarial creada exitosamente. Redirigiendo…', 'success');
-                setTimeout(() => { window.location.href = '/public/login'; }, 2000);
+                showToast('✓ Cuenta creada. Revisa tu correo para verificarla…', 'success');
+                setTimeout(() => {
+                    window.location.href = `/public/verify-email?correo=${encodeURIComponent(correo)}`;
+                }, 2000);
 
             } catch (err) {
                 showToast(err.message || 'Error al conectar con el servidor.', 'error');
@@ -318,27 +332,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } else {
             // ── TRABAJADOR: multipart/form-data, con archivos adjuntos si los hay ──
-            const { datos: formaciones, archivos: archivosFormacion }         = recolectarFormaciones();
+            const { datos: formaciones, archivos: archivosFormacion } = recolectarFormaciones();
             const { datos: certificaciones, archivos: archivosCertificacion } = recolectarCertificaciones();
 
             const datosJson = {
-                nombres:           document.getElementById('nombres').value.trim(),
-                primerApellido:    document.getElementById('primer-apellido').value.trim(),
-                segundoApellido:   document.getElementById('segundo-apellido').value.trim(),
-                tipoDocumento:     document.getElementById('tipo-documento').value,
-                numeroDocumento:   document.getElementById('num-documento').value.trim(),
+                nombres: document.getElementById('nombres').value.trim(),
+                primerApellido: document.getElementById('primer-apellido').value.trim(),
+                segundoApellido: document.getElementById('segundo-apellido').value.trim(),
+                tipoDocumento: document.getElementById('tipo-documento').value,
+                numeroDocumento: document.getElementById('num-documento').value.trim(),
                 correoElectronico: correo,
-                numeroTelefono:    telefono,
-                contrasena:        pass,
+                numeroTelefono: telefono,
+                contrasena: pass,
 
-                especialidad:          document.getElementById('especialidad').value,
-                resumenProfesional:    document.getElementById('resumen-profesional').value.trim(),
-                ciudad:                ciudadFinal,
-                anosExperienciaTotal:  anosExperienciaTotal,
+                especialidad: document.getElementById('especialidad').value,
+                resumenProfesional: document.getElementById('resumen-profesional').value.trim(),
+                ciudad: ciudadFinal,
+                anosExperienciaTotal: anosExperienciaTotal,
 
-                formaciones:     formaciones,
-                experiencias:    recolectarExperiencias(),
-                habilidades:     recolectarHabilidades(),
+                formaciones: formaciones,
+                experiencias: recolectarExperiencias(),
+                habilidades: recolectarHabilidades(),
                 certificaciones: certificaciones
             };
 
@@ -364,8 +378,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error(errorText || 'Error al registrar la cuenta.');
                 }
 
-                showToast('✓ Cuenta creada exitosamente. Redirigiendo…', 'success');
-                setTimeout(() => { window.location.href = '/public/login'; }, 2000);
+                showToast('✓ Cuenta creada. Revisa tu correo para verificarla…', 'success');
+                setTimeout(() => {
+                    window.location.href = `/public/verify-email?correo=${encodeURIComponent(correo)}`;
+                }, 2000);
 
             } catch (err) {
                 showToast(err.message || 'Error al conectar con el servidor.', 'error');
@@ -378,7 +394,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ── CONTROL DE required SEGÚN MODO ──
 function toggleRequirements(isJuridica) {
-    const fieldsNatural  = ['nombres', 'primer-apellido', 'segundo-apellido', 'tipo-documento', 'num-documento'];
+    const fieldsNatural = ['nombres', 'primer-apellido', 'segundo-apellido', 'tipo-documento', 'num-documento'];
     const fieldsJuridica = ['razon-social', 'figura-legal', 'sector', 'nit'];
     fieldsNatural.forEach(id => {
         const el = document.getElementById(id);
@@ -395,12 +411,12 @@ function setupPasswordToggle(inputId, btnId) {
     const btn = document.getElementById(btnId);
     if (!btn) return;
     btn.addEventListener('click', () => {
-        const input  = document.getElementById(inputId);
+        const input = document.getElementById(inputId);
         const isHidden = input.type === 'password';
         input.type = isHidden ? 'text' : 'password';
-        const eyeOn  = btn.querySelector('.eye-on');
+        const eyeOn = btn.querySelector('.eye-on');
         const eyeOff = btn.querySelector('.eye-off');
-        if (eyeOn)  eyeOn.style.display  = isHidden ? 'none'  : 'block';
+        if (eyeOn) eyeOn.style.display = isHidden ? 'none' : 'block';
         if (eyeOff) eyeOff.style.display = isHidden ? 'block' : 'none';
         btn.setAttribute('aria-label', isHidden ? 'Ocultar contraseña' : 'Mostrar contraseña');
     });
@@ -416,7 +432,7 @@ function showFieldError(fieldId, message) {
     const prev = group.querySelector('.field-error-msg');
     if (prev) prev.remove();
     const msg = document.createElement('span');
-    msg.className   = 'field-error-msg';
+    msg.className = 'field-error-msg';
     msg.textContent = message;
     group.appendChild(msg);
 }
@@ -440,7 +456,7 @@ function showToast(message, type = 'default') {
     const toast = document.getElementById('toast');
     clearTimeout(toastTimer);
     toast.textContent = message;
-    toast.className   = `toast ${type}`;
+    toast.className = `toast ${type}`;
     void toast.offsetWidth;
     toast.classList.add('show');
     toastTimer = setTimeout(() => toast.classList.remove('show'), 3800);
@@ -479,7 +495,7 @@ function crearFilaFormacion() {
         <button type="button" class="btn-remove-row">✕</button>
     `;
     const inputArchivo = div.querySelector('.f-documento');
-    const labelAttach  = div.querySelector('.btn-attach');
+    const labelAttach = div.querySelector('.btn-attach');
     const nombreArchivo = div.querySelector('.file-attach-name');
     labelAttach.addEventListener('click', () => inputArchivo.click());
     inputArchivo.addEventListener('change', () => {
@@ -546,7 +562,7 @@ function crearFilaCertificacion() {
         <button type="button" class="btn-remove-row">✕</button>
     `;
     const inputArchivo = div.querySelector('.c-documento');
-    const labelAttach  = div.querySelector('.btn-attach');
+    const labelAttach = div.querySelector('.btn-attach');
     const nombreArchivo = div.querySelector('.file-attach-name');
     labelAttach.addEventListener('click', () => inputArchivo.click());
     inputArchivo.addEventListener('change', () => {

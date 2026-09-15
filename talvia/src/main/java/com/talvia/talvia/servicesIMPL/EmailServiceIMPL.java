@@ -18,18 +18,21 @@ public class EmailServiceIMPL implements EmailService{
     private String remitente;
 
     @Override
-    public void enviarCorreoSimple(String destinatario, String asunto, String cuerpoHtml) {
-        try{
-            MimeMessage mensaje = mailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mensaje, true, "UTF-8");
-            helper.setFrom(remitente);
-            helper.setTo(destinatario);
-            helper.setSubject(asunto);
-            helper.setText(cuerpoHtml, true); //true = es Html
+public void enviarCorreoSimple(String destinatario, String asunto, String cuerpoHtml) {
+    try {
+        MimeMessage mensaje = mailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mensaje, true, "UTF-8");
+        helper.setFrom(remitente);
+        helper.setTo(destinatario);
+        helper.setSubject(asunto);
+        helper.setText(cuerpoHtml, true);
 
-            mailSender.send(mensaje);
-        } catch (MessagingException e){
-            System.err.println(">>> ERROR AL ENVIAR CORREO a " + destinatario + ": " + e.getMessage());
-        }
+        mailSender.send(mensaje);
+    } catch (Exception e) {
+        // Ampliado de MessagingException a Exception: Spring envuelve fallos de
+        // autenticación SMTP en MailAuthenticationException (unchecked), que no
+        // quedaba atrapada antes y tumbaba el flujo principal (registro, etc.)
+        System.err.println(">>> ERROR AL ENVIAR CORREO a " + destinatario + ": " + e.getMessage());
     }
+}
 }

@@ -95,9 +95,9 @@ public class EmpresaVacanteServiceIMPL implements EmpresaVacanteService {
         Vacante vacanteGuardada = vacanteRepository.save(vacante);
 
         emailService.enviarCorreoSimple(
-            empresa.getEmail(),
-            "Tu vacante ya está publicada -- " + vacante.getTitulo(), 
-            PlantillasEmail.vacantePublicada(empresa.getRazonSocial(), vacante.getTitulo()));
+                empresa.getEmail(),
+                "Tu vacante ya está publicada -- " + vacante.getTitulo(),
+                PlantillasEmail.vacantePublicada(empresa.getRazonSocial(), vacante.getTitulo()));
 
         return vacanteService.toDTO(vacanteGuardada);
     }

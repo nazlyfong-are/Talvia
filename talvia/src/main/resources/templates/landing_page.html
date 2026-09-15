@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talvia — El talento correcto, al presupuesto correcto</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/css/landing/landing_page_style.css}">
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="logo">Talvia<span class="dot"></span></div>
+    <nav class="main-nav">
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#empresas">Para empresas</a>
+      <a href="#postulantes">Para postulantes</a>
+      <a href="#por-que">Por qué Talvia</a>
+      <a th:href="@{/public/login}">Iniciar sesión</a>
+    </nav>
+    <a th:href="@{/public/form}" class="btn btn-primary">Empezar ahora</a>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow" style="color:var(--red)">Plataforma de selección de personal</span>
+      <h1>El talento correcto,<br>al <em>presupuesto</em> correcto.</h1>
+      <p class="lede">Talvia organiza hojas de vida, habilidades y tarifas en un solo lugar, y presenta a cada empresa los perfiles que de verdad encajan con lo que necesita gastar y lo que necesita resolver.</p>
+      <div class="hero-ctas">
+        <a th:href="@{/public/form(tipo=empresa)}" class="btn btn-primary">Solicitar personal</a>
+        <a th:href="@{/public/form(tipo=natural)}" class="btn btn-outline">Crear mi perfil</a>
+      </div>
+    </div>
+
+    <div class="stack" aria-hidden="true">
+      <div class="card card-1">
+        <div class="card-head">
+          <svg class="lock-icon" viewBox="0 0 24 24" fill="none"><path d="M6 10V8a6 6 0 0112 0v2" stroke="white" stroke-width="2" stroke-linecap="round"/><rect x="4" y="10" width="16" height="11" rx="2" fill="white"/></svg>
+          <span class="match-pill">91% match</span>
+        </div>
+        <div class="card-body">
+          <div class="avatar">MC</div>
+          <div class="card-name">María Cárdenas</div>
+          <div class="card-role">Contadora sénior</div>
+          <div class="tag-row"><span class="tag">NIIF</span><span class="tag">Excel</span><span class="tag">Nómina</span></div>
+          <div class="card-foot"><span class="budget">$2.1M/mes</span><span class="years">7 años</span></div>
+        </div>
+      </div>
+      <div class="card card-2">
+        <div class="card-head">
+          <svg class="lock-icon" viewBox="0 0 24 24" fill="none"><path d="M6 10V8a6 6 0 0112 0v2" stroke="white" stroke-width="2" stroke-linecap="round"/><rect x="4" y="10" width="16" height="11" rx="2" fill="white"/></svg>
+          <span class="match-pill">88% match</span>
+        </div>
+        <div class="card-body">
+          <div class="avatar">JR</div>
+          <div class="card-name">Julián Rojas</div>
+          <div class="card-role">Desarrollador backend</div>
+          <div class="tag-row"><span class="tag">Node</span><span class="tag">SQL</span><span class="tag">AWS</span></div>
+          <div class="card-foot"><span class="budget">$3.4M/mes</span><span class="years">4 años</span></div>
+        </div>
+      </div>
+      <div class="card card-3">
+        <div class="card-head">
+          <svg class="lock-icon" viewBox="0 0 24 24" fill="none"><path d="M6 10V8a6 6 0 0112 0v2" stroke="white" stroke-width="2" stroke-linecap="round"/><rect x="4" y="10" width="16" height="11" rx="2" fill="white"/></svg>
+          <span class="match-pill">96% match</span>
+        </div>
+        <div class="card-body">
+          <div class="avatar">LP</div>
+          <div class="card-name">Laura Peña</div>
+          <div class="card-role">Diseñadora UX</div>
+          <div class="tag-row"><span class="tag">Figma</span><span class="tag">UI</span><span class="tag">Research</span></div>
+          <div class="card-foot"><span class="budget">$2.8M/mes</span><span class="years">5 años</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="process" id="como-funciona">
+  <div class="wrap">
+    <span class="section-label">Cómo funciona</span>
+    <h2>Tres pasos entre publicar la necesidad y decidir con quién trabajar.</h2>
+    <div class="process-grid">
+      <div class="process-step">
+        <div class="step-num">01</div>
+        <h3>Cuéntanos qué necesitas</h3>
+        <p>La empresa describe el rol, las habilidades requeridas y el presupuesto disponible. El postulante registra su experiencia, conocimientos y tarifa.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">02</div>
+        <h3>Talvia cruza los perfiles</h3>
+        <p>El sistema compara requisitos contra experiencia, competencias y costo, y arma una lista corta de candidatos que realmente encajan .</p>
+      </div>
+      <div class="process-step">
+        <div class="step-num">03</div>
+        <h3>Decides con información clara</h3>
+        <p>Revisas hojas de vida, tarifas y nivel de experiencia lado a lado, y contactas directamente a quien mejor se ajuste.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="paths">
+  <div class="wrap">
+    <span class="section-label">Dos caminos, una plataforma</span>
+    <h2>Ya sea que busques contratar o que busques que te contraten.</h2>
+    <p>Talvia funciona igual de bien para empresas que necesitan cubrir un rol y para profesionales que ofrecen su trabajo por proyecto o por contrato.</p>
+    <div class="paths-grid">
+      <div class="path-card dark" id="empresas">
+        <span class="path-eyebrow">Para empresas y personas naturales</span>
+        <h3>Encuentra personal sin salirte del presupuesto</h3>
+        <ul class="path-list">
+          <li>Define el rol, las habilidades necesarias y cuánto puedes pagar.</li>
+          <li>Recibe una selección de candidatos que ya cumplen esos criterios.</li>
+          <li>Compara experiencia y tarifas en una sola vista, sin hojas de vida sueltas.</li>
+        </ul>
+        <a th:href="@{/public/form(tipo=empresa)}" class="btn btn-ghost-light">Solicitar personal</a>
+      </div>
+      <div class="path-card light" id="postulantes">
+        <span class="path-eyebrow">Para postulantes</span>
+        <h3>Aparece en las búsquedas que sí encajan contigo</h3>
+        <ul class="path-list">
+          <li>Registra tu experiencia, habilidades y tarifa una sola vez.</li>
+          <li>Te muestran solo a empresas cuyo presupuesto se ajusta a lo tuyo.</li>
+          <li>Recibe solicitudes acordes a tu nivel, sin procesos que no aplican.</li>
+        </ul>
+        <a th:href="@{/public/form(tipo=natural)}" class="btn btn-outline">Crear mi perfil</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="por-que">
+  <div class="wrap">
+    <span class="section-label">Por qué Talvia</span>
+    <h2>Selección más simple, con datos claros de por medio.</h2>
+    <div class="feature-grid">
+      <div class="feature">
+        <span class="tab">Presupuesto</span>
+        <h3>Coincidencia por costo</h3>
+        <p>Cada perfil incluye su tarifa, así que puede que revises candidatos fuera de tu rango de presupuesto.</p>
+      </div>
+      <div class="feature">
+        <span class="tab">Verificación</span>
+        <h3>Perfiles verificados</h3>
+        <p>Experiencia y habilidades confirmadas antes de mostrarse en una búsqueda.</p>
+      </div>
+      <div class="feature">
+        <span class="tab">Velocidad</span>
+        <h3>Selección más rápida</h3>
+        <p>Menos hojas de vida que revisar a mano, más candidatos que sí aplican.</p>
+      </div>
+      <div class="feature">
+        <span class="tab">Claridad</span>
+        <h3>Decisiones informadas</h3>
+        <p>Experiencia, tarifa y competencias, lado a lado, para decidir sin adivinar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="testimonial">
+  <div class="wrap">
+    <span class="quote-mark">"</span>
+    <blockquote>Con Talvia encontramos a la persona que necesitábamos para el área contable en tres días, y dentro del presupuesto que teníamos definido desde el inicio.</blockquote>
+    — Gerente de operaciones, empresa de logística
+  </div>
+</section>
+
+<section class="final-cta" id="empezar">
+  <div class="wrap">
+    <span class="section-label" style="justify-content:center">Empieza hoy</span>
+    <h2>Encuentra a la persona correcta, sin salirte del presupuesto.</h2>
+    <form class="cta-form" id="cta-form">
+      <input type="email" id="cta-email" placeholder="tucorreo@empresa.com" aria-label="Correo electrónico" required>
+      <button type="submit" class="btn btn-primary">Empezar ahora</button>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">Talvia<span class="dot">.</span></div>
+        <p class="tag">Plataforma para organizar hojas de vida y conectar talento con oportunidades, según habilidades y presupuesto.</p>
+      </div>
+      <div>
+        <h4>Plataforma</h4>
+        <ul>
+          <li><a href="#como-funciona">Cómo funciona</a></li>
+          <li><a href="#empresas">Para empresas</a></li>
+          <li><a href="#postulantes">Para postulantes</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#">Privacidad</a></li>
+          <li><a href="#">Términos de uso</a></li>
+          <li><a href="#">Contacto</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Talvia. Todos los derechos reservados.</span>
+      <span>Hecho para conectar talento con oportunidad.</span>
+    </div>
+  </div>
+</footer>
+
+<script th:src="@{/js/landing/landing.js}"></script>
+</body>
+</html>

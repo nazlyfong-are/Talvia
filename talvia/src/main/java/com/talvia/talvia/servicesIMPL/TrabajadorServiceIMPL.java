@@ -39,8 +39,10 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
 
     private static final int MAX_CVS = 4;
 
-    @Autowired private TrabajadorRepository trabajadorRepository;
-    @Autowired private CloudinaryService cloudinaryService;
+    @Autowired
+    private TrabajadorRepository trabajadorRepository;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     @Override
     @Transactional(readOnly = true)
@@ -56,14 +58,22 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
         Trabajador t = trabajadorRepository.findById(trabajadorId)
                 .orElseThrow(() -> new IllegalArgumentException("Trabajador no encontrado."));
 
-        if (dto.getNombres() != null) t.setNombre(dto.getNombres());
-        if (dto.getPrimerApellido() != null) t.setPrimerApellido(dto.getPrimerApellido());
-        if (dto.getSegundoApellido() != null) t.setSegundoApellido(dto.getSegundoApellido());
-        if (dto.getTelefono() != null) t.setTelefono(dto.getTelefono());
-        if (dto.getCiudad() != null) t.setCiudad(dto.getCiudad());
-        if (dto.getEspecialidad() != null) t.setEspecilidad(dto.getEspecialidad());
-        if (dto.getAnosExperienciaTotal() != null) t.setAnosExperienciaTotal(dto.getAnosExperienciaTotal());
-        if (dto.getDisponibleInmediato() != null) t.setDisponibleInmediato(dto.getDisponibleInmediato());
+        if (dto.getNombres() != null)
+            t.setNombre(dto.getNombres());
+        if (dto.getPrimerApellido() != null)
+            t.setPrimerApellido(dto.getPrimerApellido());
+        if (dto.getSegundoApellido() != null)
+            t.setSegundoApellido(dto.getSegundoApellido());
+        if (dto.getTelefono() != null)
+            t.setTelefono(dto.getTelefono());
+        if (dto.getCiudad() != null)
+            t.setCiudad(dto.getCiudad());
+        if (dto.getEspecialidad() != null)
+            t.setEspecilidad(dto.getEspecialidad());
+        if (dto.getAnosExperienciaTotal() != null)
+            t.setAnosExperienciaTotal(dto.getAnosExperienciaTotal());
+        if (dto.getDisponibleInmediato() != null)
+            t.setDisponibleInmediato(dto.getDisponibleInmediato());
 
         actualizarFormaciones(t, dto.getFormaciones());
         actualizarExperiencias(t, dto.getExperiencias());
@@ -112,7 +122,8 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
                 .orElseThrow(() -> new IllegalArgumentException("Trabajador no encontrado."));
 
         if (t.getCvs().size() >= MAX_CVS) {
-            throw new IllegalArgumentException("Ya tienes el máximo de " + MAX_CVS + " hojas de vida. Elimina una para subir otra.");
+            throw new IllegalArgumentException(
+                    "Ya tienes el máximo de " + MAX_CVS + " hojas de vida. Elimina una para subir otra.");
         }
 
         CloudinaryUploadResultDTO resultado = cloudinaryService.subir(archivo, "talvia/cv_completos");
@@ -152,15 +163,17 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
     private CvDocumentoResponseDTO toCvDTO(CvDocumento cv) {
         return new CvDocumentoResponseDTO(
                 cv.getId(), cv.getNombre(), cv.getUrl(),
-                cv.getFechaSubida() != null ? cv.getFechaSubida().toString() : null
-        );
+                cv.getFechaSubida() != null ? cv.getFechaSubida().toString() : null);
     }
 
-    /* ================= Documentos de formación / certificación ================= */
+    /*
+     * ================= Documentos de formación / certificación =================
+     */
 
     @Override
     @Transactional
-    public String adjuntarDocumentoFormacion(Long trabajadorId, Long formacionId, MultipartFile archivo) throws Exception {
+    public String adjuntarDocumentoFormacion(Long trabajadorId, Long formacionId, MultipartFile archivo)
+            throws Exception {
         Trabajador t = trabajadorRepository.findById(trabajadorId)
                 .orElseThrow(() -> new IllegalArgumentException("Trabajador no encontrado."));
 
@@ -202,7 +215,8 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
 
     @Override
     @Transactional
-    public String adjuntarDocumentoCertificacion(Long trabajadorId, Long certificacionId, MultipartFile archivo) throws Exception {
+    public String adjuntarDocumentoCertificacion(Long trabajadorId, Long certificacionId, MultipartFile archivo)
+            throws Exception {
         Trabajador t = trabajadorRepository.findById(trabajadorId)
                 .orElseThrow(() -> new IllegalArgumentException("Trabajador no encontrado."));
 
@@ -226,12 +240,14 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
     /* ================= Helpers privados ================= */
 
     private void actualizarFormaciones(Trabajador t, List<FormacionUpdateDTO> nuevas) {
-        if (nuevas == null) return;
+        if (nuevas == null)
+            return;
         List<Formacion> actuales = t.getFormaciones();
         actuales.removeIf(actual -> nuevas.stream().noneMatch(n -> actual.getId().equals(n.getId())));
 
         for (FormacionUpdateDTO dto : nuevas) {
-            if (dto.getInstitucion() == null || dto.getInstitucion().isBlank()) continue;
+            if (dto.getInstitucion() == null || dto.getInstitucion().isBlank())
+                continue;
 
             Formacion formacion = dto.getId() != null
                     ? actuales.stream().filter(f -> f.getId().equals(dto.getId())).findFirst().orElse(null)
@@ -247,8 +263,10 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
             formacion.setTitulo(dto.getTitulo());
             try {
                 formacion.setNivel(dto.getNivel() != null && !dto.getNivel().isBlank()
-                        ? NivelEducativo.valueOf(dto.getNivel()) : null);
-            } catch (IllegalArgumentException ignored) {}
+                        ? NivelEducativo.valueOf(dto.getNivel())
+                        : null);
+            } catch (IllegalArgumentException ignored) {
+            }
             formacion.setFechaInicio(parseFecha(dto.getFechaInicio()));
             formacion.setFechaFin(parseFecha(dto.getFechaFin()));
             formacion.setEnCurso(dto.isEnCurso());
@@ -256,12 +274,14 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
     }
 
     private void actualizarExperiencias(Trabajador t, List<ExperienciaUpdateDTO> nuevas) {
-        if (nuevas == null) return;
+        if (nuevas == null)
+            return;
         List<ExpLaboral> actuales = t.getExperiencias();
         actuales.removeIf(actual -> nuevas.stream().noneMatch(n -> actual.getId().equals(n.getId())));
 
         for (ExperienciaUpdateDTO dto : nuevas) {
-            if (dto.getEmpresaNombre() == null || dto.getEmpresaNombre().isBlank()) continue;
+            if (dto.getEmpresaNombre() == null || dto.getEmpresaNombre().isBlank())
+                continue;
 
             ExpLaboral experiencia = dto.getId() != null
                     ? actuales.stream().filter(e -> e.getId().equals(dto.getId())).findFirst().orElse(null)
@@ -283,12 +303,14 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
     }
 
     private void actualizarCertificaciones(Trabajador t, List<CertificacionUpdateDTO> nuevas) {
-        if (nuevas == null) return;
+        if (nuevas == null)
+            return;
         List<Certificacion> actuales = t.getCertificaciones();
         actuales.removeIf(actual -> nuevas.stream().noneMatch(n -> actual.getId().equals(n.getId())));
 
         for (CertificacionUpdateDTO dto : nuevas) {
-            if (dto.getNombre() == null || dto.getNombre().isBlank()) continue;
+            if (dto.getNombre() == null || dto.getNombre().isBlank())
+                continue;
 
             Certificacion cert = dto.getId() != null
                     ? actuales.stream().filter(c -> c.getId().equals(dto.getId())).findFirst().orElse(null)
@@ -311,13 +333,15 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
         List<Habilidad> nuevaLista = new ArrayList<>();
         if (tecnicas != null) {
             for (HabilidadDTO h : tecnicas) {
-                if (h.getNombre() == null || h.getNombre().isBlank()) continue;
+                if (h.getNombre() == null || h.getNombre().isBlank())
+                    continue;
                 nuevaLista.add(mapearHabilidad(h, "Técnica"));
             }
         }
         if (idiomas != null) {
             for (HabilidadDTO h : idiomas) {
-                if (h.getNombre() == null || h.getNombre().isBlank()) continue;
+                if (h.getNombre() == null || h.getNombre().isBlank())
+                    continue;
                 nuevaLista.add(mapearHabilidad(h, "Idioma"));
             }
         }
@@ -328,16 +352,24 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
     private Habilidad mapearHabilidad(HabilidadDTO dto, String categoriaPorDefecto) {
         Habilidad h = new Habilidad();
         h.setNombre(dto.getNombre());
-        h.setCategoria(dto.getCategoria() != null && !dto.getCategoria().isBlank() ? dto.getCategoria() : categoriaPorDefecto);
+        h.setCategoria(
+                dto.getCategoria() != null && !dto.getCategoria().isBlank() ? dto.getCategoria() : categoriaPorDefecto);
         try {
-            h.setNivel(dto.getNivel() != null && !dto.getNivel().isBlank() ? NivelHabilidad.valueOf(dto.getNivel()) : null);
-        } catch (IllegalArgumentException ignored) {}
+            h.setNivel(dto.getNivel() != null && !dto.getNivel().isBlank() ? NivelHabilidad.valueOf(dto.getNivel())
+                    : null);
+        } catch (IllegalArgumentException ignored) {
+        }
         return h;
     }
 
     private LocalDate parseFecha(String fecha) {
-        if (fecha == null || fecha.isBlank()) return null;
-        try { return LocalDate.parse(fecha); } catch (Exception e) { return null; }
+        if (fecha == null || fecha.isBlank())
+            return null;
+        try {
+            return LocalDate.parse(fecha);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private TrabajadorPerfilResponseDTO toResponseDTO(Trabajador t) {
@@ -360,22 +392,19 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
                 f.getNivel() != null ? f.getNivel().name() : null,
                 f.getFechaInicio() != null ? f.getFechaInicio().toString() : null,
                 f.getFechaFin() != null ? f.getFechaFin().toString() : null,
-                f.isEnCurso(), f.getDocumentoUrl()
-        )).collect(Collectors.toList()));
+                f.isEnCurso(), f.getDocumentoUrl())).collect(Collectors.toList()));
 
         dto.setExperiencias(t.getExperiencias().stream().map(e -> new ExperienciaResponseDTO(
                 e.getId(), e.getEmpresaNombre(), e.getCargo(),
                 e.getFechaInicio() != null ? e.getFechaInicio().toString() : null,
                 e.getFechaFin() != null ? e.getFechaFin().toString() : null,
-                e.getDescripcion(), e.isTrabajoActual()
-        )).collect(Collectors.toList()));
+                e.getDescripcion(), e.isTrabajoActual())).collect(Collectors.toList()));
 
         dto.setCertificaciones(t.getCertificaciones().stream().map(c -> new CertificacionResponseDTO(
                 c.getId(), c.getNombre(), c.getEntidadEmisora(),
                 c.getFechaObtencion() != null ? c.getFechaObtencion().toString() : null,
                 c.getFechaVencimiento() != null ? c.getFechaVencimiento().toString() : null,
-                c.getDocumentoUrl()
-        )).collect(Collectors.toList()));
+                c.getDocumentoUrl())).collect(Collectors.toList()));
 
         dto.setHabilidadesTecnicas(t.getHabilidades().stream()
                 .filter(h -> !"Idioma".equalsIgnoreCase(h.getCategoria()))

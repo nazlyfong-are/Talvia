@@ -36,58 +36,62 @@ public class VacanteServiceIMPL implements VacanteService {
     }
 
     @Override
-public VacantesResponseDTO toDTO(Vacante v) {
-    String empresaNombre = v.getEmpresa() != null ? v.getEmpresa().getRazonSocial() : "Empresa";
-    String logoUrl = (v.getEmpresa() != null && v.getEmpresa().getLogo() != null)
-            ? v.getEmpresa().getLogo().getUrl() : null;
+    public VacantesResponseDTO toDTO(Vacante v) {
+        String empresaNombre = v.getEmpresa() != null ? v.getEmpresa().getRazonSocial() : "Empresa";
+        String logoUrl = (v.getEmpresa() != null && v.getEmpresa().getLogo() != null)
+                ? v.getEmpresa().getLogo().getUrl()
+                : null;
 
-    String ubicacion = (v.getUbicacion() != null && !v.getUbicacion().isBlank())
-            ? v.getUbicacion()
-            : (v.getEmpresa() != null ? v.getEmpresa().getCiudad() : "");
+        String ubicacion = (v.getUbicacion() != null && !v.getUbicacion().isBlank())
+                ? v.getUbicacion()
+                : (v.getEmpresa() != null ? v.getEmpresa().getCiudad() : "");
 
-    String salarioTexto = formatearSalario(v.getPresupuesto());
-    String requisitosTexto = formatearRequisitos(v.getRequisitos());
+        String salarioTexto = formatearSalario(v.getPresupuesto());
+        String requisitosTexto = formatearRequisitos(v.getRequisitos());
 
-    String fechaTexto = v.getFechaPublicacion() != null
-            ? v.getFechaPublicacion().toLocalDate().format(FORMATO_FECHA) : "";
+        String fechaTexto = v.getFechaPublicacion() != null
+                ? v.getFechaPublicacion().toLocalDate().format(FORMATO_FECHA)
+                : "";
 
-    VacantesResponseDTO dto = new VacantesResponseDTO(
-            v.getId(),
-            v.getTitulo(),
-            empresaNombre,
-            ubicacion,
-            logoUrl,
-            v.getArea(),
-            v.getExpMinimaAnios(),
-            v.getModalidad(),
-            v.getNivelCargo(),
-            salarioTexto,
-            fechaTexto,
-            v.getDescripcion(),
-            requisitosTexto,
-            v.getBeneficios(), fechaTexto
-    );
-    dto.setNivelEducativoMinimo(v.getNivelEducativoMinimo() != null ? v.getNivelEducativoMinimo().name() : null);
-    return dto;
-}
-
-private String formatearSalario(RangoSalarial r) {
-    if (r == null || r.getMontoMin() == null) return "A convenir";
-    String moneda = r.getMoneda() != null ? r.getMoneda() : "COP";
-    String periodo = switch (r.getPeriodicidad() != null ? r.getPeriodicidad() : "") {
-        case "POR_HORA" -> "/ hora";
-        case "POR_PROYECTO" -> "/ proyecto";
-        default -> "/ mes";
-    };
-    String simbolo = "USD".equals(moneda) ? "$" : "EUR".equals(moneda) ? "€" : "$";
-    if (r.getMontoMax() != null) {
-        return String.format("%s%,.0f - %s%,.0f %s %s", simbolo, r.getMontoMin(), simbolo, r.getMontoMax(), moneda, periodo);
+        VacantesResponseDTO dto = new VacantesResponseDTO(
+                v.getId(),
+                v.getTitulo(),
+                empresaNombre,
+                ubicacion,
+                logoUrl,
+                v.getArea(),
+                v.getExpMinimaAnios(),
+                v.getModalidad(),
+                v.getNivelCargo(),
+                salarioTexto,
+                fechaTexto,
+                v.getDescripcion(),
+                requisitosTexto,
+                v.getBeneficios(), fechaTexto);
+        dto.setNivelEducativoMinimo(v.getNivelEducativoMinimo() != null ? v.getNivelEducativoMinimo().name() : null);
+        return dto;
     }
-    return String.format("%s%,.0f %s %s", simbolo, r.getMontoMin(), moneda, periodo);
-}
 
-private String formatearRequisitos(List<RequisitoVacante> requisitos) {
-    if (requisitos == null || requisitos.isEmpty()) return "";
-    return requisitos.stream().map(RequisitoVacante::getDescripcion).collect(Collectors.joining(", "));
-}
+    private String formatearSalario(RangoSalarial r) {
+        if (r == null || r.getMontoMin() == null)
+            return "A convenir";
+        String moneda = r.getMoneda() != null ? r.getMoneda() : "COP";
+        String periodo = switch (r.getPeriodicidad() != null ? r.getPeriodicidad() : "") {
+            case "POR_HORA" -> "/ hora";
+            case "POR_PROYECTO" -> "/ proyecto";
+            default -> "/ mes";
+        };
+        String simbolo = "USD".equals(moneda) ? "$" : "EUR".equals(moneda) ? "€" : "$";
+        if (r.getMontoMax() != null) {
+            return String.format("%s%,.0f - %s%,.0f %s %s", simbolo, r.getMontoMin(), simbolo, r.getMontoMax(), moneda,
+                    periodo);
+        }
+        return String.format("%s%,.0f %s %s", simbolo, r.getMontoMin(), moneda, periodo);
+    }
+
+    private String formatearRequisitos(List<RequisitoVacante> requisitos) {
+        if (requisitos == null || requisitos.isEmpty())
+            return "";
+        return requisitos.stream().map(RequisitoVacante::getDescripcion).collect(Collectors.joining(", "));
+    }
 }
