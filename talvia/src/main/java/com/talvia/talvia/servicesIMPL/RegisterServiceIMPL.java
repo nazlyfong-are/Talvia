@@ -17,6 +17,7 @@ import com.talvia.talvia.model.usuario.Trabajador;
 import com.talvia.talvia.repository.EmpresaRepository;
 import com.talvia.talvia.repository.TrabajadorRepository;
 import com.talvia.talvia.services.CloudinaryService;
+import com.talvia.talvia.services.EmailService;
 import com.talvia.talvia.services.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,6 +37,7 @@ public class RegisterServiceIMPL implements RegisterService {
     @Autowired private EmpresaRepository empresaRepository;
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private CloudinaryService cloudinaryService;
+    @Autowired private EmailService emailService;
 
     @Override
     public void registerTrabajador(RegisterTrabajadorDTO dto, Map<String, MultipartFile> archivos) {
@@ -169,6 +171,11 @@ public class RegisterServiceIMPL implements RegisterService {
         trabajador.setCertificaciones(certificaciones);
 
         trabajadorRepository.save(trabajador);
+
+        emailService.enviarCorreoSimple(
+            trabajador.getEmail(),
+            "¡Bienvenido a Talvia!",
+            PlantillasEmail.bienvenidaTrabajador(trabajador.getNombre()));
     }
 
     @Override
@@ -195,6 +202,11 @@ public class RegisterServiceIMPL implements RegisterService {
         empresa.setActivo(true);
 
         empresaRepository.save(empresa);
+
+        emailService.enviarCorreoSimple(
+            empresa.getEmail(), 
+            "¡Bienvenido a Talvia!",
+            PlantillasEmail.bienvenidaEmpresa(empresa.getRazonSocial()));
     }
 
     private LocalDate parseFecha(String fecha) {

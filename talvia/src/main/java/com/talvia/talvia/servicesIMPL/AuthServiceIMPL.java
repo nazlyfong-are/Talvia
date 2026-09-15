@@ -2,15 +2,22 @@ package com.talvia.talvia.servicesIMPL;
 
 import com.talvia.talvia.dto.request.LoginRequestDTO;
 import com.talvia.talvia.dto.response.LoginResponseDTO;
+import com.talvia.talvia.model.enums.TipoCodigo;
+import com.talvia.talvia.model.proceso.Postulacion;
 import com.talvia.talvia.model.usuario.Admin;
+import com.talvia.talvia.model.usuario.Usuario;
+import com.talvia.talvia.model.vacante.Vacante;
 import com.talvia.talvia.repository.AdminRepository;
-import com.talvia.talvia.security.UserPrincipal;
+import com.talvia.talvia.repository.PostulacionRepository;
+import com.talvia.talvia.repository.UsuarioRepository;
+import com.talvia.talvia.repository.VacanteRepository;
 import com.talvia.talvia.security.LoginAttempService;
+import com.talvia.talvia.security.UserPrincipal;
 import com.talvia.talvia.services.AuthService;
+import com.talvia.talvia.services.CodigoVerificacionService;
+import com.talvia.talvia.services.EmailService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -21,6 +28,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 public class AuthServiceIMPL implements AuthService {
@@ -33,6 +43,12 @@ public class AuthServiceIMPL implements AuthService {
     @Autowired private PasswordEncoder passwordEncoder;
     @Autowired private LoginAttempService loginAttemptService;
 
+    @Autowired private UsuarioRepository usuarioRepository;
+    @Autowired private CodigoVerificacionService codigoVerificacionService;
+    @Autowired private EmailService emailService;
+    @Autowired private PostulacionRepository postulacionRepository;
+    @Autowired private VacanteRepository vacanteRepository;
+
     @Override
     public LoginResponseDTO login(LoginRequestDTO loginRequest) {
 
@@ -42,7 +58,6 @@ public class AuthServiceIMPL implements AuthService {
             throw new BadCredentialsException(GENERIC_ERROR);
         }
 
-        // Verificar bloqueo ANTES de intentar autenticar
         if (loginAttemptService.estaBloqueado(correo)) {
             long minutos = loginAttemptService.minutosRestantesDeBloqueo(correo);
             throw new BadCredentialsException(
@@ -84,10 +99,8 @@ public class AuthServiceIMPL implements AuthService {
             }
         }
 
-        // Login exitoso: resetear contador de intentos
         loginAttemptService.registrarExito(correo);
 
-        // Prevención de session fixation
         HttpSession oldSession = request.getSession(false);
         if (oldSession != null) {
             oldSession.invalidate();
@@ -115,6 +128,63 @@ public class AuthServiceIMPL implements AuthService {
     public void logout() {
         HttpSession session = request.getSession(false);
         if (session != null) session.invalidate();
+        SecurityContextHolder.clearContext();
+    }
+
+    /* ================= Recuperar contraseña ================= */
+
+    @Override
+    public void solicitarRecuperacionContrasena(String email) {
+        if (usuarioRepository.findByEmail(email).isEmpty()) {
+            return; // No revelamos si el correo existe o no
+        }
+        String codigo = codigoVerificacionService.generarCodigo(email, TipoCodigo.RECUPERAR_CONTRASENA);
+        emailService.enviarCorreoSimple(email, "Recupera tu contraseña en Talvia", PlantillasEmail.codigoRecuperarContrasena(codigo));
+    }
+
+    @Override
+    public void restablecerContrasena(String email, String codigo, String nuevaContrasena) {
+        boolean valido = codigoVerificacionService.validarCodigo(email, TipoCodigo.RECUPERAR_CONTRASENA, codigo);
+        if (!valido) {
+            throw new BadCredentialsException("Código inválido o expirado.");
+        }
+
+        Usuario usuario = usuarioRepository.findByEmail(email)
+                .orElseThrow(() -> new BadCredentialsException("Código inválido o expirado."));
+
+        usuario.setContrasena(passwordEncoder.encode(nuevaContrasena));
+        usuarioRepository.save(usuario);
+    }
+
+    /* ================= Eliminar cuenta ================= */
+
+    @Override
+    public void solicitarEliminacionCuenta(Long usuarioId, String email) {
+        String codigo = codigoVerificacionService.generarCodigo(email, TipoCodigo.ELIMINAR_CUENTA);
+        emailService.enviarCorreoSimple(email, "Confirma la eliminación de tu cuenta", PlantillasEmail.codigoEliminarCuenta(codigo));
+    }
+
+    @Override
+    @Transactional
+    public void confirmarEliminacionCuenta(Long usuarioId, String email, String codigo) {
+        boolean valido = codigoVerificacionService.validarCodigo(email, TipoCodigo.ELIMINAR_CUENTA, codigo);
+        if (!valido) {
+            throw new BadCredentialsException("Código inválido o expirado.");
+        }
+
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new BadCredentialsException("Usuario no encontrado."));
+
+        // Borra postulaciones donde el usuario es el trabajador
+        postulacionRepository.deleteAll(postulacionRepository.findByTrabajadorId(usuarioId));
+
+        // Borra postulaciones recibidas en las vacantes de esta empresa (si aplica)
+        List<Vacante> vacantesDeEmpresa = vacanteRepository.findByEmpresaId(usuarioId);
+        for (Vacante v : vacantesDeEmpresa) {
+            postulacionRepository.deleteAll(postulacionRepository.findByVacanteId(v.getId()));
+        }
+
+        usuarioRepository.delete(usuario);
         SecurityContextHolder.clearContext();
     }
 }

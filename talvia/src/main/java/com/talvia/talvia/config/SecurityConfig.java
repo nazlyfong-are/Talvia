@@ -41,24 +41,20 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // CSRF desactivado para las APIs propias del backend (login/registro no tienen
-            // sesión previa aún; trabajador/empresa/postulaciones lo desactivamos por el
-            // comportamiento inconsistente que encontramos con el token en esta versión
-            // de Spring Security). Mismo trade-off consciente en las cuatro rutas.
             .csrf(csrf -> csrf
                 .ignoringRequestMatchers(
                     "/api/auth/**",
                     "/api/register/**",
                     "/api/trabajador/**",
                     "/api/empresa/**",
-                    "/api/postulaciones/**"
+                    "/api/postulaciones/**",
+                    "/api/cuenta/**"
                 )
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             )
             .authorizeHttpRequests(auth -> auth
-                // Público: assets, auth, registro, vacantes/empresas de solo lectura, y /error
                 .requestMatchers(
                     "/", "/public/**", "/css/**", "/js/**", "/img/**",
                     "/api/auth/**", "/api/register/**",
@@ -66,15 +62,14 @@ public class SecurityConfig {
                     "/error"
                 ).permitAll()
 
-                // Vistas protegidas por rol
                 .requestMatchers("/private/admin/**").hasRole("ADMIN")
                 .requestMatchers("/private/trabajador/**").hasRole("TRABAJADOR")
                 .requestMatchers("/private/empresa/**").hasRole("EMPRESA")
 
-                // APIs protegidas por rol
                 .requestMatchers("/api/trabajador/**").hasRole("TRABAJADOR")
                 .requestMatchers("/api/postulaciones/**").hasRole("TRABAJADOR")
                 .requestMatchers("/api/empresa/**").hasRole("EMPRESA")
+                .requestMatchers("/api/cuenta/**").authenticated()
 
                 .anyRequest().authenticated()
             )

@@ -51,5 +51,8 @@ public String detalleVacante() {
 public String misPostulaciones() {
     return "trabajador/postulaciones";
 }
-
+@GetMapping("/public/forgot-password")
+public String forgotPassword() {
+    return "auth/forgot-password";
+}
 }

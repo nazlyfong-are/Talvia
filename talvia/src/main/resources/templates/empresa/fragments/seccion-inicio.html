@@ -1,10 +1,21 @@
 <div th:fragment="contenido">
     <section id="sec-inicio" class="tab-content active">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
             <h2 style="font-family: 'Fraunces', serif; color: var(--ink);">📥 Bandeja de Postulaciones</h2>
             <span id="badge-total" style="background: var(--gold); color: var(--ink); padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 13px;">0 Candidatos</span>
         </div>
 
-        <div class="gmail-inbox" id="lista-candidatos-gmail"></div>
+        <div class="candidatos-toolbar">
+            <input type="text" id="searchCandidatos" class="search-candidatos-input" placeholder="Buscar candidato por nombre…">
+            <div class="chip-row" id="filtrosEstado">
+                <button type="button" class="chip active" data-estado="TODOS">Todos <span class="chip-count">0</span></button>
+                <button type="button" class="chip" data-estado="PENDIENTE">Pendientes <span class="chip-count">0</span></button>
+                <button type="button" class="chip" data-estado="EN_PROCESO">En Proceso <span class="chip-count">0</span></button>
+                <button type="button" class="chip" data-estado="ACEPTADO">Aceptados <span class="chip-count">0</span></button>
+                <button type="button" class="chip" data-estado="RECHAZADO">Rechazados <span class="chip-count">0</span></button>
+            </div>
+        </div>
+
+        <div id="acordeon-vacantes"></div>
     </section>
 </div>

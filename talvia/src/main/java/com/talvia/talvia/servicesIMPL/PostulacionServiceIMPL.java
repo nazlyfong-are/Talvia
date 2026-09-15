@@ -22,6 +22,7 @@ import com.talvia.talvia.repository.CvDocumentoRepository;
 import com.talvia.talvia.repository.PostulacionRepository;
 import com.talvia.talvia.repository.TrabajadorRepository;
 import com.talvia.talvia.repository.VacanteRepository;
+import com.talvia.talvia.services.EmailService;
 import com.talvia.talvia.services.PostulacionService;
 import com.talvia.talvia.services.TrabajadorService;
 import com.talvia.talvia.services.VacanteService;
@@ -35,6 +36,7 @@ public class PostulacionServiceIMPL implements PostulacionService{
     @Autowired private CvDocumentoRepository cvDocumentoRepository;
     @Autowired private TrabajadorService trabajadorService;
     @Autowired private VacanteService vacanteService;
+    @Autowired private EmailService emailService;
 
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -68,6 +70,15 @@ public class PostulacionServiceIMPL implements PostulacionService{
         postulacion.setExperienciaResumen(dto.getExpResumen());
 
         postulacionRepository.save(postulacion);
+
+        //Notificar empresa x correo
+        String nombreCandidato = (trabajador.getNombre() + " " +
+            (trabajador.getPrimerApellido() != null ? trabajador.getPrimerApellido() : "")).trim();
+
+        emailService.enviarCorreoSimple(
+            vacante.getEmpresa().getEmail(), 
+            "Nuevo candidato para " + vacante.getTitulo(),
+            PlantillasEmail.nuevoCandidato(vacante.getEmpresa().getRazonSocial(), nombreCandidato, vacante.getTitulo()));
     }
 
     @Override
@@ -113,6 +124,16 @@ public class PostulacionServiceIMPL implements PostulacionService{
             throw new IllegalArgumentException("Estado inválido.");
         }
         postulacionRepository.save(p);
+
+        //Notificar trabajador x correo
+    String nombreTrabajador = p.getTrabajador().getNombre();
+    String razonSocial = p.getVacante().getEmpresa().getRazonSocial();
+
+    emailService.enviarCorreoSimple(
+        p.getTrabajador().getEmail(),
+        "Actualización sobre tu postulación a " + p.getVacante().getTitulo(),
+        PlantillasEmail.cambioEstadoPostulacion(nombreTrabajador, p.getVacante().getTitulo(), razonSocial, nuevoEstado)
+    );
     }
 
     private void verificarPertenece(Postulacion p, Long empresaId) {
@@ -148,11 +169,12 @@ private PostulacionTrabajadorResponseDTO toTrabajadorDTO(Postulacion p) {
 
     private PostulacionResponseDTO toResponseDTO(Postulacion p) {
         String nombreCompleto = (p.getTrabajador().getNombre() + " " +
-                (p.getTrabajador().getPrimerApellido() != null ? p.getTrabajador().getPrimerApellido() : "")).trim();
-        return new PostulacionResponseDTO(
-                p.getId(), p.getTrabajador().getId(), nombreCompleto, p.getVacante().getTitulo(),
-                p.getFechaPostulacion() != null ? p.getFechaPostulacion().toLocalDate().format(FORMATO_FECHA) : "",
-                p.getEstado() != null ? p.getEstado().name() : null
-        );
+            (p.getTrabajador().getPrimerApellido() != null ? p.getTrabajador().getPrimerApellido() : "")).trim();
+    return new PostulacionResponseDTO(
+            p.getId(), p.getTrabajador().getId(), nombreCompleto, p.getVacante().getTitulo(),
+            p.getFechaPostulacion() != null ? p.getFechaPostulacion().toLocalDate().format(FORMATO_FECHA) : "",
+            p.getEstado() != null ? p.getEstado().name() : null,
+            p.getVacante().getId()
+    );
     }
 }

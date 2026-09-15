@@ -7,17 +7,21 @@ public class PostulacionResponseDTO {
     private String vacanteTitulo;
     private String fecha;
     private String estado;
+    private Long vacanteId;
 
     public PostulacionResponseDTO() {}
+    
     public PostulacionResponseDTO(Long id, Long trabajadorId, String nombreCompleto, String vacanteTitulo, String fecha,
-            String estado) {
+            String estado, Long vacanteId) {
         this.id = id;
         this.trabajadorId = trabajadorId;
         this.nombreCompleto = nombreCompleto;
         this.vacanteTitulo = vacanteTitulo;
         this.fecha = fecha;
         this.estado = estado;
+        this.vacanteId = vacanteId;
     }
+
     public Long getId() {
         return id;
     }
@@ -54,4 +58,6 @@ public class PostulacionResponseDTO {
     public void setEstado(String estado) {
         this.estado = estado;
     }
+    public Long getVacanteId() { return vacanteId; }
+public void setVacanteId(Long vacanteId) { this.vacanteId = vacanteId; }
 }

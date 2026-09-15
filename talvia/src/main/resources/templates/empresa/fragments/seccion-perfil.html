@@ -117,5 +117,33 @@
                 <button type="button" id="btn-guardar-perfil" class="btn-login oculto" style="background: var(--ink); color: var(--gold); border: 1px solid var(--gold); padding: 10px 20px;">💾 Guardar Datos de la Empresa</button>
             </div>
         </div>
+
+        <!-- ZONA DE PELIGRO: ELIMINAR CUENTA -->
+        <div class="form-box" style="margin-top: 24px; border: 1px solid #f8d7d7; background: #fffafa;">
+            <h3 style="font-family: 'Fraunces', serif; color: #d93838; margin-bottom: 6px; font-size: 17px;">⚠️ Zona de Peligro</h3>
+            <p style="font-size: 13px; color: var(--slate); margin-bottom: 16px;">Eliminar tu cuenta borrará permanentemente tu perfil, tus vacantes publicadas y las postulaciones recibidas. Esta acción no se puede deshacer.</p>
+            <button type="button" id="btn-abrir-eliminar-cuenta-emp" style="background:#fdf2f2; color:#d93838; border:1px solid #f8d7d7; padding:10px 18px; border-radius:6px; font-weight:600; cursor:pointer; font-size:13px;">Eliminar mi cuenta</button>
+        </div>
+
+        <!-- Modal eliminar cuenta -->
+        <div id="modalEliminarCuentaEmp" class="modal-overlay" style="display:none;">
+            <div class="modal-cv" style="max-width: 420px;">
+                <button class="btn-close-modal" id="btnCerrarEliminarEmp">X</button>
+                <h3 style="font-family:'Fraunces', serif; font-size:20px; color:#d93838; margin-bottom:8px;">Eliminar cuenta</h3>
+                <p id="texto-eliminar-cuenta-emp" style="font-size:13.5px; color:var(--slate); margin-bottom:20px;">Te enviaremos un código de confirmación a tu correo.</p>
+
+                <div id="paso-solicitar-eliminacion-emp">
+                    <button type="button" id="btn-enviar-codigo-eliminar-emp" style="background:#d93838; color:#fff; border:none; padding:10px 20px; font-weight:700; border-radius:4px; cursor:pointer; width:100%;">Enviar código</button>
+                </div>
+
+                <form id="form-confirmar-eliminacion-emp" class="oculto">
+                    <div class="form-group">
+                        <label>Código de confirmación</label>
+                        <input type="text" id="codigo-eliminar-cuenta-emp" inputmode="numeric" maxlength="6" placeholder="123456" required>
+                    </div>
+                    <button type="submit" style="background:#d93838; color:#fff; border:none; padding:10px 20px; font-weight:700; border-radius:4px; cursor:pointer; width:100%;">Confirmar eliminación</button>
+                </form>
+            </div>
+        </div>
     </section>
 </div>

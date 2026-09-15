@@ -131,3 +131,51 @@ async function subirLogoEmpresa(e) {
         showToast('Error al subir el logo: ' + err.message, 'error');
     }
 }
+
+/* ── ELIMINAR CUENTA (Empresa) ── */
+document.getElementById('btn-abrir-eliminar-cuenta-emp').addEventListener('click', () => {
+    document.getElementById('modalEliminarCuentaEmp').style.display = 'flex';
+});
+
+document.getElementById('btnCerrarEliminarEmp').addEventListener('click', cerrarModalEliminarEmp);
+
+function cerrarModalEliminarEmp() {
+    document.getElementById('modalEliminarCuentaEmp').style.display = 'none';
+    document.getElementById('paso-solicitar-eliminacion-emp').classList.remove('oculto');
+    document.getElementById('form-confirmar-eliminacion-emp').classList.add('oculto');
+    document.getElementById('codigo-eliminar-cuenta-emp').value = '';
+}
+
+document.getElementById('btn-enviar-codigo-eliminar-emp').addEventListener('click', async () => {
+    try {
+        const resp = await fetch('/api/cuenta/eliminar/solicitar', { method: 'POST' });
+        if (!resp.ok) throw new Error(await resp.text());
+
+        document.getElementById('paso-solicitar-eliminacion-emp').classList.add('oculto');
+        document.getElementById('form-confirmar-eliminacion-emp').classList.remove('oculto');
+        document.getElementById('texto-eliminar-cuenta-emp').textContent = 'Ingresa el código que enviamos a tu correo para confirmar.';
+    } catch (err) {
+        showToast('Error al enviar el código: ' + err.message, 'error');
+    }
+});
+
+document.getElementById('form-confirmar-eliminacion-emp').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const codigo = document.getElementById('codigo-eliminar-cuenta-emp').value.trim();
+
+    if (!confirm('¿Estás completamente seguro? Esta acción es irreversible.')) return;
+
+    try {
+        const resp = await fetch('/api/cuenta/eliminar/confirmar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ codigo })
+        });
+        if (!resp.ok) throw new Error(await resp.text());
+
+        alert('Tu cuenta empresarial ha sido eliminada.');
+        window.location.href = '/public/login';
+    } catch (err) {
+        alert('Error al eliminar la cuenta: ' + err.message);
+    }
+});

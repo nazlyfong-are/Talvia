@@ -404,3 +404,52 @@ async function guardarCambios() {
         alert('Error al guardar: ' + err.message);
     }
 }
+
+/* ── ELIMINAR CUENTA ── */
+document.getElementById('btn-abrir-eliminar-cuenta').addEventListener('click', () => {
+    document.getElementById('modalEliminarCuenta').style.display = 'flex';
+});
+
+function cerrarModalEliminar() {
+    document.getElementById('modalEliminarCuenta').style.display = 'none';
+    document.getElementById('paso-solicitar-eliminacion').classList.remove('oculto');
+    document.getElementById('form-confirmar-eliminacion').classList.add('oculto');
+    document.getElementById('codigo-eliminar-cuenta').value = '';
+}
+
+document.getElementById('btn-cancelar-eliminar').addEventListener('click', cerrarModalEliminar);
+document.getElementById('btn-cancelar-eliminar-2').addEventListener('click', cerrarModalEliminar);
+
+document.getElementById('btn-enviar-codigo-eliminar').addEventListener('click', async () => {
+    try {
+        const resp = await fetch('/api/cuenta/eliminar/solicitar', { method: 'POST' });
+        if (!resp.ok) throw new Error(await resp.text());
+
+        document.getElementById('paso-solicitar-eliminacion').classList.add('oculto');
+        document.getElementById('form-confirmar-eliminacion').classList.remove('oculto');
+        document.getElementById('texto-eliminar-cuenta').textContent = 'Ingresa el código que enviamos a tu correo para confirmar.';
+    } catch (err) {
+        alert('Error al enviar el código: ' + err.message);
+    }
+});
+
+document.getElementById('form-confirmar-eliminacion').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const codigo = document.getElementById('codigo-eliminar-cuenta').value.trim();
+
+    if (!confirm('¿Estás completamente seguro? Esta acción es irreversible.')) return;
+
+    try {
+        const resp = await fetch('/api/cuenta/eliminar/confirmar', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ codigo })
+        });
+        if (!resp.ok) throw new Error(await resp.text());
+
+        alert('Tu cuenta ha sido eliminada. Lamentamos verte partir.');
+        window.location.href = '/public/login';
+    } catch (err) {
+        alert('Error al eliminar la cuenta: ' + err.message);
+    }
+});
