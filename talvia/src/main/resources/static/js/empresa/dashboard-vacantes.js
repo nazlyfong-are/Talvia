@@ -1,8 +1,8 @@
-/* ============================================
-   DASHBOARD EMPRESA — Publicar / listar / eliminar vacantes
+/* 
+   DASHBOARD EMPRESA - Publicar / listar / eliminar vacantes
    Salario y requisitos ahora son datos estructurados,
-   no texto libre — el backend arma el texto de presentación.
-============================================ */
+   no texto libre - el backend arma el texto de presentacion.
+ */
 
 document.addEventListener('DOMContentLoaded', () => {
     cargarMisVacantes();
@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-/* ── FILAS DINÁMICAS: REQUISITOS ── */
+/*FILAS DINAMICAS: REQUISITOS*/
 function crearFilaRequisito() {
     const div = document.createElement('div');
     div.style.cssText = "display:flex; gap:8px; margin-bottom:8px;";
@@ -48,7 +48,7 @@ function recolectarRequisitos() {
         .filter(v => v);
 }
 
-/* ── PUBLICAR VACANTE ── */
+/* PUBLICAR VACANTE */
 async function publicarVacante(e) {
     e.preventDefault();
     const btn = document.getElementById('btn-publicar');
@@ -103,7 +103,7 @@ async function publicarVacante(e) {
     }
 }
 
-/* ── LISTAR MIS VACANTES ── */
+/*LISTAR MIS VACANTES*/
 async function cargarMisVacantes() {
     const cont = document.getElementById('lista-mis-vacantes');
     try {

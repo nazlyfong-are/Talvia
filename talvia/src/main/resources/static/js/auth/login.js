@@ -1,11 +1,10 @@
-/* ============================================
+/*
   TALVIA LOGIN— JavaScript (dual mode)
-   Modes: 'client' | 'admin'
-============================================ */
+   Modes: 'client' | 'admin' */
 
 let currentMode = 'client';
 
-// ── AL CARGAR LA PÁGINA ──
+//AL CARGAR LA PAGINA
 document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
   if (params.get('error') === 'unauthorized') {
@@ -13,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// ── SWITCH MODE ──
+// SWITCH MODE
 function switchMode() {
   currentMode = currentMode === 'client' ? 'admin' : 'client';
   applyMode(currentMode);
@@ -81,7 +80,7 @@ function applyMode(mode) {
   resetPasswordVisibility();
 }
 
-// ── TOGGLE PASSWORD VISIBILITY ──
+//TOGGLE PASSWORD VISIBILITY
 function togglePassword() {
   const input   = document.getElementById('password');
   const eyeOn   = document.getElementById('eyeIcon');
@@ -103,14 +102,14 @@ function resetPasswordVisibility() {
   eyeOff.style.display = 'none';
 }
 
-// ── SECURITY CODE FORMATTING ──
+//SECURITY CODE FORMATTING
 document.getElementById('securityCode').addEventListener('input', function () {
   let val = this.value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
   if (val.length > 4) val = val.slice(0, 4) + '-' + val.slice(4, 8);
   this.value = val;
 });
 
-// ── TOAST NOTIFICATIONS ──
+//TOAST NOTIFICATIONS
 let toastTimer;
 
 function showToast(message, type = 'default') {
@@ -123,7 +122,7 @@ function showToast(message, type = 'default') {
   toastTimer = setTimeout(() => toast.classList.remove('show'), 3800);
 }
 
-// ── FORM SUBMISSION ──
+// FORM SUBMISSION
 async function handleLogin(event) {
   event.preventDefault();
 
@@ -204,7 +203,7 @@ async function handleLogin(event) {
   }
 }
 
-// ── HELPERS ──
+// HELPERS
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
@@ -219,7 +218,7 @@ function shakeField(fieldId) {
   wrapper.addEventListener('animationend', () => wrapper.classList.remove('shake'), { once: true });
 }
 
-// ── REAL AUTH (conecta con el backend) ──
+// REAL AUTH (conecta con el backend)
 async function realAuth(email, password, securityCode) {
   const response = await fetch('/api/auth/login', {
     method: 'POST',
@@ -239,7 +238,7 @@ async function realAuth(email, password, securityCode) {
   return response.json();
 }
 
-// ── KEYBOARD ACCESSIBILITY ──
+//KEYBOARD ACCESSIBILITY
 document.getElementById('togglePwd')?.addEventListener('keydown', (e) => {
   if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); togglePassword(); }
 });

@@ -1,11 +1,11 @@
-/* ============================================
+/*
    TALVIA REGISTER — JavaScript
    Validaciones colombianas + fetch al backend
    Incluye: especialidad/ciudad/sector como select, experiencia
    con unidad meses/años, adjuntar documentos (formación
-   y certificaciones) subidos directo a Cloudinary vía multipart,
-   y redirección a verificación de correo tras registro exitoso
-============================================ */
+   y certificaciones) subidos directo a Cloudinary via multipart,
+   y redirección a verificacion de correo tras registro exitoso
+*/
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('registration-form');
     const registerBtn = document.getElementById('register-btn');
 
-    // ── PRE-SELECCIÓN DESDE LA LANDING (?tipo=empresa|natural, ?correo=...) ──
+    //PRE-SELECCION DESDE LA LANDING (?tipo=empresa|natural, ?correo=...) ──
     const paramsUrl = new URLSearchParams(window.location.search);
     const tipoParam = paramsUrl.get('tipo');
     const correoParam = paramsUrl.get('correo');
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     wrapper.classList.add('mode-natural');
     toggleRequirements(false);
 
-    // ── CAMBIO DE TABS ──
+    //CAMBIO DE TABS
     tabNatural.addEventListener('click', () => {
         tabJuridica.classList.remove('active');
         tabNatural.classList.add('active');
@@ -58,7 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clearErrors();
     });
 
-    // ── FORMATO NIT EN TIEMPO REAL ──
+    //FORMATO NIT EN TIEMPO REAL
     const nitInput = document.getElementById('nit');
     if (nitInput) {
         nitInput.addEventListener('input', function () {
@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── RESTRICCIÓN EN TIEMPO REAL: DOCUMENTO NATURAL ──
+    //RESTRICCION EN TIEMPO REAL: DOCUMENTO NATURAL
     const tipoDocSelect = document.getElementById('tipo-documento');
     const numDocInput = document.getElementById('num-documento');
     if (numDocInput && tipoDocSelect) {
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else numDocInput.placeholder = 'Número de documento';
     }
 
-    // ── RESTRICCIÓN TELÉFONO: solo 10 dígitos ──
+    // RESTRICCION TELEFONO: solo 10 digitos
     const telefonoInput = document.getElementById('telefono');
     if (telefonoInput) {
         telefonoInput.addEventListener('input', function () {
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── RESTRICCIÓN AÑOS/MESES DE EXPERIENCIA: solo números ──
+    // RESTRICCION AÑOS/MESES DE EXPERIENCIA: solo numeros
     const experienciaValorInput = document.getElementById('experiencia-valor');
     if (experienciaValorInput) {
         experienciaValorInput.addEventListener('input', function () {
@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── CIUDAD "OTRA" ──
+    // CIUDAD "OTRA"
     const ciudadSelect = document.getElementById('ciudad');
     const ciudadOtraInput = document.getElementById('ciudad-otra');
     if (ciudadSelect && ciudadOtraInput) {
@@ -131,17 +131,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ── TOGGLE CONTRASEÑAS ──
+    //  TOGGLE CONTRASEÑAS 
     setupPasswordToggle('password', 'togglePwd1');
     setupPasswordToggle('confirm-password', 'togglePwd2');
 
-    // ── LIMPIAR ERROR AL EDITAR ──
+    //  LIMPIAR ERROR AL EDITAR 
     document.querySelectorAll('input, select').forEach(el => {
         el.addEventListener('input', () => clearFieldError(el.id));
         el.addEventListener('change', () => clearFieldError(el.id));
     });
 
-    // ── FILAS DINÁMICAS: CV OPCIONAL ──
+    // FILAS DINÁMICAS: CV OPCIONAL
     document.getElementById('add-formacion')?.addEventListener('click', () => {
         document.getElementById('formaciones-container').appendChild(crearFilaFormacion());
     });
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('certificaciones-container').appendChild(crearFilaCertificacion());
     });
 
-    // ── ENVÍO DEL FORMULARIO ──
+    //ENVÍO DEL FORMULARI
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
         clearErrors();
@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const isJuridica = wrapper.classList.contains('mode-juridica');
         let hasError = false;
 
-        // ── VALIDACIONES PERSONA NATURAL ──
+        // VALIDACIONES PERSONA NATURAL
         if (!isJuridica) {
             const nombres = document.getElementById('nombres').value.trim();
             const primerApellido = document.getElementById('primer-apellido').value.trim();
@@ -205,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // ── VALIDACIONES EMPRESA ──
+        // VALIDACIONES EMPRESA
         if (isJuridica) {
             const razonSocial = document.getElementById('razon-social').value.trim();
             const figuraLegal = document.getElementById('figura-legal').value;
@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // ── VALIDACIONES COMUNES ──
+        // VALIDACIONES COMUNES
         const correo = document.getElementById('correo').value.trim();
         const telefono = document.getElementById('telefono').value.trim();
         const pass = document.getElementById('password').value;
@@ -241,7 +241,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hasError = true;
         }
 
-        // Teléfono colombiano: móvil 3XXXXXXXXX (10 dígitos) o fijo 60X/1-8 + 7 dígitos
+        // Telefono colombiano 3XXXXXXXXX (10 digitos) o fijo 60X/1-8 + 7 digitos
         if (!/^(3[0-9]{9}|60[1-9][0-9]{7}|[1-8][0-9]{7})$/.test(telefono)) {
             showFieldError('telefono', 'Ingrese un número colombiano válido. Ej: 3001234567 (móvil) o 6011234567 (fijo).');
             hasError = true;
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // ── VALIDAR CIUDAD "OTRA" (valor final a enviar) ──
+        //VALIDAR CIUDAD "OTRA" (valor final a enviar)
         let ciudadFinal = '';
         if (!isJuridica) {
             ciudadFinal = document.getElementById('ciudad').value;
@@ -279,7 +279,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // ── CALCULAR EXPERIENCIA (solo si se ingresó algo) ──
+        //CALCULAR EXPERIENCIA (solo si se ingresó algo)
         let anosExperienciaTotal = null;
         if (!isJuridica) {
             const expValor = document.getElementById('experiencia-valor').value.trim();
@@ -290,13 +290,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // ── FETCH AL BACKEND ──
+        //FETCH AL BACKEN
         const endpoint = isJuridica ? '/api/register/empresa' : '/api/register/trabajador';
 
         registerBtn.classList.add('loading');
 
         if (isJuridica) {
-            // ── EMPRESA: JSON normal, sin archivos ──
+            // EMPRESA: JSON normal, sin archivos
             const body = {
                 razonSocial: document.getElementById('razon-social').value.trim(),
                 figuraLegal: document.getElementById('figura-legal').value,
@@ -331,7 +331,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
         } else {
-            // ── TRABAJADOR: multipart/form-data, con archivos adjuntos si los hay ──
+            //TRABAJADOR: multipart/form-data, con archivos adjuntos si los hay
             const { datos: formaciones, archivos: archivosFormacion } = recolectarFormaciones();
             const { datos: certificaciones, archivos: archivosCertificacion } = recolectarCertificaciones();
 
@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-// ── CONTROL DE required SEGÚN MODO ──
+//CONTROL DE required SEGUN MODO
 function toggleRequirements(isJuridica) {
     const fieldsNatural = ['nombres', 'primer-apellido', 'segundo-apellido', 'tipo-documento', 'num-documento'];
     const fieldsJuridica = ['razon-social', 'figura-legal', 'sector', 'nit'];
@@ -406,7 +406,7 @@ function toggleRequirements(isJuridica) {
     });
 }
 
-// ── TOGGLE CONTRASEÑA ──
+//TOGGLE CONTRASEÑA
 function setupPasswordToggle(inputId, btnId) {
     const btn = document.getElementById(btnId);
     if (!btn) return;
@@ -422,7 +422,7 @@ function setupPasswordToggle(inputId, btnId) {
     });
 }
 
-// ── ERRORES POR CAMPO ──
+//ERRORES POR CAMPO
 function showFieldError(fieldId, message) {
     const field = document.getElementById(fieldId);
     if (!field) return;
@@ -450,7 +450,7 @@ function clearErrors() {
     document.querySelectorAll('.field-error-msg').forEach(el => el.remove());
 }
 
-// ── TOAST ──
+//TOAST
 let toastTimer;
 function showToast(message, type = 'default') {
     const toast = document.getElementById('toast');
@@ -462,10 +462,8 @@ function showToast(message, type = 'default') {
     toastTimer = setTimeout(() => toast.classList.remove('show'), 3800);
 }
 
-/* ============================================
-   CV OPCIONAL — Filas dinámicas
-   (Formación, Experiencia, Habilidades, Certificaciones)
-============================================ */
+/* CV OPCIONAL - Filas dinamicas
+   (Formacion, Experiencia, Habilidades, Certificaciones) */
 
 function crearFilaFormacion() {
     const div = document.createElement('div');
@@ -572,9 +570,7 @@ function crearFilaCertificacion() {
     return div;
 }
 
-/* ============================================
-   RECOLECCIÓN DE DATOS DE LAS FILAS DINÁMICAS
-============================================ */
+/*  RECOLECCION DE DATOS DE LAS FILAS DINAMICAS */
 
 function recolectarFormaciones() {
     const filas = Array.from(document.querySelectorAll('#formaciones-container .formacion-row'))

@@ -1,6 +1,5 @@
-/* ============================================
-   VERIFICAR CORREO — código de activación de cuenta
-============================================ */
+/*
+   VERIFICAR CORREO — codigo de activacion de cuenta */
 
 let correoActual = '';
 

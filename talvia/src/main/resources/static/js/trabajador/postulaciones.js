@@ -1,6 +1,4 @@
-/* ============================================
-   MIS POSTULACIONES — Listado, búsqueda y orden
-============================================ */
+/* MIS POSTULACIONES — Listado, búsqueda y orden*/
 
 let postulacionesData = [];
 let ordenActual = 'recientes';
@@ -50,7 +48,7 @@ function renderizar() {
 
     let lista = [...postulacionesData];
 
-    // Búsqueda por palabra clave (título o empresa)
+    // busqueda por palabra clave (titulo o empresa)
     if (busquedaActual) {
         lista = lista.filter(p =>
             (p.titulo || '').toLowerCase().includes(busquedaActual) ||

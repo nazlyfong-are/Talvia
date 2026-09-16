@@ -1,6 +1,5 @@
-/* ============================================
-   DASHBOARD EMPRESA — Perfil de la empresa
-============================================ */
+/* 
+   DASHBOARD EMPRESA — Perfil de la empresa */
 
 const CAMPOS_PERFIL_EMPRESA = [
     'emp-nombre', 'emp-figura-legal', 'emp-ciudad', 'emp-sector',
@@ -132,7 +131,7 @@ async function subirLogoEmpresa(e) {
     }
 }
 
-/* ── ELIMINAR CUENTA (Empresa) ── */
+/*ELIMINAR CUENTA (Empresa) */
 document.getElementById('btn-abrir-eliminar-cuenta-emp').addEventListener('click', () => {
     document.getElementById('modalEliminarCuentaEmp').style.display = 'flex';
 });

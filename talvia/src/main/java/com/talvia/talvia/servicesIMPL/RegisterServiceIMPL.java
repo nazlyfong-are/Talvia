@@ -24,6 +24,7 @@ import com.talvia.talvia.services.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import com.talvia.talvia.model.embedded.ImagenCloudinary;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
@@ -80,6 +81,11 @@ public class RegisterServiceIMPL implements RegisterService {
         trabajador.setResumenProfesional(dto.getResumenProfesional());
         trabajador.setCiudad(dto.getCiudad());
         trabajador.setAnosExperienciaTotal(dto.getAnosExperienciaTotal());
+        ImagenCloudinary fotoDefault = new ImagenCloudinary();
+        fotoDefault.setUrl("/img/avatar-default.svg");
+        fotoDefault.setPublicId(null); // null a propósito: no es de Cloudinary, no hay nada que borrar ahí después
+        fotoDefault.setFechaSubida(LocalDateTime.now());
+        trabajador.setFoto(fotoDefault);
 
         // ── Habilidades ──
         List<Habilidad> habilidades = new ArrayList<>();

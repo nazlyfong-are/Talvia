@@ -1,6 +1,5 @@
-/* ============================================
-   DASHBOARD TRABAJADOR — Carga de vacantes reales
-============================================ */
+/*
+   DASHBOARD TRABAJADOR — Carga de vacantes reales */
 
 window.addEventListener('load', async () => {
     const contenedorIndex = document.getElementById('jobList');

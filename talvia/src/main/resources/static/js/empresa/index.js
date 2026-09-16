@@ -1,6 +1,4 @@
-/* ============================================
-   DASHBOARD EMPRESA — Conectado al backend real
-============================================ */
+
 
 let candidatosCache = [];
 
@@ -43,9 +41,7 @@ function showToast(message, type = 'default') {
     setTimeout(() => toast.classList.remove('show'), 3800);
 }
 
-/* ============================================
-   PERFIL DE EMPRESA
-============================================ */
+/* PERFIL DE EMPRESA */
 
 async function cargarPerfilEmpresa() {
     try {
@@ -110,9 +106,7 @@ async function subirLogoEmpresa(e) {
     }
 }
 
-/* ============================================
-   PUBLICAR / LISTAR / ELIMINAR VACANTES
-============================================ */
+/* PUBLICAR / LISTAR / ELIMINAR VACANTES*/
 
 async function publicarVacante(e) {
     e.preventDefault();
@@ -197,9 +191,7 @@ async function eliminarVacante(id, boton) {
     }
 }
 
-/* ============================================
-   BUZÓN DE POSTULACIONES
-============================================ */
+/* BUZON DE POSTULACIONES */
 
 async function cargarBuzon() {
     const cont = document.getElementById('lista-candidatos-gmail');

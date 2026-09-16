@@ -1,6 +1,4 @@
-/* ============================================
-   RECUPERAR CONTRASEÑA — flujo de 2 pasos
-============================================ */
+/* RECUPERAR CONTRASEÑA - flujo de 2 pasos */
 
 let correoActual = '';
 

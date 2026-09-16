@@ -1,7 +1,7 @@
-/* ============================================
-   DASHBOARD EMPRESA — Buzón agrupado por vacante,
-   con filtros por estado y búsqueda de candidato
-============================================ */
+/* 
+   DASHBOARD EMPRESA — Buzon agrupado por vacante,
+   con filtros por estado y busqueda de candidato
+ */
 
 let candidatosData = [];
 let filtroEstadoActual = 'TODOS';

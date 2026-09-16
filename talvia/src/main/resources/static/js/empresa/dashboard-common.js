@@ -1,6 +1,6 @@
-/* ============================================
-   DASHBOARD EMPRESA — Utilidades compartidas
-============================================ */
+/*
+   DASHBOARD EMPRESA - Utilidades compartidas
+ */
 
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.emp-nav-btn').forEach(btn => {

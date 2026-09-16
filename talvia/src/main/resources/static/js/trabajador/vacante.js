@@ -1,6 +1,4 @@
-/* ============================================
-   DETALLE DE VACANTE — Carga real + postulación (con selección de CV)
-============================================ */
+/* DETALLE DE VACANTE — Carga real + postulación (con selección de CV) */
 
 let vacanteId = null;
 let vacanteActual = null;

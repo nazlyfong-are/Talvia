@@ -1,6 +1,4 @@
-/* =========================================
-   CONFIGURACIÓN INICIAL
-   ========================================= */
+/*CONFIGURACION INICIAL*/
 const state = {
     filters: {
         area: "todas",
@@ -13,15 +11,13 @@ const state = {
     sort: "recientes",
     pagination: {
         currentPage: 1,
-        itemsPerPage: 3, // Cambia este número para mostrar más/menos por página
+        itemsPerPage: 10, // Cambia este número para mostrar más/menos por página
         totalPages: 1
     },
     filteredJobs: [] // Aquí guardamos las tarjetas que pasaron el filtro para paginarlas
 };
 
-/* =========================================
-   REFERENCIAS AL DOM
-   ========================================= */
+/* referencias al DOMa*/
 // Filtros Select
 const areaSelect = document.getElementById("areaSelect");
 const expSelect = document.getElementById("expSelect");
@@ -29,7 +25,7 @@ const modalitySelect = document.getElementById("modalitySelect");
 const levelSelect = document.getElementById("levelSelect");
 const sortSelect = document.querySelector(".sort-select");
 
-// Búsqueda
+//busqueda
 const searchInput = document.getElementById("searchInput");
 const locationInput = document.getElementById("locationInput");
 const searchBtn = document.getElementById("searchBtn");
@@ -40,16 +36,14 @@ const jobList = document.getElementById("jobList");
 let allJobCards = Array.from(document.querySelectorAll(".job-card"));
 const resultsCount = document.getElementById("resultsCount");
 
-// Paginación
+// Paginacion
 const paginationContainer = document.getElementById("paginationContainer");
 const prevPageBtn = document.getElementById("prevPageBtn");
 const nextPageBtn = document.getElementById("nextPageBtn");
 const pageNumbers = document.getElementById("pageNumbers");
 
 
-/* =========================================
-   EVENT LISTENERS
-   ========================================= */
+/* event listeners */
 
 areaSelect.addEventListener("change", (e) => {
     state.filters.area = e.target.value;
@@ -84,7 +78,7 @@ searchBtn.addEventListener("click", () => {
 
 [searchInput, locationInput].forEach(input => {
     input.addEventListener("keyup", (e) => {
-        if(e.key === "Enter"){
+        if (e.key === "Enter") {
             state.filters.keyword = searchInput.value.toLowerCase().trim();
             state.filters.location = locationInput.value.toLowerCase().trim();
             aplicarFiltros();
@@ -103,7 +97,7 @@ clearFiltersBtn.addEventListener("click", () => {
 
     state.filters = { area: "todas", experiencia: 0, modalidad: "todas", nivel: "todos", keyword: "", location: "" };
     state.sort = "recientes";
-    
+
     aplicarFiltros();
 });
 
@@ -122,9 +116,7 @@ nextPageBtn.addEventListener("click", () => {
 });
 
 
-/* =========================================
-   LÓGICA PRINCIPAL DE FILTRADO Y ORDEN
-   ========================================= */
+/* logica principal de filtrado y de orden */
 
 function aplicarFiltros() {
     allJobCards = Array.from(document.querySelectorAll(".job-card"));
@@ -134,16 +126,19 @@ function aplicarFiltros() {
         const experiencia = Number(vacante.dataset.experience || 0);
         const modalidad = vacante.dataset.modality || "";
         const nivel = vacante.dataset.level || "";
-        
+
         const textContent = vacante.innerText.toLowerCase();
         const jobCompanyElement = vacante.querySelector('.job-company');
         const locationText = jobCompanyElement ? jobCompanyElement.innerText.toLowerCase() : "";
 
-        const coincideArea = state.filters.area === "todas" || area === state.filters.area;
+        const coincideArea = state.filters.area === "todas"
+            || area.trim().toLowerCase() === state.filters.area.trim().toLowerCase();
         const coincideExperiencia = experiencia >= state.filters.experiencia;
-        const coincideModalidad = state.filters.modalidad === "todas" || modalidad === state.filters.modalidad;
-        const coincideNivel = state.filters.nivel === "todos" || nivel === state.filters.nivel;
-        
+        const coincideModalidad = state.filters.modalidad === "todas"
+            || modalidad.trim().toLowerCase() === state.filters.modalidad.trim().toLowerCase();
+        const coincideNivel = state.filters.nivel === "todos"
+            || nivel.trim().toLowerCase() === state.filters.nivel.trim().toLowerCase();
+
         const coincidePalabra = state.filters.keyword === "" || textContent.includes(state.filters.keyword);
         const coincideLugar = state.filters.location === "" || locationText.includes(state.filters.location);
 
@@ -158,7 +153,7 @@ function aplicarFiltros() {
 
         if (state.sort === "salario-mayor") return salarioB - salarioA;
         if (state.sort === "salario-menor") return salarioA - salarioB;
-        return fechaB - fechaA; 
+        return fechaB - fechaA;
     });
 
     allJobCards.forEach(vacante => vacante.style.display = "none");
@@ -172,16 +167,14 @@ function aplicarFiltros() {
     if (state.pagination.currentPage > state.pagination.totalPages) {
         state.pagination.currentPage = 1;
     }
-    
+
     paginationContainer.style.display = total > 0 ? "flex" : "none";
 
     renderizarPagina();
 }
 
 
-/* =========================================
-   RENDERIZADO DE PAGINACIÓN
-   ========================================= */
+/*renderizado de la pagina*/
 
 function renderizarPagina() {
     state.filteredJobs.forEach(vacante => vacante.style.display = "none");
@@ -190,7 +183,7 @@ function renderizarPagina() {
     const endIndex = startIndex + state.pagination.itemsPerPage;
 
     const jobsToShow = state.filteredJobs.slice(startIndex, endIndex);
-    
+
     jobsToShow.forEach(vacante => {
         vacante.style.display = "flex";
         jobList.appendChild(vacante);
@@ -204,18 +197,18 @@ function actualizarBotonesPaginacion() {
     nextPageBtn.disabled = state.pagination.currentPage === state.pagination.totalPages;
 
     pageNumbers.innerHTML = "";
-    
+
     for (let i = 1; i <= state.pagination.totalPages; i++) {
         const btn = document.createElement("button");
         btn.classList.add("page-num");
         if (i === state.pagination.currentPage) btn.classList.add("active");
         btn.textContent = i;
-        
+
         btn.addEventListener("click", () => {
             state.pagination.currentPage = i;
             renderizarPagina();
         });
-        
+
         pageNumbers.appendChild(btn);
     }
 }

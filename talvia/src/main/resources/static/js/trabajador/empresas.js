@@ -1,6 +1,4 @@
-/* ============================================
-   EMPRESAS ALIADAS — Carga de empresas reales
-============================================ */
+/* EMPRESAS ALIADAS — Carga de empresas reales */
 
 window.addEventListener('load', async () => {
     const contenedor = document.getElementById('empresasList');
@@ -57,6 +55,6 @@ window.addEventListener('load', async () => {
 });
 
 function verPerfilEmpresa(id) {
-    // Pendiente: página de detalle de empresa
+    // Pendiente: pagina de detalle de empresa
     window.location.href = `/private/trabajador/empresa?id=${id}`;
 }
