@@ -1,7 +1,10 @@
-/* DETALLE DE VACANTE — Carga real + postulación (con selección de CV) */
+/* ============================================
+   DETALLE DE VACANTE — Carga real + postulación (con selección de CV) + favoritos
+============================================ */
 
 let vacanteId = null;
 let vacanteActual = null;
+let esFavoritaActual = false;
 
 document.addEventListener('DOMContentLoaded', () => {
     const params = new URLSearchParams(window.location.search);
@@ -17,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('btn-postular').addEventListener('click', abrirModalPreguntas);
     document.getElementById('btn-cancelar-postulacion').addEventListener('click', cerrarModalPreguntas);
     document.getElementById('form-postulacion').addEventListener('submit', confirmarPostulacion);
+    document.getElementById('btn-favorito').addEventListener('click', toggleFavorito);
     document.getElementById('logoutBtn').addEventListener('click', cerrarSesion);
 });
 
@@ -32,7 +36,17 @@ async function cargarVacante() {
         vacanteActual = await resp.json();
 
         document.getElementById('v-titulo').textContent = vacanteActual.titulo || 'Sin título';
-        document.getElementById('v-empresa-nombre').textContent = vacanteActual.empresa || 'Empresa';
+
+        const nombreEmpresaEl = document.getElementById('v-empresa-nombre');
+        nombreEmpresaEl.textContent = vacanteActual.empresa || 'Empresa';
+        if (vacanteActual.empresaId) {
+            nombreEmpresaEl.style.cursor = 'pointer';
+            nombreEmpresaEl.style.textDecoration = 'underline';
+            nombreEmpresaEl.addEventListener('click', () => {
+                window.location.href = `/private/trabajador/empresa?id=${vacanteActual.empresaId}`;
+            });
+        }
+
         document.getElementById('v-ubicacion').textContent = '📍 ' + (vacanteActual.ubicacion || 'No especificada');
         document.getElementById('v-salario').textContent = vacanteActual.salario || 'A convenir';
         document.getElementById('v-fecha').textContent = vacanteActual.fecha
@@ -61,6 +75,7 @@ async function cargarVacante() {
         }
 
         await verificarPostulacionPrevia();
+        await verificarFavorito();
 
     } catch (err) {
         document.getElementById('v-titulo').textContent = 'Error al cargar la vacante';
@@ -90,6 +105,8 @@ function renderizarLista(idContenedor, textoPlano, mensajeVacio) {
         cont.appendChild(li);
     });
 }
+
+/* ── POSTULACIÓN ── */
 
 async function verificarPostulacionPrevia() {
     try {
@@ -189,5 +206,38 @@ async function confirmarPostulacion(event) {
     } finally {
         btnConfirmar.disabled = false;
         btnConfirmar.textContent = 'Confirmar y Enviar CV';
+    }
+}
+
+/* ── FAVORITOS ── */
+
+async function verificarFavorito() {
+    try {
+        const resp = await fetch(`/api/trabajador/favoritos/verificar/${vacanteId}`);
+        if (!resp.ok) return;
+        const data = await resp.json();
+        esFavoritaActual = data.favorita;
+        actualizarBotonFavorito();
+    } catch (err) {
+        // silencioso, no es crítico si falla
+    }
+}
+
+function actualizarBotonFavorito() {
+    const btn = document.getElementById('btn-favorito');
+    btn.textContent = esFavoritaActual ? '★' : '☆';
+    btn.classList.toggle('activo', esFavoritaActual);
+    btn.title = esFavoritaActual ? 'Quitar de guardados' : 'Guardar vacante';
+}
+
+async function toggleFavorito() {
+    const metodo = esFavoritaActual ? 'DELETE' : 'POST';
+    try {
+        const resp = await fetch(`/api/trabajador/favoritos/${vacanteId}`, { method: metodo });
+        if (!resp.ok) throw new Error(await resp.text());
+        esFavoritaActual = !esFavoritaActual;
+        actualizarBotonFavorito();
+    } catch (err) {
+        alert('Error: ' + err.message);
     }
 }

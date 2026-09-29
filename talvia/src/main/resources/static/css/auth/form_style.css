@@ -429,11 +429,3 @@ body {
 .register-wrapper.mode-juridica .block-natural {
     display: none;
 }
-
-
-@media (max-width: 900px) {
-    .register-wrapper { grid-template-columns: 1fr; }
-    .type-panel { padding: 32px; }
-    .form-panel { padding: 32px 24px; }
-    .fields-grid { grid-template-columns: 1fr; }
-}

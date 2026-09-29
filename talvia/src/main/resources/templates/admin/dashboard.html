@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración — Talvia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <th:block th:replace="~{fragments/shared-css :: links}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_style.css}">
+</head>
+<body>
+
+<th:block th:replace="~{fragments/admin-header :: header('dashboard')}"></th:block>
+
+<div class="admin-page-header">
+    <div class="admin-page-eyebrow">Panel de administración</div>
+    <h1 class="admin-page-title">Resumen general</h1>
+    <p class="admin-page-subtitle">Vista general del estado de la plataforma.</p>
+</div>
+
+<div class="admin-container">
+
+    <div class="stats-grid" id="stats-grid">
+        <div class="stat-card"><div class="skeleton-loader skeleton-line" style="width:60%;"></div><div class="skeleton-loader skeleton-line" style="width:40%; height:28px; margin-top:10px;"></div></div>
+        <div class="stat-card"><div class="skeleton-loader skeleton-line" style="width:60%;"></div><div class="skeleton-loader skeleton-line" style="width:40%; height:28px; margin-top:10px;"></div></div>
+        <div class="stat-card"><div class="skeleton-loader skeleton-line" style="width:60%;"></div><div class="skeleton-loader skeleton-line" style="width:40%; height:28px; margin-top:10px;"></div></div>
+        <div class="stat-card"><div class="skeleton-loader skeleton-line" style="width:60%;"></div><div class="skeleton-loader skeleton-line" style="width:40%; height:28px; margin-top:10px;"></div></div>
+    </div>
+
+    <div class="chart-box">
+        <h3>Registros por semana</h3>
+        <div class="bar-chart" id="bar-chart">
+            <div class="admin-table-loading">Cargando gráfico...</div>
+        </div>
+    </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script th:src="@{/js/shared/notificaciones.js}"></script>
+<script th:src="@{/js/shared/mobile-nav.js}"></script>
+<script th:src="@{/js/admin/admin-common.js}"></script>
+<script th:src="@{/js/admin/dashboard.js}"></script>
+</body>
+</html>

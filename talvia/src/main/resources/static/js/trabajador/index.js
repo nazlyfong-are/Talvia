@@ -34,6 +34,8 @@ window.addEventListener('load', async () => {
             gerencia: 'Gerencia'
         };
 
+        contenedorIndex.innerHTML = '';
+
         vacantes.forEach((vacante) => {
             const logoHTML = vacante.logoUrl
                 ? `<img src="${vacante.logoUrl}" style="width:100%; height:100%; object-fit:cover; border-radius:4px;">`

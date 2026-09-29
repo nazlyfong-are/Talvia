@@ -66,3 +66,24 @@
     cursor: pointer;
     font-family: "IBM Plex Sans", sans-serif;
 }
+
+/* ── BOTÓN HAMBURGUESA (oculto en desktop) ── */
+.mobile-menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+}
+
+.nav-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: 999;
+}
+.nav-backdrop.show { display: block; }

@@ -3,9 +3,10 @@ package com.talvia.talvia.security;
 import com.talvia.talvia.model.usuario.Admin;
 import com.talvia.talvia.model.usuario.Empresa;
 import com.talvia.talvia.model.usuario.Trabajador;
-import com.talvia.talvia.repository.AdminRepository;
-import com.talvia.talvia.repository.EmpresaRepository;
-import com.talvia.talvia.repository.TrabajadorRepository;
+import com.talvia.talvia.repository.usuario.AdminRepository;
+import com.talvia.talvia.repository.usuario.EmpresaRepository;
+import com.talvia.talvia.repository.usuario.TrabajadorRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

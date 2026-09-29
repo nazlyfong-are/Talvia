@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Postulaciones — Panel Admin — Talvia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <th:block th:replace="~{fragments/shared-css :: links}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_style.css}">
+</head>
+<body>
+
+<th:block th:replace="~{fragments/admin-header :: header('postulaciones')}"></th:block>
+
+<div class="admin-page-header">
+    <div class="admin-page-eyebrow">Panel de administración</div>
+    <h1 class="admin-page-title">Postulaciones</h1>
+    <p class="admin-page-subtitle">Auditoría de todas las postulaciones de la plataforma (solo lectura).</p>
+</div>
+
+<div class="admin-container">
+
+    <div class="admin-toolbar">
+    <div class="admin-toolbar-filters">
+        <div class="admin-filter-group">
+            <label class="admin-filter-label" for="filtro-estado-post">Estado</label>
+            <select id="filtro-estado-post" class="filter-select">
+                <option value="">Todos los estados</option>
+                <option value="PENDIENTE">Pendiente</option>
+                <option value="EN_PROCESO">En proceso</option>
+                <option value="ACEPTADO">Aceptado</option>
+                <option value="RECHAZADO">Rechazado</option>
+            </select>
+        </div>
+        <div class="admin-filter-group">
+            <label class="admin-filter-label" for="filtro-desde">Desde</label>
+            <input type="date" id="filtro-desde">
+        </div>
+        <div class="admin-filter-group">
+            <label class="admin-filter-label" for="filtro-hasta">Hasta</label>
+            <input type="date" id="filtro-hasta">
+        </div>
+        <button type="button" class="admin-clear-filters" id="btn-limpiar-filtros-post">Limpiar filtros</button>
+    </div>
+</div>
+
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Trabajador</th>
+                    <th>Vacante</th>
+                    <th>Empresa</th>
+                    <th>Fecha</th>
+                    <th>Vista</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody id="postulaciones-tbody">
+                <tr><td colspan="6" class="admin-table-loading">Cargando postulaciones...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination-container" id="paginacion" style="margin-top:20px;"></div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script th:src="@{/js/shared/notificaciones.js}"></script>
+<script th:src="@{/js/shared/mobile-nav.js}"></script>
+<script th:src="@{/js/admin/admin-common.js}"></script>
+<script th:src="@{/js/admin/postulaciones.js}"></script>
+</body>
+</html>

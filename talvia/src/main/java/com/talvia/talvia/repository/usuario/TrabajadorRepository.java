@@ -1,0 +1,12 @@
+package com.talvia.talvia.repository.usuario;
+
+import com.talvia.talvia.model.usuario.Trabajador;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface TrabajadorRepository extends JpaRepository<Trabajador, Long> {
+    Optional<Trabajador> findByEmail(String email);
+    boolean existsByEmailIgnoreCase(String email);
+    Optional<Trabajador> findByNumeroDocumento(String numeroDocumento);
+}

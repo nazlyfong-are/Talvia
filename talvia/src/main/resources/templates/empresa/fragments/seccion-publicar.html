@@ -1,11 +1,14 @@
 <div th:fragment="contenido">
     <section id="sec-publicar" class="tab-content">
         <div class="form-box">
-            <h2 style="font-family: 'Fraunces', serif; color: var(--gold-deep); margin-bottom: 8px;">➕ Publicar Nueva Oferta Laboral</h2>
-            <p style="color: var(--slate); font-size: 13px; margin-bottom: 24px;">La oferta se publicará automáticamente con el nombre y logo actual de tu empresa.</p>
+            <h2 style="font-family: 'Fraunces', serif; color: var(--gold-deep); margin-bottom: 8px;"
+                id="form-vacante-titulo">➕ Publicar Nueva Oferta Laboral</h2>
+            <p style="color: var(--slate); font-size: 13px; margin-bottom: 24px;" id="form-vacante-subtitulo">La oferta
+                se publicará automáticamente con el nombre y logo actual de tu empresa.</p>
 
             <form id="form-publicar-vacante">
                 <div class="form-group">
+                    <input type="hidden" id="vac-editando-id" value="">
                     <label>Título de la Vacante</label>
                     <input type="text" id="vac-titulo" placeholder="Ej: Senior Frontend Developer" required>
                 </div>
@@ -41,7 +44,8 @@
                             <option value="Remoto">Remoto (sin ciudad específica)</option>
                             <option value="otra">Otra ciudad...</option>
                         </select>
-                        <input type="text" id="vac-ubicacion-otra" placeholder="Escriba la ciudad" class="oculto" style="margin-top:8px;">
+                        <input type="text" id="vac-ubicacion-otra" placeholder="Escriba la ciudad" class="oculto"
+                            style="margin-top:8px;">
                     </div>
 
                     <div class="form-group">
@@ -139,28 +143,41 @@
 
                 <div class="form-group">
                     <label>Descripción del Rol</label>
-                    <textarea id="vac-descripcion" rows="3" placeholder="Describe brevemente las responsabilidades del puesto..." required></textarea>
+                    <textarea id="vac-descripcion" rows="3"
+                        placeholder="Describe brevemente las responsabilidades del puesto..." required></textarea>
                 </div>
 
                 <!-- REQUISITOS ESTRUCTURADOS -->
                 <div class="form-group">
                     <label>Requisitos del Candidato</label>
                     <div id="requisitos-container"></div>
-                    <button type="button" id="add-requisito" class="btn-login" style="background:var(--bg); color:var(--ink); border:1px solid var(--line); padding:8px 14px; font-size:13px; margin-top:8px;">+ Agregar requisito</button>
+                    <button type="button" id="add-requisito" class="btn-login"
+                        style="background:var(--bg); color:var(--ink); border:1px solid var(--line); padding:8px 14px; font-size:13px; margin-top:8px;">+
+                        Agregar requisito</button>
                 </div>
 
                 <div class="form-group">
                     <label>¿Qué Ofrecemos? (Beneficios)</label>
-                    <textarea id="vac-beneficios" rows="3" placeholder="Ej: Horario flexible, Seguro médico, Capacidad de crecimiento..." required></textarea>
+                    <textarea id="vac-beneficios" rows="3"
+                        placeholder="Ej: Horario flexible, Seguro médico, Capacidad de crecimiento..."
+                        required></textarea>
                 </div>
 
-                <button type="submit" class="btn-login" id="btn-publicar" style="background: var(--gold); color: var(--ink); font-weight: 600; width: 100%; padding: 12px; margin-top: 16px;">Publicar Oferta Ahora</button>
+                <div style="display:flex; gap:10px;">
+                    <button type="submit" class="btn-login" id="btn-publicar"
+                        style="background: var(--gold); color: var(--ink); font-weight: 600; flex:1; padding: 12px;">Publicar
+                        Oferta Ahora</button>
+                    <button type="button" id="btn-cancelar-edicion" class="btn-login oculto"
+                        style="background: var(--bg); color: var(--ink); border: 1px solid var(--line); padding: 12px 20px;">Cancelar</button>
+                </div>
             </form>
         </div>
 
         <div class="form-box" style="margin-top: 24px;">
-            <h3 style="font-family: 'Fraunces', serif; color: var(--ink); margin-bottom: 4px; font-size: 18px;">📋 Mis Vacantes Publicadas</h3>
-            <p style="color: var(--slate); font-size: 13px; margin-bottom: 20px;">Estas son las ofertas activas de tu empresa. Puedes eliminarlas cuando ya no estén disponibles.</p>
+            <h3 style="font-family: 'Fraunces', serif; color: var(--ink); margin-bottom: 4px; font-size: 18px;">📋 Mis
+                Vacantes Publicadas</h3>
+            <p style="color: var(--slate); font-size: 13px; margin-bottom: 20px;">Estas son las ofertas activas de tu
+                empresa. Puedes eliminarlas cuando ya no estén disponibles.</p>
             <div id="lista-mis-vacantes" style="display: grid; gap: 12px;"></div>
         </div>
     </section>

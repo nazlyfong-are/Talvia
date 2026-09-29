@@ -12,7 +12,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequisitoVacante {
-
     private String descripcion;
     private boolean obligatorio;
 }

@@ -97,8 +97,11 @@ function renderizar() {
                 </div>
                 <div class="job-company">Empresa: <b>${p.empresa || ''}</b> · ${p.ubicacion || ''}</div>
                 <div class="tag-row">
-                    <span class="tag">Postulado el ${p.fechaTexto || '—'}</span>
-                </div>
+    <span class="tag">Postulado el ${p.fechaTexto || '—'}</span>
+    ${p.fechaVistaTexto
+                ? `<span class="tag" style="background:var(--green-bg); color:var(--green);">👁 Vista el ${p.fechaVistaTexto}</span>`
+                : `<span class="tag" style="color:var(--slate);">Aún no ha sido vista</span>`}
+</div>
             </div>
             <div class="job-side">
                 <div class="job-salary">${p.salario || ''}</div>

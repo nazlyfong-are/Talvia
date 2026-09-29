@@ -586,22 +586,3 @@ body[data-mode="admin"] .input-wrapper:focus-within .input-icon { stroke: var(--
 }
 
 .shake { animation: shake 0.35s ease; }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 768px) {
-  .page-wrapper { flex-direction: column; }
-  .brand-panel { flex: 0 0 auto; min-height: 200px; padding: 40px 24px 36px; }
-  .brand-content { padding: 0; max-width: 100%; width: 100%; }
-  .brand-logo { margin-bottom: 24px; }
-  .brand-tagline h1 { font-size: 24px; }
-  .brand-stats { margin-top: 28px; padding-top: 20px; }
-  .form-panel { padding: 36px 20px 48px; }
-  .admin-btn { top: 14px; right: 14px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  *, *::before, *::after {
-    transition-duration: 0.01ms !important;
-    animation-duration: 0.01ms !important;
-  }
-}

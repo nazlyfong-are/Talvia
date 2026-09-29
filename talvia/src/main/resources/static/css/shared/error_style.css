@@ -1,0 +1,55 @@
+body {
+    margin: 0;
+    font-family: "IBM Plex Sans", sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-page { padding: 24px; }
+
+.error-card {
+    background: var(--panel);
+    max-width: 420px;
+    margin: 0 auto;
+    padding: 48px 40px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    text-align: center;
+}
+
+.error-code {
+    font-family: "Fraunces", serif;
+    font-size: 64px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 12px;
+}
+
+.error-title {
+    font-family: "Fraunces", serif;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 10px;
+}
+
+.error-subtitle {
+    font-size: 14px;
+    color: var(--slate);
+    line-height: 1.6;
+    margin-bottom: 28px;
+}
+
+.btn-primary {
+    display: inline-block;
+    background: var(--ink);
+    color: #fff;
+    padding: 12px 28px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+.btn-primary:hover { background: var(--ink-soft); }

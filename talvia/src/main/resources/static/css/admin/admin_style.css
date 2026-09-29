@@ -1,0 +1,389 @@
+/* ============================================
+   ADMIN — estilos compartidos por las 6 vistas
+   Reutiliza variables/paleta ya definidas en
+   shared/variables.css
+============================================ */
+
+/* ── Resaltar link activo en el menú ── */
+.admin-nav a.nav-active {
+    color: #fff;
+    font-weight: 600;
+}
+
+/* ── Encabezado de página ── */
+.admin-page-header {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 40px 40px 0;
+}
+.admin-page-eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-deep);
+    margin-bottom: 8px;
+}
+.admin-page-title {
+    font-family: "Fraunces", serif;
+    font-size: 30px;
+    color: var(--ink);
+    margin-bottom: 6px;
+}
+.admin-page-subtitle {
+    font-size: 14px;
+    color: var(--slate);
+    margin-bottom: 28px;
+}
+
+/* ── Contenedor general de página ── */
+.admin-container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 40px 80px;
+}
+
+/* ── Tarjetas de estadísticas (dashboard) ── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 32px;
+}
+.stat-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+}
+.stat-card-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 10px;
+}
+.stat-card-value {
+    font-family: "Fraunces", serif;
+    font-size: 34px;
+    font-weight: 600;
+    color: var(--ink);
+}
+.stat-card-value.accent-green { color: var(--green); }
+.stat-card-value.accent-red { color: #d93838; }
+.stat-card-sub {
+    font-size: 12px;
+    color: var(--slate);
+    margin-top: 4px;
+}
+
+/* ── Gráfico de barras simple (sin librerías) ── */
+.chart-box {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 32px;
+}
+.chart-box h3 {
+    font-family: "Fraunces", serif;
+    font-size: 17px;
+    color: var(--ink);
+    margin-bottom: 20px;
+}
+.bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 160px;
+    padding-top: 20px;
+}
+.bar-chart-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    justify-content: flex-end;
+}
+.bar-chart-bar {
+    width: 100%;
+    max-width: 36px;
+    background: var(--gold);
+    border-radius: 4px 4px 0 0;
+    transition: height 0.4s ease;
+    min-height: 3px;
+}
+.bar-chart-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    color: var(--slate);
+    white-space: nowrap;
+}
+
+/* ── Barra de filtros/búsqueda reutilizable ── */
+.admin-toolbar {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 20px;
+    justify-content: space-between;
+}
+.admin-toolbar-filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+.admin-search-input {
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-family: "IBM Plex Sans", sans-serif;
+    min-width: 220px;
+    background: #fff;
+}
+
+/* ── Tabla genérica ── */
+.admin-table-wrapper {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    overflow-x: auto;
+}
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+.admin-table th {
+    text-align: left;
+    padding: 14px 18px;
+    background: var(--bg);
+    color: var(--ink-soft);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--line);
+    white-space: nowrap;
+}
+.admin-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--line);
+    color: var(--ink);
+    vertical-align: middle;
+}
+.admin-table tr:last-child td { border-bottom: none; }
+.admin-table tr:hover td { background: var(--bg); }
+
+.admin-table-empty, .admin-table-loading {
+    text-align: center;
+    padding: 50px 20px;
+    color: var(--slate);
+}
+
+/* ── Badges de estado genéricos ── */
+.badge-estado {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    display: inline-block;
+}
+.badge-activo, .badge-abierta, .badge-aceptado { background: var(--green-bg); color: var(--green); }
+.badge-inactivo, .badge-cerrada, .badge-rechazado { background: #fdecec; color: #d93838; }
+.badge-pausada, .badge-pendiente { background: #fbf3e3; color: var(--gold-deep); }
+.badge-en-proceso { background: #e6eef5; color: var(--ink-soft); }
+
+/* ── Botones de acción en tabla ── */
+.btn-tabla {
+    background: var(--bg);
+    color: var(--ink);
+    border: 1px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.btn-tabla:hover { background: var(--line); }
+.btn-tabla-peligro { background: #fdf2f2; color: #d93838; border-color: #f8d7d7; }
+.btn-tabla-peligro:hover { background: #fbe4e4; }
+
+/* ── Modal genérico de detalle (reutiliza .modal-overlay/.modal-card ya definidos) ── */
+.detalle-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+.detalle-item-label {
+    font-size: 11px;
+    color: var(--slate);
+    text-transform: uppercase;
+    font-family: "IBM Plex Mono", monospace;
+    margin-bottom: 3px;
+}
+.detalle-item-value {
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+}
+
+/* ── Configuración (formulario simple) ── */
+.config-form-box {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 28px;
+    max-width: 560px;
+}
+.config-field { margin-bottom: 20px; }
+.config-field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+}
+.config-field-hint {
+    font-size: 12px;
+    color: var(--slate);
+    margin-top: 5px;
+}
+.config-field input, .config-field select {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 14px;
+}
+.config-switch-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-top: 1px solid var(--line);
+}
+.config-switch-row:first-child { border-top: none; }
+
+/* ── Modal (detalle de usuario) ── */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(12, 55, 74, 0.55);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1100;
+}
+
+.modal-card {
+    background: #fff;
+    color: var(--ink);
+    padding: 30px;
+    border-radius: var(--radius);
+    max-width: 440px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.modal-card h3 {
+    font-family: 'Fraunces', serif;
+    font-size: 20px;
+    margin-bottom: 18px;
+}
+
+/* ── Grupos de filtro con etiqueta ── */
+.admin-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.admin-filter-label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ── Select con flecha personalizada ── */
+.admin-toolbar-filters select.filter-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235c7688' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E") no-repeat right 12px center;
+    background-size: 13px;
+    padding: 10px 34px 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-family: "IBM Plex Sans", sans-serif;
+    color: var(--ink);
+    min-width: 170px;
+    cursor: pointer;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.admin-toolbar-filters select.filter-select:hover {
+    border-color: var(--gold-deep);
+}
+
+.admin-toolbar-filters select.filter-select:focus {
+    outline: none;
+    border-color: var(--ink-soft);
+    box-shadow: 0 0 0 3px rgba(45,90,112,0.12);
+}
+
+/* ── Inputs de fecha, mismo lenguaje visual que el select ── */
+.admin-toolbar-filters input[type="date"] {
+    padding: 9px 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-family: "IBM Plex Sans", sans-serif;
+    color: var(--ink);
+    background: #fff;
+    min-width: 150px;
+    cursor: pointer;
+}
+
+.admin-toolbar-filters input[type="date"]:hover {
+    border-color: var(--gold-deep);
+}
+
+.admin-toolbar-filters input[type="date"]:focus {
+    outline: none;
+    border-color: var(--ink-soft);
+    box-shadow: 0 0 0 3px rgba(45,90,112,0.12);
+}
+
+/* ── Botón para limpiar filtros (opcional, se agrega en el paso siguiente) ── */
+.admin-clear-filters {
+    background: transparent;
+    border: none;
+    color: var(--slate);
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    align-self: flex-end;
+    padding: 10px 0;
+}
+.admin-clear-filters:hover { color: #d93838; }

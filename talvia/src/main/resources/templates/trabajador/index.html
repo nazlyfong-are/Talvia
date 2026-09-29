@@ -7,15 +7,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/shared/variables.css}">
-<link rel="stylesheet" th:href="@{/css/shared/base.css}">
-<link rel="stylesheet" th:href="@{/css/shared/header.css}">
-<link rel="stylesheet" th:href="@{/css/shared/hero.css}">
-<link rel="stylesheet" th:href="@{/css/shared/layout.css}">
-<link rel="stylesheet" th:href="@{/css/shared/filters_pagination.css}">
-<link rel="stylesheet" th:href="@{/css/shared/job-card.css}">
-<link rel="stylesheet" th:href="@{/css/shared/cta.css}">
-<link rel="stylesheet" th:href="@{/css/shared/footer.css}">
+    <th:block th:replace="~{fragments/shared-css :: links}"></th:block>
 </head>
 
 <body>
@@ -27,17 +19,34 @@
             <div class="brand-name">Tal<span>via</span></div>
         </div>
 
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menú">☰</button>
+
         <nav class="top-nav">
-            <a href="#vacantes" class="btn-vacantes">Vacantes</a>
-            <a th:href="@{/private/trabajador/postulaciones}" style="color: #fff; font-weight: 600;">Mis Postulaciones</a>
-            <a th:href="@{/private/trabajador/empresas}" style="color: #fff; font-weight: 600;">Empresas</a>
-            <a th:href="@{/private/trabajador/perfil}" style="color: #fff; font-weight: 600;">Mi Perfil</a>
+            <a th:href="@{/private/trabajador/index}" style="color: #fff; font-weight: 600;">Inicio</a>
+            <a th:href="@{/private/trabajador/empresas}">Empresas</a>
+            <a th:href="@{/private/trabajador/postulaciones}">Mis Postulaciones</a>
+            <a th:href="@{/private/trabajador/favoritos}">Guardadas</a>
+            <a th:href="@{/private/trabajador/perfil}">Mi Perfil</a>
         </nav>
+
+        <div class="notif-wrapper">
+            <button class="notif-bell-btn" id="notif-bell-btn" title="Notificaciones">
+                🔔
+                <span class="notif-badge oculto" id="notif-badge">0</span>
+            </button>
+            <div class="notif-panel" id="notif-panel">
+                <div class="notif-panel-header">
+                    <h4>Notificaciones</h4>
+                    <button class="notif-marcar-todas" id="notif-marcar-todas">Marcar todas como leídas</button>
+                </div>
+                <div class="notif-list" id="notif-list"></div>
+            </div>
+        </div>
 
         <button class="btn-publish" style="background: transparent; border: 1px solid #d93838; color: #d93838;" id="logoutBtn">Cerrar Sesión</button>
     </div>
 </header>
-
+<div class="nav-backdrop" id="nav-backdrop"></div>
 <section class="hero">
     <div class="hero-inner">
         <div class="hero-eyebrow">Bolsa de empleo para empresas aliadas</div>
@@ -130,13 +139,13 @@
         <div class="filter-group">
             <label class="filter-label" for="levelSelect">Nivel del cargo</label>
             <select id="levelSelect" class="filter-select">
-    <option value="todos">Todos los niveles</option>
-    <option value="entrada">Nivel de entrada</option>
-    <option value="intermedio">Nivel intermedio</option>
-    <option value="avanzado">Avanzado / Especializado</option>
-    <option value="coordinacion">Coordinación / Supervisión</option>
-    <option value="gerencia">Gerencia / Dirección</option>
-</select>
+                <option value="todos">Todos los niveles</option>
+                <option value="entrada">Nivel de entrada</option>
+                <option value="intermedio">Nivel intermedio</option>
+                <option value="avanzado">Avanzado / Especializado</option>
+                <option value="coordinacion">Coordinación / Supervisión</option>
+                <option value="gerencia">Gerencia / Dirección</option>
+            </select>
         </div>
     </aside>
 
@@ -154,7 +163,11 @@
             </select>
         </div>
 
-        <div class="job-list" id="jobList"></div>
+        <div class="job-list" id="jobList">
+            <div class="skeleton-loader skeleton-card"></div>
+            <div class="skeleton-loader skeleton-card"></div>
+            <div class="skeleton-loader skeleton-card"></div>
+        </div>
 
         <div class="pagination-container" id="paginationContainer">
             <button class="page-btn" id="prevPageBtn" disabled>&laquo; Anterior</button>
@@ -168,7 +181,8 @@
 <footer class="footer">
     © 2026 Talvia · Tablero de vacantes para empresas aliadas
 </footer>
-
+<script th:src="@{/js/shared/notificaciones.js}"></script>
+<script th:src="@{/js/shared/mobile-nav.js}"></script>
 <script th:src="@{/js/trabajador/filtros_paginacion.js}"></script>
 <script th:src="@{/js/trabajador/index.js}"></script>
 </body>

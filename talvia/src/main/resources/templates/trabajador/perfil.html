@@ -7,15 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" th:href="@{/css/shared/variables.css}">
-    <link rel="stylesheet" th:href="@{/css/shared/base.css}">
-    <link rel="stylesheet" th:href="@{/css/shared/header.css}">
-    <link rel="stylesheet" th:href="@{/css/shared/hero.css}">
-    <link rel="stylesheet" th:href="@{/css/shared/layout.css}">
-    <link rel="stylesheet" th:href="@{/css/shared/filters-pagination.css}">
-    <link rel="stylesheet" th:href="@{/css/shared/job-card.css}">
-    <link rel="stylesheet" th:href="@{/css/shared/cta.css}">
-    <link rel="stylesheet" th:href="@{/css/shared/footer.css}">
+    <th:block th:replace="~{fragments/shared-css :: links}"></th:block>
     <link rel="stylesheet" th:href="@{/css/trabajador/perfil_style.css}">
 </head>
 <body>
@@ -23,19 +15,36 @@
 <header class="top">
     <div class="top-inner">
         <div class="brand">
-            <div class="brand-mark">V</div>
+            <div class="brand-mark">TV</div>
             <div class="brand-name">Tal<span>via</span></div>
         </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menú">☰</button>
         <nav class="top-nav">
             <a th:href="@{/private/trabajador/index}">Inicio</a>
-            <a th:href="@{/private/trabajador/index}+'#vacantes'">Vacantes</a>
             <a th:href="@{/private/trabajador/empresas}">Empresas</a>
             <a th:href="@{/private/trabajador/postulaciones}">Mis Postulaciones</a>
+            <a th:href="@{/private/trabajador/favoritos}">Guardadas</a>
             <a th:href="@{/private/trabajador/perfil}" style="color:#fff;font-weight:600;">Mi Perfil</a>
         </nav>
+
+        <div class="notif-wrapper">
+            <button class="notif-bell-btn" id="notif-bell-btn" title="Notificaciones">
+                🔔
+                <span class="notif-badge oculto" id="notif-badge">0</span>
+            </button>
+            <div class="notif-panel" id="notif-panel">
+                <div class="notif-panel-header">
+                    <h4>Notificaciones</h4>
+                    <button class="notif-marcar-todas" id="notif-marcar-todas">Marcar todas como leídas</button>
+                </div>
+                <div class="notif-list" id="notif-list"></div>
+            </div>
+        </div>
+
+        <button class="btn-publish" style="background: transparent; border: 1px solid #d93838; color: #d93838;" id="logoutBtn">Cerrar Sesión</button>
     </div>
 </header>
-
+<div class="nav-backdrop" id="nav-backdrop"></div>
 <section class="hero" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:24px;">
 
     <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
@@ -47,19 +56,18 @@
 
         <div>
             <div class="hero-eyebrow">Panel del Candidato</div>
-            <h1 class="hero-title" style="margin-bottom:6px;">
-                <span class="editable-field" id="campo-nombres" contenteditable="false">Nombre</span>
-                <span class="editable-field" id="campo-primer-apellido" contenteditable="false">Apellido</span>
-                <span class="editable-field" id="campo-segundo-apellido" contenteditable="false">Apellido</span>
+            <h1 class="hero-title" style="margin-bottom:6px; display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+                <span class="editable-field hero-skel skeleton-loader skeleton-text" id="campo-nombres" contenteditable="false" style="width:110px;"></span>
+                <span class="editable-field hero-skel skeleton-loader skeleton-text" id="campo-primer-apellido" contenteditable="false" style="width:90px;"></span>
+                <span class="editable-field hero-skel skeleton-loader skeleton-text" id="campo-segundo-apellido" contenteditable="false" style="width:90px;"></span>
             </h1>
-            <p class="editable-field" id="campo-especialidad" contenteditable="false" style="color:var(--gold); font-size:18px; font-family:'IBM Plex Sans',sans-serif; font-weight:500; margin-bottom:10px; display:inline-block;">
-                Especialidad / cargo
+            <p class="editable-field hero-skel skeleton-loader skeleton-text" id="campo-especialidad" contenteditable="false" style="color:var(--gold); font-size:18px; font-family:'IBM Plex Sans',sans-serif; font-weight:500; margin-bottom:10px; width:220px; height:1.1em;">
             </p>
             <br>
             <p class="hero-description" style="margin-bottom:0;">
-                📍 <span class="editable-field" id="campo-ciudad" contenteditable="false">Ciudad</span>
-                &nbsp;|&nbsp; ✉️ <span id="campo-correo">correo@ejemplo.com</span>
-                &nbsp;|&nbsp; 📱 <span class="editable-field" id="campo-telefono" contenteditable="false">Teléfono</span>
+                📍 <span class="editable-field hero-skel skeleton-loader skeleton-text" id="campo-ciudad" contenteditable="false" style="width:90px;"></span>
+                &nbsp;|&nbsp; ✉️ <span class="hero-skel skeleton-loader skeleton-text" id="campo-correo" style="width:150px;"></span>
+                &nbsp;|&nbsp; 📱 <span class="editable-field hero-skel skeleton-loader skeleton-text" id="campo-telefono" contenteditable="false" style="width:100px;"></span>
             </p>
         </div>
     </div>
@@ -106,7 +114,10 @@
             </label>
             <p style="font-size:12px; color:var(--slate); margin-bottom:12px;">Puedes tener hasta 4 CVs distintos (ej: uno por área) y elegir cuál enviar en cada postulación.</p>
 
-            <div id="cvs-container" style="display:grid; gap:10px; margin-bottom:14px;"></div>
+            <div id="cvs-container" style="display:grid; gap:10px; margin-bottom:14px;">
+                <div class="skeleton-loader skeleton-block"></div>
+                <div class="skeleton-loader skeleton-block"></div>
+            </div>
 
             <div id="subir-cv-form" class="cv-item" style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
                 <input type="text" id="nuevo-cv-nombre" placeholder="Nombre del CV (ej: CV Desarrollador)" style="flex:1; min-width:200px; padding:8px 10px; border:1px solid var(--line); border-radius:6px; font-size:13px;">
@@ -118,21 +129,29 @@
         <!-- FORMACIÓN -->
         <div class="filter-group" style="border:none; margin-bottom:30px;">
             <label class="filter-label" style="font-size:14px; color:var(--ink); margin-bottom:14px;">Formación Académica</label>
-            <div id="formaciones-container" style="display:grid; gap:16px;"></div>
+            <div id="formaciones-container" style="display:grid; gap:16px;">
+                <div class="skeleton-loader skeleton-block"></div>
+                <div class="skeleton-loader skeleton-block"></div>
+            </div>
             <button type="button" class="btn-apply oculto btn-agregar" id="add-formacion" style="margin-top:12px;">+ Agregar formación</button>
         </div>
 
         <!-- EXPERIENCIA -->
         <div class="filter-group" style="border:none; margin-bottom:30px;">
             <label class="filter-label" style="font-size:14px; color:var(--ink); margin-bottom:14px;">Experiencia Profesional</label>
-            <div id="experiencias-container" style="display:grid; gap:16px;"></div>
+            <div id="experiencias-container" style="display:grid; gap:16px;">
+                <div class="skeleton-loader skeleton-block"></div>
+                <div class="skeleton-loader skeleton-block"></div>
+            </div>
             <button type="button" class="btn-apply oculto btn-agregar" id="add-experiencia" style="margin-top:12px;">+ Agregar experiencia</button>
         </div>
 
         <!-- CERTIFICACIONES -->
         <div class="filter-group" style="border:none; margin-bottom:30px;">
             <label class="filter-label" style="font-size:14px; color:var(--ink); margin-bottom:14px;">Certificaciones</label>
-            <div id="certificaciones-container" style="display:grid; gap:16px;"></div>
+            <div id="certificaciones-container" style="display:grid; gap:16px;">
+                <div class="skeleton-loader skeleton-block"></div>
+            </div>
             <button type="button" class="btn-apply oculto btn-agregar" id="add-certificacion" style="margin-top:12px;">+ Agregar certificación</button>
         </div>
 
@@ -140,7 +159,10 @@
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px;">
             <div>
                 <label class="filter-label" style="font-size:14px; color:var(--ink); margin-bottom:10px;">Idiomas</label>
-                <div class="tag-row" id="idiomas-tags"></div>
+                <div class="tag-row" id="idiomas-tags">
+                    <span class="skeleton-loader skeleton-tag"></span>
+                    <span class="skeleton-loader skeleton-tag"></span>
+                </div>
                 <div class="tag-input-row oculto" id="idiomas-input-row">
                     <input type="text" id="idioma-nuevo" placeholder="Ej: Inglés (B2)" class="tag-input">
                     <button type="button" id="add-idioma" class="btn-add-tag">+</button>
@@ -148,7 +170,11 @@
             </div>
             <div>
                 <label class="filter-label" style="font-size:14px; color:var(--ink); margin-bottom:10px;">Habilidades Técnicas</label>
-                <div class="tag-row" id="habilidades-tags"></div>
+                <div class="tag-row" id="habilidades-tags">
+                    <span class="skeleton-loader skeleton-tag"></span>
+                    <span class="skeleton-loader skeleton-tag"></span>
+                    <span class="skeleton-loader skeleton-tag"></span>
+                </div>
                 <div class="tag-input-row oculto" id="habilidades-input-row">
                     <input type="text" id="habilidad-nueva" placeholder="Ej: React" class="tag-input">
                     <button type="button" id="add-habilidad" class="btn-add-tag">+</button>
@@ -199,6 +225,8 @@
     <p>&copy; 2026 Talvia - Proyecto Académico. Todos los derechos reservados.</p>
 </footer>
 
+<script th:src="@{/js/shared/notificaciones.js}"></script>
+<script th:src="@{/js/shared/mobile-nav.js}"></script>
 <script th:src="@{/js/trabajador/perfil.js}"></script>
 </body>
 </html>

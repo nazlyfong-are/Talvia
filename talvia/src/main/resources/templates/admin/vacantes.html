@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vacantes — Panel Admin — Talvia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <th:block th:replace="~{fragments/shared-css :: links}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_style.css}">
+</head>
+<body>
+
+<th:block th:replace="~{fragments/admin-header :: header('vacantes')}"></th:block>
+
+<div class="admin-page-header">
+    <div class="admin-page-eyebrow">Panel de administración</div>
+    <h1 class="admin-page-title">Vacantes</h1>
+    <p class="admin-page-subtitle">Todas las vacantes publicadas en la plataforma.</p>
+</div>
+
+<div class="admin-container">
+
+    <div class="admin-toolbar">
+    <input type="text" id="buscar-vacante" class="admin-search-input" placeholder="Buscar por título o empresa…">
+    <div class="admin-toolbar-filters">
+        <div class="admin-filter-group">
+            <label class="admin-filter-label" for="filtro-estado-vacante">Estado</label>
+            <select id="filtro-estado-vacante" class="filter-select">
+                <option value="">Todos los estados</option>
+                <option value="ABIERTA">Abierta</option>
+                <option value="PAUSADA">Pausada</option>
+                <option value="CERRADA">Cerrada</option>
+            </select>
+        </div>
+        <div class="admin-filter-group">
+            <label class="admin-filter-label" for="filtro-area-vacante">Área</label>
+            <select id="filtro-area-vacante" class="filter-select">
+                <option value="">Todas las áreas</option>
+                <option value="tecnologia">Tecnología & IT</option>
+                <option value="ventas">Ventas y Comercial</option>
+                <option value="logistica">Logística y Transporte</option>
+                <option value="finanzas">Finanzas y Contabilidad</option>
+                <option value="salud">Salud y Medicina</option>
+                <option value="administracion">Administración</option>
+                <option value="marketing">Marketing y Publicidad</option>
+                <option value="ingenieria">Ingeniería</option>
+                <option value="educacion">Educación</option>
+                <option value="legal">Legal y Jurídico</option>
+                <option value="recursos-humanos">Recursos Humanos</option>
+                <option value="construccion">Construcción</option>
+                <option value="atencion-cliente">Atención al cliente</option>
+                <option value="produccion">Producción y Manufactura</option>
+                <option value="diseno">Diseño y Artes</option>
+                <option value="gastronomia">Gastronomía y Turismo</option>
+            </select>
+        </div>
+        <button type="button" class="admin-clear-filters" id="btn-limpiar-filtros-vacantes">Limpiar filtros</button>
+    </div>
+</div>
+
+    <div class="admin-table-wrapper">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Empresa</th>
+                    <th>Área</th>
+                    <th>Publicación</th>
+                    <th>Postulaciones</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="vacantes-tbody">
+                <tr><td colspan="7" class="admin-table-loading">Cargando vacantes...</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination-container" id="paginacion" style="margin-top:20px;"></div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script th:src="@{/js/shared/notificaciones.js}"></script>
+<script th:src="@{/js/shared/mobile-nav.js}"></script>
+<script th:src="@{/js/admin/admin-common.js}"></script>
+<script th:src="@{/js/admin/vacantes.js}"></script>
+</body>
+</html>

@@ -21,6 +21,8 @@ window.addEventListener('load', async () => {
 
         resultsCount.textContent = `Mostrando ${empresas.length} ${empresas.length === 1 ? 'organización' : 'organizaciones'}`;
 
+        contenedor.innerHTML = '';
+
         empresas.forEach((empresa) => {
             const iniciales = empresa.razonSocial ? empresa.razonSocial.substring(0, 2).toUpperCase() : 'EM';
             const logoHTML = empresa.logoUrl
@@ -55,6 +57,10 @@ window.addEventListener('load', async () => {
 });
 
 function verPerfilEmpresa(id) {
-    // Pendiente: pagina de detalle de empresa
     window.location.href = `/private/trabajador/empresa?id=${id}`;
 }
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+    try { await fetch('/api/auth/logout', { method: 'POST' }); }
+    finally { window.location.href = '/public/login'; }
+});

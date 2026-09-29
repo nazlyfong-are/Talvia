@@ -1,15 +1,26 @@
-/*
+/* ============================================
    PERFIL TRABAJADOR — Carga, edición y guardado real
    Incluye: datos básicos, foto, hasta 4 CVs, formación,
-   experiencia, certificaciones, idiomas y habilidades
- */
+   experiencia, certificaciones, idiomas, habilidades
+   y eliminación de cuenta.
+
+   OPTIMIZACIÓN: perfil y CVs se cargan en PARALELO,
+   no uno esperando al otro (antes tardaban ~1.2s
+   sumados en serie, ahora tardan lo que tarde el más
+   lento de los dos).
+============================================ */
 
 let perfilActual = null;
 let editando = false;
 const MAX_CVS = 4;
 
-/* CARGA INICIAL */
-window.addEventListener('load', async () => {
+/* ── CARGA INICIAL (en paralelo) ── */
+window.addEventListener('load', () => {
+    cargarPerfil();
+    cargarCvs();
+});
+
+async function cargarPerfil() {
     try {
         const response = await fetch('/api/trabajador/perfil');
         if (!response.ok) throw new Error('No se pudo cargar el perfil.');
@@ -18,10 +29,16 @@ window.addEventListener('load', async () => {
     } catch (err) {
         alert('Error cargando el perfil: ' + err.message);
     }
-    cargarCvs();
-});
+}
 
 function pintarPerfil(p) {
+    // Quita el efecto skeleton de los campos del encabezado
+    document.querySelectorAll('.hero-skel').forEach(el => {
+        el.classList.remove('skeleton-loader', 'skeleton-text');
+        el.style.width = '';
+        el.style.height = '';
+    });
+
     document.getElementById('campo-nombres').textContent = p.nombres || '';
     document.getElementById('campo-primer-apellido').textContent = p.primerApellido || '';
     document.getElementById('campo-segundo-apellido').textContent = p.segundoApellido || '';
@@ -39,7 +56,7 @@ function pintarPerfil(p) {
     pintarTags('habilidades-tags', p.habilidadesTecnicas || []);
 }
 
-/*HOJAS DE VIDA (hasta 4)*/
+/* ── HOJAS DE VIDA (hasta 4) ── */
 function pintarCvs(lista) {
     const cont = document.getElementById('cvs-container');
     const contador = document.getElementById('cvs-contador');
@@ -118,7 +135,7 @@ async function eliminarCv(cvId) {
     }
 }
 
-/*RENDER: FORMACION*/
+/* ── RENDER: FORMACIÓN ── */
 function pintarFormaciones(lista) {
     const cont = document.getElementById('formaciones-container');
     cont.innerHTML = '';
@@ -187,7 +204,7 @@ function crearFilaFormacion(f = {}) {
     return div;
 }
 
-/*RENDER: EXPERIENCIA*/
+/* ── RENDER: EXPERIENCIA ── */
 function pintarExperiencias(lista) {
     const cont = document.getElementById('experiencias-container');
     cont.innerHTML = '';
@@ -213,7 +230,7 @@ function crearFilaExperiencia(e = {}) {
     return div;
 }
 
-/* RENDER: CERTIFICACIONES */
+/* ── RENDER: CERTIFICACIONES ── */
 function pintarCertificaciones(lista) {
     const cont = document.getElementById('certificaciones-container');
     cont.innerHTML = '';
@@ -273,7 +290,7 @@ document.getElementById('add-certificacion').addEventListener('click', () => {
     document.getElementById('certificaciones-container').appendChild(crearFilaCertificacion());
 });
 
-/* RENDER: TAGS (idiomas / habilidades)*/
+/* ── RENDER: TAGS (idiomas / habilidades) ── */
 function pintarTags(contenedorId, lista) {
     const cont = document.getElementById(contenedorId);
     cont.innerHTML = '';
@@ -303,7 +320,7 @@ document.getElementById('add-habilidad').addEventListener('click', () => {
     input.value = '';
 });
 
-/* AGREGAR NUEVA FORMACION / EXPERIENCIA  */
+/* ── AGREGAR NUEVA FORMACIÓN / EXPERIENCIA ── */
 document.getElementById('add-formacion').addEventListener('click', () => {
     document.getElementById('formaciones-container').appendChild(crearFilaFormacion());
 });
@@ -311,7 +328,7 @@ document.getElementById('add-experiencia').addEventListener('click', () => {
     document.getElementById('experiencias-container').appendChild(crearFilaExperiencia());
 });
 
-/* TOGGLE MODO EDICION  */
+/* ── TOGGLE MODO EDICIÓN ── */
 document.getElementById('btn-editar').addEventListener('click', () => {
     editando = true;
     document.querySelectorAll('.editable-field').forEach(el => el.contentEditable = 'true');
@@ -327,7 +344,7 @@ document.getElementById('btn-editar').addEventListener('click', () => {
 
 document.getElementById('btn-guardar').addEventListener('click', guardarCambios);
 
-/*SUBIDA DE FOTO (inmediata al seleccionar)*/
+/* ── SUBIDA DE FOTO (inmediata al seleccionar) ── */
 document.getElementById('input-foto').addEventListener('change', async (e) => {
     const archivo = e.target.files[0];
     if (!archivo) return;
@@ -343,7 +360,7 @@ document.getElementById('input-foto').addEventListener('change', async (e) => {
     }
 });
 
-/* GUARDAR CAMBIOS DE TEXTO/CV  */
+/* ── GUARDAR CAMBIOS DE TEXTO/CV ── */
 async function guardarCambios() {
     const body = {
         nombres: document.getElementById('campo-nombres').textContent.trim(),
@@ -405,7 +422,7 @@ async function guardarCambios() {
     }
 }
 
-/*  ELIMINAR CUENTA  */
+/* ── ELIMINAR CUENTA ── */
 document.getElementById('btn-abrir-eliminar-cuenta').addEventListener('click', () => {
     document.getElementById('modalEliminarCuenta').style.display = 'flex';
 });
@@ -452,4 +469,9 @@ document.getElementById('form-confirmar-eliminacion').addEventListener('submit',
     } catch (err) {
         alert('Error al eliminar la cuenta: ' + err.message);
     }
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+    try { await fetch('/api/auth/logout', { method: 'POST' }); }
+    finally { window.location.href = '/public/login'; }
 });

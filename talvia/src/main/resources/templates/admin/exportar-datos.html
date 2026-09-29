@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exportar Datos — Panel Admin — Talvia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <th:block th:replace="~{fragments/shared-css :: links}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/admin/admin_style.css}">
+</head>
+<body>
+
+<th:block th:replace="~{fragments/admin-header :: header('exportar')}"></th:block>
+
+<div class="admin-page-header">
+    <div class="admin-page-eyebrow">Panel de administración</div>
+    <h1 class="admin-page-title">Exportar datos</h1>
+    <p class="admin-page-subtitle">Descarga un CSV con las postulaciones para análisis de datos.</p>
+</div>
+
+<div class="admin-container">
+
+    <div class="config-form-box">
+        <div class="config-field">
+            <label>Rango de fechas (opcional)</label>
+            <div style="display:flex; gap:10px;">
+                <input type="date" id="export-desde">
+                <input type="date" id="export-hasta">
+            </div>
+            <p class="config-field-hint">Deja los campos vacíos para exportar todo el historial.</p>
+        </div>
+
+        <button type="button" class="btn-publish" id="btn-exportar" style="width:100%; text-align:center; background:var(--gold); color:var(--ink); font-weight:600;">
+            📥 Descargar CSV de postulaciones
+        </button>
+
+        <p class="config-field-hint" style="margin-top:16px;">
+            El archivo incluye: experiencia del candidato, nivel educativo, salario esperado,
+            presupuesto de la vacante, área, ciudad, modalidad, nivel del cargo y estado final
+            de cada postulación.
+        </p>
+    </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script th:src="@{/js/shared/notificaciones.js}"></script>
+<script th:src="@{/js/shared/mobile-nav.js}"></script>
+<script th:src="@{/js/admin/admin-common.js}"></script>
+<script th:src="@{/js/admin/exportar-datos.js}"></script>
+</body>
+</html>

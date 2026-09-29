@@ -1,0 +1,12 @@
+package com.talvia.talvia.model.enums;
+
+public enum TipoNotificacion {
+    POSTULACION_ACEPTADA,
+    POSTULACION_RECHAZADA,
+    POSTULACION_EN_PROCESO,
+    CV_VISTO,
+    CUENTA_VERIFICADA,
+    NUEVO_CANDIDATO,
+    VACANTE_PUBLICADA,
+    VACANTE_SIN_CANDIDATOS
+}
