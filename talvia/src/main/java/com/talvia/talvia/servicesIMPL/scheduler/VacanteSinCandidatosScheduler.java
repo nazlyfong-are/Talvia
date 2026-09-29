@@ -22,12 +22,9 @@ import com.talvia.talvia.services.notificacion.NotificacionService;
 @RestController
 public class VacanteSinCandidatosScheduler {
 
-    @Autowired
-    private VacanteRepository vacanteRepository;
-    @Autowired
-    private PostulacionRepository postulacionRepository;
-    @Autowired
-    private NotificacionService notificacionService;
+    @Autowired private VacanteRepository vacanteRepository;
+    @Autowired private PostulacionRepository postulacionRepository;
+    @Autowired private NotificacionService notificacionService;
 
     @Autowired
 private ConfiguracionSistemaRepository configRepository;

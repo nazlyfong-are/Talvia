@@ -1,5 +1,5 @@
 /* ============================================
-   DASHBOARD EMPRESA — Publicar / editar / pausar / eliminar vacantes
+   DASHBOARD EMPRESA — Publicar / editar / pausar / cerrar / eliminar vacantes
 ============================================ */
 
 let vacanteEditandoId = null;
@@ -164,7 +164,7 @@ function cancelarEdicion() {
     document.getElementById('requisitos-container').innerHTML = '';
 }
 
-/* ── LISTAR MIS VACANTES (con estado, editar, pausar) ── */
+/* ── LISTAR MIS VACANTES (con estado, editar, pausar, cerrar) ── */
 async function cargarMisVacantes() {
     const cont = document.getElementById('lista-mis-vacantes');
     try {
@@ -180,20 +180,30 @@ async function cargarMisVacantes() {
         cont.innerHTML = '';
         vacantes.forEach(v => {
             const pausada = v.estado === 'PAUSADA';
+            const cerrada = v.estado === 'CERRADA';
+
+            let badge = '';
+            if (pausada) {
+                badge = '<span style="font-family:\'IBM Plex Mono\',monospace; font-size:10px; background:#fbf3e3; color:var(--gold-deep); padding:2px 8px; border-radius:10px;">PAUSADA</span>';
+            } else if (cerrada) {
+                badge = '<span style="font-family:\'IBM Plex Mono\',monospace; font-size:10px; background:#fdecec; color:#d93838; padding:2px 8px; border-radius:10px;">CERRADA</span>';
+            }
+
             const fila = document.createElement('div');
             fila.style.cssText = "display:flex; justify-content: space-between; align-items: center; gap: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 14px 16px; flex-wrap: wrap;";
             fila.innerHTML = `
                 <div>
                     <div style="font-weight: 600; color: var(--ink); font-size: 14px; display:flex; align-items:center; gap:8px;">
                         ${v.titulo || 'Sin título'}
-                        ${pausada ? '<span style="font-family:\'IBM Plex Mono\',monospace; font-size:10px; background:#fbf3e3; color:var(--gold-deep); padding:2px 8px; border-radius:10px;">PAUSADA</span>' : ''}
+                        ${badge}
                     </div>
                     <div style="font-size: 12.5px; color: var(--slate);">${v.ubicacion || ''} ${v.salario ? '• ' + v.salario : ''}</div>
                 </div>
                 <div style="display:flex; gap:8px; flex-wrap:wrap;">
                     <button type="button" data-id="${v.id}" class="btn-editar-vacante" style="background: var(--bg); color: var(--ink); border: 1px solid var(--line); padding: 7px 14px; border-radius: 4px; font-size: 12.5px; font-weight: 600; cursor: pointer;">✏️ Editar</button>
-                    <button type="button" data-id="${v.id}" data-estado="${v.estado}" class="btn-pausar-vacante" style="background: ${pausada ? 'var(--green-bg)' : '#fbf3e3'}; color: ${pausada ? 'var(--green)' : 'var(--gold-deep)'}; border: 1px solid ${pausada ? 'var(--green)' : 'var(--gold-deep)'}; padding: 7px 14px; border-radius: 4px; font-size: 12.5px; font-weight: 600; cursor: pointer;">${pausada ? '▶ Reactivar' : '⏸ Pausar'}</button>
-                    <button type="button" data-id="${v.id}" data-titulo="${v.titulo}" class="btn-eliminar-vacante" style="background: #fdf2f2; color: #d93838; border: 1px solid #f8d7d7; padding: 7px 14px; border-radius: 4px; font-size: 12.5px; font-weight: 600; cursor: pointer;">🗑 Eliminar</button>
+                    ${!cerrada ? `<button type="button" data-id="${v.id}" data-estado="${v.estado}" class="btn-pausar-vacante" style="background: ${pausada ? 'var(--green-bg)' : '#fbf3e3'}; color: ${pausada ? 'var(--green)' : 'var(--gold-deep)'}; border: 1px solid ${pausada ? 'var(--green)' : 'var(--gold-deep)'}; padding: 7px 14px; border-radius: 4px; font-size: 12.5px; font-weight: 600; cursor: pointer;">${pausada ? '▶ Reactivar' : '⏸ Pausar'}</button>` : ''}
+                    ${!cerrada ? `<button type="button" data-id="${v.id}" data-titulo="${v.titulo}" class="btn-cerrar-vacante" style="background: #fdf2f2; color: #d93838; border: 1px solid #f8d7d7; padding: 7px 14px; border-radius: 4px; font-size: 12.5px; font-weight: 600; cursor: pointer;">🔒 Cerrar</button>` : ''}
+                    <button type="button" data-id="${v.id}" data-titulo="${v.titulo}" data-cerrada="${cerrada}" class="btn-eliminar-vacante" style="background: #fdf2f2; color: #d93838; border: 1px solid #f8d7d7; padding: 7px 14px; border-radius: 4px; font-size: 12.5px; font-weight: 600; cursor: pointer;">🗑 Eliminar</button>
                 </div>
             `;
             cont.appendChild(fila);
@@ -205,8 +215,11 @@ async function cargarMisVacantes() {
         cont.querySelectorAll('.btn-pausar-vacante').forEach(btn => {
             btn.addEventListener('click', () => togglePausarVacante(btn.dataset.id, btn.dataset.estado));
         });
+        cont.querySelectorAll('.btn-cerrar-vacante').forEach(btn => {
+            btn.addEventListener('click', () => cerrarVacante(btn.dataset.id, btn.dataset.titulo));
+        });
         cont.querySelectorAll('.btn-eliminar-vacante').forEach(btn => {
-            btn.addEventListener('click', () => eliminarVacante(btn.dataset.id, btn.dataset.titulo));
+            btn.addEventListener('click', () => eliminarVacante(btn.dataset.id, btn.dataset.titulo, btn.dataset.cerrada === 'true'));
         });
     } catch (err) {
         cont.innerHTML = `<p style="color:red; font-size:13px;">Error: ${err.message}</p>`;
@@ -229,8 +242,29 @@ async function togglePausarVacante(id, estadoActual) {
     }
 }
 
-async function eliminarVacante(id, titulo) {
-    if (!confirm(`¿Seguro que quieres eliminar la vacante "${titulo}"? Esta acción no se puede deshacer.`)) return;
+async function cerrarVacante(id, titulo) {
+    if (!confirm(`¿Cerrar la vacante "${titulo}"? Se notificará a todos los candidatos que se postularon, y no podrás reabrirla desde aquí.`)) return;
+
+    try {
+        const resp = await fetch(`/api/empresa/vacantes/${id}/estado`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ estado: 'CERRADA' })
+        });
+        if (!resp.ok) throw new Error(await resp.text());
+        showToast('✓ Vacante cerrada. Se notificó a los candidatos.', 'success');
+        cargarMisVacantes();
+    } catch (err) {
+        showToast('Error al cerrar la vacante: ' + err.message, 'error');
+    }
+}
+
+async function eliminarVacante(id, titulo, estaCerrada) {
+    const mensaje = estaCerrada
+        ? `¿Eliminar "${titulo}"? Como está cerrada, esto también borrará permanentemente todas sus postulaciones e historial. Esta acción no se puede deshacer.`
+        : `¿Seguro que quieres eliminar la vacante "${titulo}"? Esta acción no se puede deshacer.`;
+
+    if (!confirm(mensaje)) return;
 
     try {
         const resp = await fetch(`/api/empresa/vacantes/${id}`, { method: 'DELETE' });

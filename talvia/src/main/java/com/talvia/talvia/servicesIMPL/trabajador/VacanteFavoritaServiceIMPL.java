@@ -2,7 +2,6 @@ package com.talvia.talvia.servicesIMPL.trabajador;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +22,10 @@ import jakarta.transaction.Transactional;
 @Service
 public class VacanteFavoritaServiceIMPL implements VacanteFavoritaService {
 
-    @Autowired
-    private VacanteFavoritaRespository favoritaRespository;
-    @Autowired
-    private TrabajadorRepository trabajadorRepository;
-    @Autowired
-    private VacanteRepository vacanteRepository;
-    @Autowired
-    private VacanteService vacanteService;
+    @Autowired private VacanteFavoritaRespository favoritaRespository;
+    @Autowired private TrabajadorRepository trabajadorRepository;
+    @Autowired private VacanteRepository vacanteRepository;
+    @Autowired private VacanteService vacanteService;
 
     @Override
     public void agregar(Long trabajadorId, Long vacanteId) {

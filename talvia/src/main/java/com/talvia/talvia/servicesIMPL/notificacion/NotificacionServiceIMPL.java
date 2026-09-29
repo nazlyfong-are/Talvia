@@ -21,8 +21,7 @@ import jakarta.transaction.Transactional;
 public class NotificacionServiceIMPL implements NotificacionService{
     private static final DateTimeFormatter FORMATO = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-    @Autowired
-    private NotificacionRepository notificacionRepository;
+    @Autowired private NotificacionRepository notificacionRepository;
 
     @Override
     public void crear(Usuario usuario, TipoNotificacion tipo, String mensaje, String urlDestino) {

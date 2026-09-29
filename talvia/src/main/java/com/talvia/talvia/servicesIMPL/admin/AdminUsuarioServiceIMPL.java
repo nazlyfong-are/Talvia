@@ -29,8 +29,7 @@ public class AdminUsuarioServiceIMPL implements AdminUsuarioService {
     private static final int TAMANO_PAGINA = 15;
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    @Autowired private UsuarioRepository usuarioRepository;
 
     @Override
     @Transactional(readOnly = true)

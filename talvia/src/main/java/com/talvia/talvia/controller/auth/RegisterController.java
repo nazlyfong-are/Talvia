@@ -17,8 +17,7 @@ import java.util.Map;
 @RequestMapping("/api/register")
 public class RegisterController {
 
-    @Autowired
-    private RegisterService registerService;
+    @Autowired private RegisterService registerService;
 
     @PostMapping(value = "/trabajador", consumes = "multipart/form-data")
     public ResponseEntity<?> registerTrabajador(@RequestPart("datos") RegisterTrabajadorDTO dto,

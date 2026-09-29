@@ -18,8 +18,7 @@ import java.util.stream.Collectors;
 @Service
 public class VacanteServiceIMPL implements VacanteService {
 
-    @Autowired
-    private VacanteRepository vacanteRepository;
+    @Autowired private VacanteRepository vacanteRepository;
 
     private static final DateTimeFormatter FORMATO_FECHA = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

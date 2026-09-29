@@ -21,8 +21,7 @@ import com.talvia.talvia.services.trabajador.PostulacionService;
 @RequestMapping("/api/postulaciones")
 public class PostulacionController {
 
-    @Autowired
-    private PostulacionService postulacionService;
+    @Autowired private PostulacionService postulacionService;
 
     @PostMapping
     public ResponseEntity<?> postularse(@AuthenticationPrincipal UserPrincipal principal, // <-- UserPrincipal en vez de

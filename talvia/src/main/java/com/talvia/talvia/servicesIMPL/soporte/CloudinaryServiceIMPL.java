@@ -1,6 +1,7 @@
 package com.talvia.talvia.servicesIMPL.soporte;
 
 import java.util.Map;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,11 +22,19 @@ public class CloudinaryServiceIMPL implements CloudinaryService {
     public CloudinaryUploadResultDTO subir(MultipartFile archivo, String carpeta) throws Exception {
         String resourceType = determinarResourceType(archivo);
 
-        Map<?, ?> resultado = cloudinary.uploader().upload(
-                archivo.getBytes(),
-                ObjectUtils.asMap("folder", carpeta, "resource_type", resourceType));
+        Map<String, Object> opciones = new java.util.HashMap<>();
+        opciones.put("folder", carpeta);
+        opciones.put("resource_type", resourceType);
 
-        System.out.println(">>> RESPUESTA CRUDA DE CLOUDINARY: " + resultado); // ← temporal, para diagnosticar
+        if ("raw".equals(resourceType)) {
+            String extension = extraerExtension(archivo.getOriginalFilename());
+            if (extension != null) {
+                String idUnico = UUID.randomUUID().toString();
+                opciones.put("public_id", idUnico + "." + extension);
+            }
+        }
+
+        Map<?, ?> resultado = cloudinary.uploader().upload(archivo.getBytes(), opciones);
 
         return new CloudinaryUploadResultDTO((String) resultado.get("secure_url"), (String) resultado.get("public_id"));
     }
@@ -34,9 +43,6 @@ public class CloudinaryServiceIMPL implements CloudinaryService {
     public void eliminar(String publicId) throws Exception {
         if (publicId == null || publicId.isBlank())
             return;
-        // "raw" cubre PDFs/documentos; si el recurso era imagen, Cloudinary igual
-        // permite destroy con resource_type explícito.
-        // Para simplificar, probamos primero como "image" y si falla, como "raw".
         try {
             cloudinary.uploader().destroy(publicId, ObjectUtils.asMap("resource_type", "image"));
         } catch (Exception ignoredImage) {
@@ -49,7 +55,13 @@ public class CloudinaryServiceIMPL implements CloudinaryService {
         if (contentType != null && contentType.startsWith("image/")) {
             return "image";
         }
-        // PDFs, Word, etc. van como "raw" en Cloudinary
         return "raw";
+    }
+
+    private String extraerExtension(String nombreOriginal) {
+        if (nombreOriginal == null || !nombreOriginal.contains(".")) {
+            return null;
+        }
+        return nombreOriginal.substring(nombreOriginal.lastIndexOf('.') + 1).toLowerCase();
     }
 }

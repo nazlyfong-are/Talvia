@@ -14,8 +14,7 @@ import com.talvia.talvia.services.notificacion.NotificacionService;
 @RequestMapping("/api/notificaciones")
 public class NotificacionController {
 
-    @Autowired
-    private NotificacionService notificacionService;
+    @Autowired private NotificacionService notificacionService;
 
     @GetMapping
     public ResponseEntity<?> listar(@AuthenticationPrincipal UserPrincipal principal) {

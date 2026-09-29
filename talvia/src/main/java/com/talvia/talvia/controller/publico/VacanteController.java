@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/api/vacantes")
 public class VacanteController {
 
-    @Autowired
-    private VacanteService vacanteService;
+    @Autowired private VacanteService vacanteService;
 
     @GetMapping("/activas")
     public List<VacantesResponseDTO> listarActivas() {

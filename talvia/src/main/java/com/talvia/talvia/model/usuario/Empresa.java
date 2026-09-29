@@ -5,12 +5,7 @@ import java.util.List;
 import com.talvia.talvia.model.embedded.ImagenCloudinary;
 import com.talvia.talvia.model.vacante.Vacante;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

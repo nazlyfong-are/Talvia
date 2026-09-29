@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/cuenta")
 public class CuentaController {
 
-    @Autowired
-    private AuthService authService;
+    @Autowired private AuthService authService;
 
     @PostMapping("/eliminar/solicitar")
     public ResponseEntity<?> solicitar(@AuthenticationPrincipal UserPrincipal principal) {

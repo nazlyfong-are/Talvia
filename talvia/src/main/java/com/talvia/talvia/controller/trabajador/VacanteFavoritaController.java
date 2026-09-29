@@ -14,8 +14,7 @@ import java.util.Map;
 @RequestMapping("/api/trabajador/favoritos")
 public class VacanteFavoritaController {
 
-    @Autowired
-    private VacanteFavoritaService favoritaService;
+    @Autowired private VacanteFavoritaService favoritaService;
 
     @GetMapping
     public ResponseEntity<?> listar(@AuthenticationPrincipal UserPrincipal principal) {

@@ -24,7 +24,6 @@ import com.talvia.talvia.repository.proceso.PostulacionRepository;
 import com.talvia.talvia.repository.usuario.TrabajadorRepository;
 import com.talvia.talvia.repository.vacante.VacanteRepository;
 import com.talvia.talvia.services.notificacion.NotificacionService;
-import com.talvia.talvia.services.soporte.EmailService;
 import com.talvia.talvia.services.trabajador.PostulacionService;
 import com.talvia.talvia.services.trabajador.TrabajadorService;
 import com.talvia.talvia.services.vacante.VacanteService;

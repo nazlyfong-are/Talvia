@@ -16,8 +16,7 @@ import java.util.Map;
 @RequestMapping("/api/empresa/perfil")
 public class EmpresaController {
 
-    @Autowired
-    private EmpresaService empresaService;
+    @Autowired private EmpresaService empresaService;
 
     @GetMapping
     public ResponseEntity<?> obtener(@AuthenticationPrincipal UserPrincipal principal) {

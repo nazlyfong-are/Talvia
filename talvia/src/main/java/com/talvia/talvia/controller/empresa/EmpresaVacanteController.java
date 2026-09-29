@@ -64,12 +64,14 @@ public class EmpresaVacanteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> eliminar(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long id) {
-        try {
-            empresaVacanteService.eliminar(principal.getId(), id);
-            return ResponseEntity.ok().build();
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(403).body(e.getMessage());
-        }
+public ResponseEntity<?> eliminar(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long id) {
+    try {
+        empresaVacanteService.eliminar(principal.getId(), id);
+        return ResponseEntity.ok().build();
+    } catch (IllegalStateException e) {
+        return ResponseEntity.status(409).body(e.getMessage());
+    } catch (IllegalArgumentException e) {
+        return ResponseEntity.status(403).body(e.getMessage());
     }
+}
 }

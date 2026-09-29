@@ -6,6 +6,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import com.talvia.talvia.model.vacante.Vacante;
 import java.util.List;
@@ -25,8 +27,9 @@ public interface VacanteRepository extends JpaRepository<Vacante, Long>, JpaSpec
     List<Vacante> findByModalidadAndEstado(String modalidad, EstadoVacante estado);
     long countByEmpresaIdAndEstado(Long empresaId, EstadoVacante estado);
     long countByEstado(EstadoVacante estado);
-
     @Override
     @EntityGraph(attributePaths = {"empresa"})
     Page<Vacante> findAll(Specification<Vacante> spec, Pageable pageable);
+    @Query("SELECT v.empresa.id, COUNT(v) FROM Vacante v WHERE v.estado = :estado GROUP BY v.empresa.id")
+List<Object[]> contarActivasPorEmpresa(@Param("estado") EstadoVacante estado);
 }

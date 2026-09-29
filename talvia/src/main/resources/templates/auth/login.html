@@ -22,20 +22,18 @@
 
   <div class="page-wrapper">
 
-    <!-- ════════════════════════════════
-         LEFT PANEL — changes per mode
-    ════════════════════════════════ -->
+    <!-- cambia los modos -->
     <div class="brand-panel" id="brandPanel">
       <div class="brand-diagonal"></div>
       <div class="brand-content">
 
-        <!-- Logo (always visible) -->
+        <!-- Logo -->
         <div class="brand-logo">
-          <div class="logo-mark"><span>SS</span></div>
+          <div class="logo-mark"><span>TV</span></div>
           <span class="logo-text">Talvia</span>
         </div>
 
-        <!-- CLIENT brand content -->
+        <!-- Clientes (empresas/trabajadores)-->
         <div class="brand-tagline" id="clientBrand">
           <h1>Plataforma <br/><em>Clientes</em></h1>
           <p>Gestión de solicitudes.</p>
@@ -47,7 +45,7 @@
           </div>
         </div>
 
-        <!-- ADMIN brand content -->
+        <!-- ADMIN-->
         <div class="brand-tagline hidden" id="adminBrand">
           <div class="admin-brand-badge">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -68,13 +66,11 @@
       </div>
     </div>
 
-    <!-- ════════════════════════════════
-         RIGHT PANEL — form
-    ════════════════════════════════ -->
+    <!--formulario-->
     <div class="form-panel">
       <div class="form-card">
 
-        <!-- Mode indicator pill -->
+        
         <div class="mode-pill" id="modePill">
           <span class="mode-pill-dot"></span>
           <span id="modePillLabel">Acceso Cliente</span>
@@ -100,7 +96,7 @@
             </div>
           </div>
 
-          <!-- Password -->
+          <!-- contraseña -->
           <div class="field-group">
             <div class="label-row">
               <label for="password">Contraseña</label>
@@ -124,7 +120,7 @@
             <a th:href="@{/public/forgot-password}" class="forgot-link">¿Olvidó su contraseña?</a>
           </div>
 
-          <!-- Admin: extra security code field -->
+          <!-- Admin codigo de seguridad -->
           <div class="field-group hidden" id="securityCodeGroup">
             <label for="securityCode">Código de seguridad</label>
             <div class="input-wrapper">
@@ -137,13 +133,13 @@
           </div>
 
           <!-- Remember me (client only) -->
-          <div class="remember-row" id="rememberRow">
+           <!--<div class="remember-row" id="rememberRow">
             <label class="checkbox-label">
               <input type="checkbox" id="remember" />
               <span class="checkmark"></span>
               Mantener sesión activa
             </label>
-          </div>
+          </div> -->
 
           <button type="submit" class="btn-primary" id="loginBtn">
             <span class="btn-text" id="loginBtnText">Ingresar</span>
@@ -155,7 +151,7 @@
 
         </form>
 
-        <!-- Client-only footer actions -->
+        
         <div id="clientFooterActions">
           <div class="form-divider">
             <span>¿No tienes cuenta?</span>
@@ -174,7 +170,7 @@
 
   </div>
 
-  <!-- Toast -->
+
   <div class="toast" id="toast"></div>
 
   <script th:src="@{/js/auth/login.js}"></script>

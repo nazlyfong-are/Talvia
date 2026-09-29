@@ -21,6 +21,13 @@ async function cargarEmpresa(id) {
         if (!resp.ok) throw new Error('No se pudo cargar la empresa.');
         const e = await resp.json();
 
+        // Quita el efecto skeleton de los campos del encabezado
+        document.querySelectorAll('.hero-skel').forEach(el => {
+            el.classList.remove('skeleton-loader', 'skeleton-text');
+            el.style.width = '';
+            el.style.display = '';
+        });
+
         document.getElementById('e-nombre').textContent = e.razonSocial || 'Empresa';
         document.getElementById('e-sector').textContent = e.sector || 'Sector no especificado';
         document.getElementById('e-ubicacion-info').textContent =

@@ -37,7 +37,7 @@ public class AdminConfiguracionServiceIMPL implements AdminConfiguracionService 
         return toDTO(configRepository.save(config));
     }
 
-    /** La fila con id=1 se crea sola la primera vez que alguien pide o guarda la configuración. */
+    /** La fila con id=1 se crea sola la primera vez que alguien pide o guarda la configuracion. */
     private ConfiguracionSistema obtenerOCrear() {
         return configRepository.findById(ID_UNICO)
                 .orElseGet(() -> configRepository.save(new ConfiguracionSistema()));

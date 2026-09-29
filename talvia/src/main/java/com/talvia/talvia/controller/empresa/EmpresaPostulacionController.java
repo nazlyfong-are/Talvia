@@ -20,8 +20,7 @@ import com.talvia.talvia.services.trabajador.PostulacionService;
 @RequestMapping("/api/empresa/postulaciones")
 public class EmpresaPostulacionController {
 
-    @Autowired
-    private PostulacionService postulacionService;
+    @Autowired private PostulacionService postulacionService;
 
     @GetMapping
     public ResponseEntity<?> listar(@AuthenticationPrincipal UserPrincipal principal) {

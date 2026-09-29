@@ -16,8 +16,7 @@ import java.util.Map;
 @RequestMapping("/api/trabajador")
 public class TrabajadorController {
 
-    @Autowired
-    private TrabajadorService trabajadorService;
+    @Autowired private TrabajadorService trabajadorService;
 
     @GetMapping("/perfil")
     public ResponseEntity<?> obtenerPerfil(@AuthenticationPrincipal UserPrincipal principal) {

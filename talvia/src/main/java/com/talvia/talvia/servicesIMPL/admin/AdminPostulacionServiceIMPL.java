@@ -46,7 +46,7 @@ public class AdminPostulacionServiceIMPL implements AdminPostulacionService {
         }
 
         LocalDateTime desdeDt = desde != null ? desde.atStartOfDay() : null;
-        // "hasta" es inclusivo: se usa el inicio del día siguiente como límite exclusivo
+        // "hasta" es inclusivo: se usa el inicio del dia siguiente como limite exclusivo
         LocalDateTime hastaDt = hasta != null ? hasta.plusDays(1).atStartOfDay() : null;
 
         final EstadoPostulacion estadoFinal = estadoEnum;

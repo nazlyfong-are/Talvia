@@ -88,6 +88,15 @@ public class PlantillasEmail {
                         "Este código expira en 15 minutos. Si no creaste esta cuenta, ignora este correo.");
     }
 
+    public static String vacanteCerrada(String nombreTrabajador, String tituloVacante, String razonSocial) {
+    return envolver(
+        "La vacante fue cerrada",
+        "Hola " + nombreTrabajador + ", la vacante \"" + tituloVacante + "\" de " + razonSocial +
+        " ha sido cerrada. Gracias por tu interés — te invitamos a seguir explorando otras " +
+        "oportunidades en Talvia."
+    );
+}
+
     private static String envolver(String titulo, String mensaje) {
         return "<div style='font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;'>"
                 + "<div style='background:" + COLOR_INK + "; padding: 24px; text-align:center;'>"

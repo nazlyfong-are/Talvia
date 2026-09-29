@@ -1,22 +1,9 @@
 package com.talvia.talvia.servicesIMPL.trabajador;
 
-import com.talvia.talvia.dto.*;
-import com.talvia.talvia.dto.request.comunes.CloudinaryUploadResultDTO;
-import com.talvia.talvia.dto.request.comunes.HabilidadDTO;
-import com.talvia.talvia.dto.request.trabajador.CertificacionUpdateDTO;
-import com.talvia.talvia.dto.request.trabajador.ExperienciaUpdateDTO;
-import com.talvia.talvia.dto.request.trabajador.FormacionUpdateDTO;
-import com.talvia.talvia.dto.request.trabajador.TrabajadorPerfilUpdateDTO;
-import com.talvia.talvia.dto.response.trabajador.CertificacionResponseDTO;
-import com.talvia.talvia.dto.response.trabajador.CvDocumentoResponseDTO;
-import com.talvia.talvia.dto.response.trabajador.ExperienciaResponseDTO;
-import com.talvia.talvia.dto.response.trabajador.FormacionResponsiveDTO;
-import com.talvia.talvia.dto.response.trabajador.TrabajadorPerfilResponseDTO;
-import com.talvia.talvia.model.embedded.Certificacion;
-import com.talvia.talvia.model.embedded.ExpLaboral;
-import com.talvia.talvia.model.embedded.Formacion;
-import com.talvia.talvia.model.embedded.Habilidad;
-import com.talvia.talvia.model.embedded.ImagenCloudinary;
+import com.talvia.talvia.dto.request.comunes.*;
+import com.talvia.talvia.dto.request.trabajador.*;
+import com.talvia.talvia.dto.response.trabajador.*;
+import com.talvia.talvia.model.embedded.*;
 import com.talvia.talvia.model.enums.NivelEducativo;
 import com.talvia.talvia.model.enums.NivelHabilidad;
 import com.talvia.talvia.model.embedded.CvDocumento;

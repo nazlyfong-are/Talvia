@@ -1,7 +1,5 @@
 package com.talvia.talvia.servicesIMPL.auth;
 
-import com.talvia.talvia.dto.*;
-import com.talvia.talvia.dto.request.*;
 import com.talvia.talvia.dto.request.auth.RegisterEmpresaDTO;
 import com.talvia.talvia.dto.request.auth.RegisterTrabajadorDTO;
 import com.talvia.talvia.dto.request.comunes.CertificacionDTO;
@@ -17,7 +15,7 @@ import com.talvia.talvia.model.usuario.Trabajador;
 import com.talvia.talvia.repository.sistema.ConfiguracionSistemaRepository;
 import com.talvia.talvia.repository.usuario.EmpresaRepository;
 import com.talvia.talvia.repository.usuario.TrabajadorRepository;
-import com.talvia.talvia.services.*;
+
 import com.talvia.talvia.services.auth.CodigoVerificacionService;
 import com.talvia.talvia.services.auth.RegisterService;
 import com.talvia.talvia.services.soporte.CloudinaryService;
@@ -38,20 +36,13 @@ import java.util.Map;
 @Service
 public class RegisterServiceIMPL implements RegisterService {
 
-    @Autowired
-    private TrabajadorRepository trabajadorRepository;
-    @Autowired
-    private EmpresaRepository empresaRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    @Autowired
-    private CloudinaryService cloudinaryService;
-    @Autowired
-    private EmailService emailService;
-    @Autowired
-    private CodigoVerificacionService codigoVerificacionService;
-    @Autowired
-    private ConfiguracionSistemaRepository configRepository;
+    @Autowired private TrabajadorRepository trabajadorRepository;
+    @Autowired private EmpresaRepository empresaRepository;
+    @Autowired private PasswordEncoder passwordEncoder;
+    @Autowired private CloudinaryService cloudinaryService;
+    @Autowired private EmailService emailService;
+    @Autowired private CodigoVerificacionService codigoVerificacionService;
+    @Autowired private ConfiguracionSistemaRepository configRepository;
 
     @Override
     public void registerTrabajador(RegisterTrabajadorDTO dto, Map<String, MultipartFile> archivos) {
