@@ -62,9 +62,9 @@ function crearFilaPostulacion(p) {
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
-        <td>${p.trabajadorNombre || '—'}</td>
-        <td>${p.vacanteTitulo || '—'}</td>
-        <td>${p.empresaNombre || '—'}</td>
+        <td class="celda-truncada" title="${escaparHtml(p.trabajadorNombre)}">${escaparHtml(p.trabajadorNombre) || '—'}</td>
+        <td class="celda-truncada" title="${escaparHtml(p.vacanteTitulo)}">${escaparHtml(p.vacanteTitulo) || '—'}</td>
+        <td class="celda-truncada" title="${escaparHtml(p.empresaNombre)}">${escaparHtml(p.empresaNombre) || '—'}</td>
         <td>${p.fecha || '—'}</td>
         <td>${p.fechaVista || '<span style="color:var(--slate);">No vista</span>'}</td>
         <td><span class="badge-estado ${badgeClase}">${p.estado || '—'}</span></td>

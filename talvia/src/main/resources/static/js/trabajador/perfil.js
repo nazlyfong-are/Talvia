@@ -1,13 +1,11 @@
 /* ============================================
    PERFIL TRABAJADOR — Carga, edición y guardado real
    Incluye: datos básicos, foto, hasta 4 CVs, formación,
-   experiencia, certificaciones, idiomas, habilidades
+   experiencia, certificaciones, idiomas, habilidades,
+   preferencias y apoyos de trabajo (shared/apoyos.js)
    y eliminación de cuenta.
 
-   OPTIMIZACIÓN: perfil y CVs se cargan en PARALELO,
-   no uno esperando al otro (antes tardaban ~1.2s
-   sumados en serie, ahora tardan lo que tarde el más
-   lento de los dos).
+   El perfil y los CVs se cargan en PARALELO, no uno esperando al otro.
 ============================================ */
 
 let perfilActual = null;
@@ -54,6 +52,7 @@ function pintarPerfil(p) {
     pintarCertificaciones(p.certificaciones || []);
     pintarTags('idiomas-tags', p.idiomas || []);
     pintarTags('habilidades-tags', p.habilidadesTecnicas || []);
+    pintarApoyos(p);
 }
 
 /* ── HOJAS DE VIDA (hasta 4) ── */
@@ -328,6 +327,19 @@ document.getElementById('add-experiencia').addEventListener('click', () => {
     document.getElementById('experiencias-container').appendChild(crearFilaExperiencia());
 });
 
+/* ── PREFERENCIAS Y APOYOS (opcional) ──
+   El componente lo dibuja shared/apoyos.js. Si ese script no cargó, el resto del perfil
+   funciona igual y simplemente no se envían ni se muestran los apoyos. */
+const widgetApoyos = (window.Apoyos && document.getElementById('apoyos-edicion'))
+    ? Apoyos.render(document.getElementById('apoyos-edicion'), { prefijo: 'perfil' })
+    : null;
+
+function pintarApoyos(p) {
+    if (!window.Apoyos) return;
+    Apoyos.pintarVista(document.getElementById('apoyos-vista'), p.apoyos || [], p.apoyosNota);
+    if (widgetApoyos) widgetApoyos.escribir(p.apoyos || [], p.apoyosNota);
+}
+
 /* ── TOGGLE MODO EDICIÓN ── */
 document.getElementById('btn-editar').addEventListener('click', () => {
     editando = true;
@@ -362,6 +374,14 @@ document.getElementById('input-foto').addEventListener('change', async (e) => {
 
 /* ── GUARDAR CAMBIOS DE TEXTO/CV ── */
 async function guardarCambios() {
+    // Preferencias y apoyos: exige la autorización solo si hay algo concreto o una nota
+    const errorApoyos = widgetApoyos ? widgetApoyos.validar() : null;
+    if (errorApoyos) {
+        alert(errorApoyos);
+        return;
+    }
+    const datosApoyos = widgetApoyos ? widgetApoyos.leer() : null;   // { apoyos, apoyosNota, autorizaTratamientoApoyos }
+
     const body = {
         nombres: document.getElementById('campo-nombres').textContent.trim(),
         primerApellido: document.getElementById('campo-primer-apellido').textContent.trim(),
@@ -395,7 +415,8 @@ async function guardarCambios() {
             fechaVencimiento: item.querySelector('.c-fecha-vencimiento').value
         })),
         idiomas: Array.from(document.querySelectorAll('#idiomas-tags .tag-item')).map(t => ({ nombre: t.dataset.nombre, categoria: 'Idioma' })),
-        habilidadesTecnicas: Array.from(document.querySelectorAll('#habilidades-tags .tag-item')).map(t => ({ nombre: t.dataset.nombre, categoria: 'Técnica' }))
+        habilidadesTecnicas: Array.from(document.querySelectorAll('#habilidades-tags .tag-item')).map(t => ({ nombre: t.dataset.nombre, categoria: 'Técnica' })),
+        ...(datosApoyos || {})
     };
 
     try {
@@ -471,6 +492,7 @@ document.getElementById('form-confirmar-eliminacion').addEventListener('submit',
     }
 });
 
+/* ── CERRAR SESIÓN ── */
 document.getElementById('logoutBtn').addEventListener('click', async () => {
     try { await fetch('/api/auth/logout', { method: 'POST' }); }
     finally { window.location.href = '/public/login'; }

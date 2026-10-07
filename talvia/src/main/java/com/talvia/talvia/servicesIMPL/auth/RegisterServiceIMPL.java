@@ -7,21 +7,27 @@ import com.talvia.talvia.dto.request.comunes.CloudinaryUploadResultDTO;
 import com.talvia.talvia.dto.request.comunes.ExperienciaDTO;
 import com.talvia.talvia.dto.request.comunes.FormacionDTO;
 import com.talvia.talvia.dto.request.comunes.HabilidadDTO;
-import com.talvia.talvia.model.embedded.*;
-import com.talvia.talvia.model.enums.*;
+import com.talvia.talvia.model.embedded.Certificacion;
+import com.talvia.talvia.model.embedded.ExpLaboral;
+import com.talvia.talvia.model.embedded.Formacion;
+import com.talvia.talvia.model.embedded.Habilidad;
+import com.talvia.talvia.model.embedded.ImagenCloudinary;
+import com.talvia.talvia.model.enums.NivelEducativo;
+import com.talvia.talvia.model.enums.NivelHabilidad;
+import com.talvia.talvia.model.enums.Rol;
+import com.talvia.talvia.model.enums.TipoCodigo;
+import com.talvia.talvia.model.enums.TipoDocumento;
 import com.talvia.talvia.model.proceso.ConfiguracionSistema;
 import com.talvia.talvia.model.usuario.Empresa;
 import com.talvia.talvia.model.usuario.Trabajador;
 import com.talvia.talvia.repository.sistema.ConfiguracionSistemaRepository;
 import com.talvia.talvia.repository.usuario.EmpresaRepository;
 import com.talvia.talvia.repository.usuario.TrabajadorRepository;
-
 import com.talvia.talvia.services.auth.CodigoVerificacionService;
 import com.talvia.talvia.services.auth.RegisterService;
 import com.talvia.talvia.services.soporte.CloudinaryService;
 import com.talvia.talvia.services.soporte.EmailService;
 import com.talvia.talvia.servicesIMPL.soporte.PlantillasEmail;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -81,6 +87,14 @@ public class RegisterServiceIMPL implements RegisterService {
         trabajador.setResumenProfesional(dto.getResumenProfesional());
         trabajador.setCiudad(dto.getCiudad());
         trabajador.setAnosExperienciaTotal(dto.getAnosExperienciaTotal());
+
+        // ── Preferencias y apoyos de trabajo (opcional) ──
+        // Se valida aquí, antes de subir archivos a Cloudinary: si falla, no se sube nada.
+        trabajador.aplicarApoyos(
+                dto.getApoyos(),
+                dto.getApoyosNota(),
+                Boolean.TRUE.equals(dto.getAutorizaTratamientoApoyos()));
+
         ImagenCloudinary fotoDefault = new ImagenCloudinary();
         fotoDefault.setUrl("/img/avatar-default.svg");
         fotoDefault.setPublicId(null); // null a propósito: no es de Cloudinary, no hay nada que borrar ahí después
@@ -133,8 +147,7 @@ public class RegisterServiceIMPL implements RegisterService {
                         formacion.setDocumentoUrl(resultado.getUrl());
                         formacion.setDocumentoPublicId(resultado.getPublicId());
                     } catch (Exception ignored) {
-                        // Si falla la subida, el registro continúa igual — el usuario podrá adjuntarlo
-                        // después
+                        // Si falla la subida, el registro continúa igual: el usuario podrá adjuntarlo después
                     }
                 }
 

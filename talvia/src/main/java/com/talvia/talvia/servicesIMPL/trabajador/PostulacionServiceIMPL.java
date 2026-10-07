@@ -171,15 +171,18 @@ public class PostulacionServiceIMPL implements PostulacionService {
     }
 
     private PostulacionResponseDTO toResponseDTO(Postulacion p) {
-        String nombreCompleto = (p.getTrabajador().getNombre() + " " +
-                (p.getTrabajador().getPrimerApellido() != null ? p.getTrabajador().getPrimerApellido() : "")).trim();
-        return new PostulacionResponseDTO(
-                p.getId(), p.getTrabajador().getId(), nombreCompleto, p.getVacante().getTitulo(),
-                p.getFechaPostulacion() != null ? p.getFechaPostulacion().toLocalDate().format(FORMATO_FECHA) : "",
-                p.getEstado() != null ? p.getEstado().name() : null,
-                p.getVacante().getId()
-        );
-    }
+    String nombreCompleto = (p.getTrabajador().getNombre() + " " +
+            (p.getTrabajador().getPrimerApellido() != null ? p.getTrabajador().getPrimerApellido() : "")).trim();
+
+    PostulacionResponseDTO dto = new PostulacionResponseDTO(
+            p.getId(), p.getTrabajador().getId(), nombreCompleto, p.getVacante().getTitulo(),
+            p.getFechaPostulacion() != null ? p.getFechaPostulacion().toLocalDate().format(FORMATO_FECHA) : "",
+            p.getEstado() != null ? p.getEstado().name() : null,
+            p.getVacante().getId()
+    );
+    dto.setFechaVista(p.getFechaVista() != null ? p.getFechaVista().toLocalDate().format(FORMATO_FECHA) : null);
+    return dto;
+}
 
     private PostulacionTrabajadorResponseDTO toTrabajadorDTO(Postulacion p) {
         VacantesResponseDTO v = vacanteService.toDTO(p.getVacante());

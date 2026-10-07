@@ -1,18 +1,29 @@
 package com.talvia.talvia.servicesIMPL.trabajador;
 
-import com.talvia.talvia.dto.request.comunes.*;
-import com.talvia.talvia.dto.request.trabajador.*;
-import com.talvia.talvia.dto.response.trabajador.*;
-import com.talvia.talvia.model.embedded.*;
+import com.talvia.talvia.dto.request.comunes.CloudinaryUploadResultDTO;
+import com.talvia.talvia.dto.request.comunes.HabilidadDTO;
+import com.talvia.talvia.dto.request.trabajador.CertificacionUpdateDTO;
+import com.talvia.talvia.dto.request.trabajador.ExperienciaUpdateDTO;
+import com.talvia.talvia.dto.request.trabajador.FormacionUpdateDTO;
+import com.talvia.talvia.dto.request.trabajador.TrabajadorPerfilUpdateDTO;
+import com.talvia.talvia.dto.response.trabajador.CertificacionResponseDTO;
+import com.talvia.talvia.dto.response.trabajador.CvDocumentoResponseDTO;
+import com.talvia.talvia.dto.response.trabajador.ExperienciaResponseDTO;
+import com.talvia.talvia.dto.response.trabajador.FormacionResponsiveDTO;
+import com.talvia.talvia.dto.response.trabajador.TrabajadorPerfilResponseDTO;
+import com.talvia.talvia.model.embedded.Certificacion;
+import com.talvia.talvia.model.embedded.CvDocumento;
+import com.talvia.talvia.model.embedded.ExpLaboral;
+import com.talvia.talvia.model.embedded.Formacion;
+import com.talvia.talvia.model.embedded.Habilidad;
+import com.talvia.talvia.model.embedded.ImagenCloudinary;
 import com.talvia.talvia.model.enums.NivelEducativo;
 import com.talvia.talvia.model.enums.NivelHabilidad;
-import com.talvia.talvia.model.embedded.CvDocumento;
 import com.talvia.talvia.model.usuario.Trabajador;
 import com.talvia.talvia.repository.proceso.PostulacionRepository;
 import com.talvia.talvia.repository.usuario.TrabajadorRepository;
 import com.talvia.talvia.services.soporte.CloudinaryService;
 import com.talvia.talvia.services.trabajador.TrabajadorService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,6 +101,13 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
             t.setAnosExperienciaTotal(dto.getAnosExperienciaTotal());
         if (dto.getDisponibleInmediato() != null)
             t.setDisponibleInmediato(dto.getDisponibleInmediato());
+
+        // Preferencias y apoyos: null = la sección no vino en la petición y no se toca nada.
+        // Si la validación falla, se lanza IllegalArgumentException y la transacción se revierte completa.
+        if (dto.getApoyos() != null) {
+            t.aplicarApoyos(dto.getApoyos(), dto.getApoyosNota(),
+                    Boolean.TRUE.equals(dto.getAutorizaTratamientoApoyos()));
+        }
 
         actualizarFormaciones(t, dto.getFormaciones());
         actualizarExperiencias(t, dto.getExperiencias());
@@ -174,9 +192,8 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
 
         if (postulacionRepository.existsByCvEnviadoId(cvId)) {
             throw new IllegalArgumentException(
-                "No puedes eliminar este CV porque ya fue enviado en una portulación. " +
-                "Sube uno nuevo si quietes reemplazarlo."
-            );
+                    "No puedes eliminar este CV porque ya fue enviado en una postulación. " +
+                    "Sube uno nuevo si quieres reemplazarlo.");
         }
 
         if (cv.getPublicId() != null) {
@@ -194,9 +211,7 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
                 cv.getFechaSubida() != null ? cv.getFechaSubida().toString() : null);
     }
 
-    /*
-     * ================= Documentos de formación / certificación =================
-     */
+    /* ================= Documentos de formación / certificación ================= */
 
     @Override
     @Transactional
@@ -444,6 +459,10 @@ public class TrabajadorServiceIMPL implements TrabajadorService {
         dto.setIdiomas(t.getHabilidades().stream()
                 .filter(h -> "Idioma".equalsIgnoreCase(h.getCategoria()))
                 .map(this::toHabilidadDTO).collect(Collectors.toList()));
+
+        // Preferencias y apoyos de trabajo (la empresa ve lo mismo al abrir una postulación)
+        dto.setApoyos(t.getApoyos().stream().sorted().map(Enum::name).collect(Collectors.toList()));
+        dto.setApoyosNota(t.getApoyosNota());
 
         return dto;
     }

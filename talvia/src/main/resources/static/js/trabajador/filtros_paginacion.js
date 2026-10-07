@@ -1,4 +1,12 @@
-/*CONFIGURACION INICIAL*/
+/* =========================================
+   FILTROS + PAGINACIÓN DEL TABLERO DE VACANTES
+   Requiere shared/paginacion.js (función rangoPaginas),
+   que se carga desde fragments/shared-css.
+   ========================================= */
+
+/* =========================================
+   CONFIGURACIÓN INICIAL
+   ========================================= */
 const state = {
     filters: {
         area: "todas",
@@ -17,7 +25,9 @@ const state = {
     filteredJobs: [] // Aquí guardamos las tarjetas que pasaron el filtro para paginarlas
 };
 
-/* referencias al DOMa*/
+/* =========================================
+   REFERENCIAS AL DOM
+   ========================================= */
 // Filtros Select
 const areaSelect = document.getElementById("areaSelect");
 const expSelect = document.getElementById("expSelect");
@@ -25,7 +35,7 @@ const modalitySelect = document.getElementById("modalitySelect");
 const levelSelect = document.getElementById("levelSelect");
 const sortSelect = document.querySelector(".sort-select");
 
-//busqueda
+// Búsqueda
 const searchInput = document.getElementById("searchInput");
 const locationInput = document.getElementById("locationInput");
 const searchBtn = document.getElementById("searchBtn");
@@ -36,43 +46,52 @@ const jobList = document.getElementById("jobList");
 let allJobCards = Array.from(document.querySelectorAll(".job-card"));
 const resultsCount = document.getElementById("resultsCount");
 
-// Paginacion
+// Paginación
 const paginationContainer = document.getElementById("paginationContainer");
 const prevPageBtn = document.getElementById("prevPageBtn");
 const nextPageBtn = document.getElementById("nextPageBtn");
 const pageNumbers = document.getElementById("pageNumbers");
 
 
-/* event listeners */
+/* =========================================
+   EVENT LISTENERS
+   ========================================= */
 
+// Al cambiar cualquier filtro se vuelve a la página 1 de los nuevos resultados
 areaSelect.addEventListener("change", (e) => {
     state.filters.area = e.target.value;
+    state.pagination.currentPage = 1;
     aplicarFiltros();
 });
 
 expSelect.addEventListener("change", (e) => {
     state.filters.experiencia = Number(e.target.value);
+    state.pagination.currentPage = 1;
     aplicarFiltros();
 });
 
 modalitySelect.addEventListener("change", (e) => {
     state.filters.modalidad = e.target.value;
+    state.pagination.currentPage = 1;
     aplicarFiltros();
 });
 
 levelSelect.addEventListener("change", (e) => {
     state.filters.nivel = e.target.value;
+    state.pagination.currentPage = 1;
     aplicarFiltros();
 });
 
 sortSelect.addEventListener("change", (e) => {
     state.sort = e.target.value;
+    state.pagination.currentPage = 1;
     aplicarFiltros();
 });
 
 searchBtn.addEventListener("click", () => {
     state.filters.keyword = searchInput.value.toLowerCase().trim();
     state.filters.location = locationInput.value.toLowerCase().trim();
+    state.pagination.currentPage = 1;
     aplicarFiltros();
 });
 
@@ -81,6 +100,7 @@ searchBtn.addEventListener("click", () => {
         if (e.key === "Enter") {
             state.filters.keyword = searchInput.value.toLowerCase().trim();
             state.filters.location = locationInput.value.toLowerCase().trim();
+            state.pagination.currentPage = 1;
             aplicarFiltros();
         }
     });
@@ -97,6 +117,7 @@ clearFiltersBtn.addEventListener("click", () => {
 
     state.filters = { area: "todas", experiencia: 0, modalidad: "todas", nivel: "todos", keyword: "", location: "" };
     state.sort = "recientes";
+    state.pagination.currentPage = 1;
 
     aplicarFiltros();
 });
@@ -105,6 +126,7 @@ prevPageBtn.addEventListener("click", () => {
     if (state.pagination.currentPage > 1) {
         state.pagination.currentPage--;
         renderizarPagina();
+        volverAlInicioDeLista();
     }
 });
 
@@ -112,11 +134,14 @@ nextPageBtn.addEventListener("click", () => {
     if (state.pagination.currentPage < state.pagination.totalPages) {
         state.pagination.currentPage++;
         renderizarPagina();
+        volverAlInicioDeLista();
     }
 });
 
 
-/* logica principal de filtrado y de orden */
+/* =========================================
+   LÓGICA PRINCIPAL DE FILTRADO Y ORDEN
+   ========================================= */
 
 function aplicarFiltros() {
     allJobCards = Array.from(document.querySelectorAll(".job-card"));
@@ -174,7 +199,9 @@ function aplicarFiltros() {
 }
 
 
-/*renderizado de la pagina*/
+/* =========================================
+   RENDERIZADO DE PAGINACIÓN
+   ========================================= */
 
 function renderizarPagina() {
     state.filteredJobs.forEach(vacante => vacante.style.display = "none");
@@ -192,23 +219,39 @@ function renderizarPagina() {
     actualizarBotonesPaginacion();
 }
 
+// Sube hasta el inicio de la lista al cambiar de página, para no quedarse mirando el final
+function volverAlInicioDeLista() {
+    const zona = document.getElementById("vacantes");
+    if (zona) zona.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
 function actualizarBotonesPaginacion() {
     prevPageBtn.disabled = state.pagination.currentPage === 1;
     nextPageBtn.disabled = state.pagination.currentPage === state.pagination.totalPages;
 
     pageNumbers.innerHTML = "";
 
-    for (let i = 1; i <= state.pagination.totalPages; i++) {
+    // rangoPaginas devuelve números y '…', ej: [1, '…', 9, 10, 11, '…', 28]
+    rangoPaginas(state.pagination.currentPage, state.pagination.totalPages).forEach(p => {
+        if (p === "…") {
+            const puntos = document.createElement("span");
+            puntos.classList.add("page-ellipsis");
+            puntos.textContent = "…";
+            pageNumbers.appendChild(puntos);
+            return;
+        }
+
         const btn = document.createElement("button");
         btn.classList.add("page-num");
-        if (i === state.pagination.currentPage) btn.classList.add("active");
-        btn.textContent = i;
+        if (p === state.pagination.currentPage) btn.classList.add("active");
+        btn.textContent = p;
 
         btn.addEventListener("click", () => {
-            state.pagination.currentPage = i;
+            state.pagination.currentPage = p;
             renderizarPagina();
+            volverAlInicioDeLista();
         });
 
         pageNumbers.appendChild(btn);
-    }
+    });
 }

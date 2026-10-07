@@ -126,13 +126,15 @@ public class EmpresaVacanteServiceIMPL implements EmpresaVacanteService{
         vacante.setEstado(estado);
         Vacante guardada = vacanteRepository.save(vacante);
 
-        // Solo notifica en el momento en que la vacante PASA a estar cerrada,
-        // no cada vez que alguien vuelve a guardar el mismo estado.
-        if (estado == EstadoVacante.CERRADA && estadoAnterior != EstadoVacante.CERRADA) {
-            notificarCierreATrabajadores(guardada);
-        }
+if (estado == EstadoVacante.CERRADA && estadoAnterior != EstadoVacante.CERRADA) {
+    try {
+        notificarCierreATrabajadores(guardada);
+    } catch (Exception e) {
+        System.err.println(">>> ERROR AL NOTIFICAR EL CIERRE DE LA VACANTE " + vacanteId + ": " + e.getMessage());
+    }
+}
 
-        return vacanteService.toDTO(guardada);
+return vacanteService.toDTO(guardada);
     }
 
     @Override
@@ -163,18 +165,22 @@ public void eliminar(Long empresaId, Long vacanteId) {
         String razonSocial = vacante.getEmpresa() != null ? vacante.getEmpresa().getRazonSocial() : "La empresa";
 
         for (Postulacion p : postulaciones) {
-            Trabajador t = p.getTrabajador();
-            if (t == null) continue;
+    try {
+        Trabajador t = p.getTrabajador();
+        if (t == null) continue;
 
-            notificacionService.crear(t, TipoNotificacion.VACANTE_CERRADA,
-                    razonSocial + " cerró la vacante \"" + vacante.getTitulo() + "\" a la que te postulaste.",
-                    "/private/trabajador/postulaciones");
+        notificacionService.crear(t, TipoNotificacion.VACANTE_CERRADA,
+                razonSocial + " cerró la vacante \"" + vacante.getTitulo() + "\" a la que te postulaste.",
+                "/private/trabajador/postulaciones");
 
-            emailService.enviarCorreoSimple(
-                    t.getEmail(),
-                    "La vacante \"" + vacante.getTitulo() + "\" fue cerrada",
-                    PlantillasEmail.vacanteCerrada(t.getNombre(), vacante.getTitulo(), razonSocial));
-        }
+        emailService.enviarCorreoSimple(
+                t.getEmail(),
+                "La vacante \"" + vacante.getTitulo() + "\" fue cerrada",
+                PlantillasEmail.vacanteCerrada(t.getNombre(), vacante.getTitulo(), razonSocial));
+    } catch (Exception e) {
+        System.err.println(">>> ERROR AL NOTIFICAR A UN CANDIDATO: " + e.getMessage());
+    }
+}
     }
 
     private Vacante obtenerVerificando(Long empresaId, Long vacanteId) {

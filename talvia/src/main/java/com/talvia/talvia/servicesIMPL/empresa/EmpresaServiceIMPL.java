@@ -28,28 +28,31 @@ import com.talvia.talvia.services.soporte.CloudinaryService;
 @Service
 public class EmpresaServiceIMPL implements EmpresaService {
 
-    @Autowired private EmpresaRepository empresaRepository;
-    @Autowired private VacanteRepository vacanteRepository;
-    @Autowired private CloudinaryService cloudinaryService;
+    @Autowired
+    private EmpresaRepository empresaRepository;
+    @Autowired
+    private VacanteRepository vacanteRepository;
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     private static final int MAX_EMPRESAS_DESTACADAS = 5;
 
     @Override
-public List<EmpresaResponseDTO> listarEmpresas() {
-    List<Empresa> empresas = empresaRepository.findAll();
+    public List<EmpresaResponseDTO> listarEmpresas() {
+        List<Empresa> empresas = empresaRepository.findAll();
 
-    // Un solo query trae el conteo de vacantes activas de TODAS las empresas
-    Map<Long, Long> conteos = new HashMap<>();
-    for (Object[] fila : vacanteRepository.contarActivasPorEmpresa(EstadoVacante.ABIERTA)) {
-        conteos.put(((Number) fila[0]).longValue(), ((Number) fila[1]).longValue());
+        // Un solo query trae el conteo de vacantes activas de TODAS las empresas
+        Map<Long, Long> conteos = new HashMap<>();
+        for (Object[] fila : vacanteRepository.contarActivasPorEmpresa(EstadoVacante.ABIERTA)) {
+            conteos.put(((Number) fila[0]).longValue(), ((Number) fila[1]).longValue());
+        }
+
+        List<EmpresaResponseDTO> todas = empresas.stream()
+                .map(e -> toDTO(e, conteos.getOrDefault(e.getId(), 0L)))
+                .collect(Collectors.toList());
+
+        return seleccionarDestacadas(todas);
     }
-
-    List<EmpresaResponseDTO> todas = empresas.stream()
-            .map(e -> toDTO(e, conteos.getOrDefault(e.getId(), 0L)))
-            .collect(Collectors.toList());
-
-    return seleccionarDestacadas(todas);
-}
 
     private EmpresaResponseDTO toDTO(Empresa e) {
         long vacantesActivas = vacanteRepository.countByEmpresaIdAndEstado(e.getId(), EstadoVacante.ABIERTA);
@@ -77,8 +80,22 @@ public List<EmpresaResponseDTO> listarEmpresas() {
         Empresa e = empresaRepository.findById(empresaId)
                 .orElseThrow(() -> new IllegalArgumentException("Empresa no encontrada."));
 
-        if (dto.getRazonSocial() != null)
-            e.setRazonSocial(dto.getRazonSocial());
+        if (dto.getRazonSocial() != null) {
+            String razon = dto.getRazonSocial().trim();
+            if (razon.isEmpty()) {
+                throw new IllegalArgumentException("La razón social no puede estar vacía.");
+            }
+            e.setRazonSocial(razon);
+            e.setNombre(razon);
+        }
+        if (dto.getTelefono() != null) {
+            String telefono = dto.getTelefono().trim();
+            if (!telefono.matches("^(3[0-9]{9}|60[1-9][0-9]{7}|[1-8][0-9]{7})$")) {
+                throw new IllegalArgumentException(
+                        "Ingresa un teléfono colombiano válido. Ej: 3001234567 (móvil) o 6011234567 (fijo).");
+            }
+            e.setTelefono(telefono);
+        }
         if (dto.getCiudad() != null)
             e.setCiudad(dto.getCiudad());
         if (dto.getSector() != null)
@@ -180,6 +197,7 @@ public List<EmpresaResponseDTO> listarEmpresas() {
         dto.setLogoUrl(e.getLogo() != null ? e.getLogo().getUrl() : null);
         return dto;
     }
+
     private EmpresaResponseDTO toDTO(Empresa e, long vacantesActivas) {
         String logoUrl = e.getLogo() != null ? e.getLogo().getUrl() : null;
 

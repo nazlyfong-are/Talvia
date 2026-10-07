@@ -8,6 +8,7 @@ public class PostulacionResponseDTO {
     private String fecha;
     private String estado;
     private Long vacanteId;
+    private String fechaVista;
 
     public PostulacionResponseDTO() {}
     
@@ -60,4 +61,6 @@ public class PostulacionResponseDTO {
     }
     public Long getVacanteId() { return vacanteId; }
 public void setVacanteId(Long vacanteId) { this.vacanteId = vacanteId; }
+public String getFechaVista() { return fechaVista; }
+public void setFechaVista(String fechaVista) { this.fechaVista = fechaVista; }
 }

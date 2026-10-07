@@ -1,23 +1,57 @@
 <div th:fragment="contenido">
     <section id="sec-publicar" class="tab-content">
-        <div class="form-box">
-            <h2 style="font-family: 'Fraunces', serif; color: var(--gold-deep); margin-bottom: 8px;"
-                id="form-vacante-titulo">➕ Publicar Nueva Oferta Laboral</h2>
-            <p style="color: var(--slate); font-size: 13px; margin-bottom: 24px;" id="form-vacante-subtitulo">La oferta
-                se publicará automáticamente con el nombre y logo actual de tu empresa.</p>
 
-            <form id="form-publicar-vacante">
-                <div class="form-group">
-                    <input type="hidden" id="vac-editando-id" value="">
-                    <label>Título de la Vacante</label>
-                    <input type="text" id="vac-titulo" placeholder="Ej: Senior Frontend Developer" required>
+        <div class="pv-head">
+            <h2 id="form-vacante-titulo">➕ Publicar Nueva Oferta Laboral</h2>
+            <p id="form-vacante-subtitulo">La oferta se publicará automáticamente con el nombre y logo actual de tu empresa.</p>
+        </div>
+
+        <form id="form-publicar-vacante" class="pv-form">
+
+            <!-- 1. LO ESENCIAL -->
+            <div class="pv-card">
+                <div class="pv-card-head">
+                    <span class="pv-paso">1</span>
+                    <div>
+                        <h3>Lo esencial</h3>
+                        <p>Cómo se llama el cargo y dónde está.</p>
+                    </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="form-group">
-                        <label>Ubicación (Ciudad)</label>
-                        <select id="vac-ubicacion" required>
-                            <option value="" disabled selected>Seleccione una ciudad</option>
+                <div class="pv-grid">
+                    <div class="pv-campo pv-full">
+                        <label for="vac-titulo">Título de la vacante <span class="pv-req">*</span></label>
+                        <input type="text" id="vac-titulo" class="pv-input" maxlength="120"
+                            placeholder="Ej: Analista de nómina" required>
+                    </div>
+
+                    <div class="pv-campo">
+                        <label for="vac-area">Área <span class="pv-req">*</span></label>
+                        <select id="vac-area" class="pv-input" required>
+                            <option value="" disabled selected>Selecciona un área</option>
+                            <option value="tecnologia">Tecnología & IT</option>
+                            <option value="ventas">Ventas y Comercial</option>
+                            <option value="logistica">Logística y Transporte</option>
+                            <option value="finanzas">Finanzas y Contabilidad</option>
+                            <option value="salud">Salud y Medicina</option>
+                            <option value="administracion">Administración</option>
+                            <option value="marketing">Marketing y Publicidad</option>
+                            <option value="ingenieria">Ingeniería</option>
+                            <option value="educacion">Educación</option>
+                            <option value="legal">Legal y Jurídico</option>
+                            <option value="recursos-humanos">Recursos Humanos</option>
+                            <option value="construccion">Construcción</option>
+                            <option value="atencion-cliente">Atención al cliente</option>
+                            <option value="produccion">Producción y Manufactura</option>
+                            <option value="diseno">Diseño y Artes</option>
+                            <option value="gastronomia">Gastronomía y Turismo</option>
+                        </select>
+                    </div>
+
+                    <div class="pv-campo">
+                        <label for="vac-ubicacion">Ciudad <span class="pv-req">*</span></label>
+                        <select id="vac-ubicacion" class="pv-input" required>
+                            <option value="" disabled selected>Selecciona una ciudad</option>
                             <option value="Bogotá">Bogotá</option>
                             <option value="Medellín">Medellín</option>
                             <option value="Cali">Cali</option>
@@ -44,57 +78,46 @@
                             <option value="Remoto">Remoto (sin ciudad específica)</option>
                             <option value="otra">Otra ciudad...</option>
                         </select>
-                        <input type="text" id="vac-ubicacion-otra" placeholder="Escriba la ciudad" class="oculto"
-                            style="margin-top:8px;">
+                        <input type="text" id="vac-ubicacion-otra" class="pv-input oculto" maxlength="60"
+                            placeholder="Escribe la ciudad">
                     </div>
+                </div>
+            </div>
 
-                    <div class="form-group">
-                        <label>Área / Profesión</label>
-                        <select id="vac-area" required>
-                            <option value="tecnologia">Tecnología & IT</option>
-                            <option value="ventas">Ventas y Comercial</option>
-                            <option value="logistica">Logística y Transporte</option>
-                            <option value="finanzas">Finanzas y Contabilidad</option>
-                            <option value="salud">Salud y Medicina</option>
-                            <option value="administracion">Administración</option>
-                            <option value="marketing">Marketing y Publicidad</option>
-                            <option value="ingenieria">Ingeniería</option>
-                            <option value="educacion">Educación</option>
-                            <option value="legal">Legal y Jurídico</option>
-                            <option value="recursos-humanos">Recursos Humanos</option>
-                            <option value="construccion">Construcción</option>
-                            <option value="atencion-cliente">Atención al cliente</option>
-                            <option value="produccion">Producción y Manufactura</option>
-                            <option value="diseno">Diseño y Artes</option>
-                            <option value="gastronomia">Gastronomía y Turismo</option>
-                        </select>
+            <!-- 2. EL CARGO -->
+            <div class="pv-card">
+                <div class="pv-card-head">
+                    <span class="pv-paso">2</span>
+                    <div>
+                        <h3>El cargo</h3>
+                        <p>Nivel, modalidad y lo que debe tener el candidato.</p>
                     </div>
                 </div>
 
-                <!-- SALARIO ESTRUCTURADO -->
-                <div class="form-group">
-                    <label>Sueldo Ofrecido</label>
-                    <div style="display:grid; grid-template-columns: 1fr 1fr 100px 140px; gap:8px;">
-                        <input type="text" inputmode="numeric" id="vac-monto-min" placeholder="Monto mínimo" required>
-                        <input type="text" inputmode="numeric" id="vac-monto-max" placeholder="Monto máximo (opcional)">
-                        <select id="vac-moneda">
-                            <option value="COP">COP</option>
-                            <option value="USD">USD</option>
-                            <option value="EUR">EUR</option>
-                            <option value="MXN">MXN</option>
-                        </select>
-                        <select id="vac-periodicidad">
-                            <option value="MENSUAL">Mensual</option>
-                            <option value="POR_HORA">Por hora</option>
-                            <option value="POR_PROYECTO">Por proyecto</option>
+                <div class="pv-grid">
+                    <div class="pv-campo">
+                        <label for="vac-nivel">Nivel del cargo <span class="pv-req">*</span></label>
+                        <select id="vac-nivel" class="pv-input" required>
+                            <option value="entrada">Nivel de entrada / Sin experiencia</option>
+                            <option value="intermedio">Nivel intermedio / Con experiencia</option>
+                            <option value="avanzado">Avanzado / Especializado</option>
+                            <option value="coordinacion">Coordinación / Supervisión</option>
+                            <option value="gerencia">Gerencia / Dirección</option>
                         </select>
                     </div>
-                </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="form-group">
-                        <label>Años de Experiencia Mínima</label>
-                        <select id="vac-experiencia" required>
+                    <div class="pv-campo">
+                        <label for="vac-modalidad">Modalidad <span class="pv-req">*</span></label>
+                        <select id="vac-modalidad" class="pv-input" required>
+                            <option value="presencial">Presencial</option>
+                            <option value="remoto">Remoto</option>
+                            <option value="hibrido">Híbrido</option>
+                        </select>
+                    </div>
+
+                    <div class="pv-campo">
+                        <label for="vac-experiencia">Experiencia mínima <span class="pv-req">*</span></label>
+                        <select id="vac-experiencia" class="pv-input" required>
                             <option value="0">Sin experiencia requerida</option>
                             <option value="1">1+ año</option>
                             <option value="2">2+ años</option>
@@ -105,9 +128,10 @@
                             <option value="10">10+ años</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Nivel Educativo Mínimo (opcional)</label>
-                        <select id="vac-nivel-educativo">
+
+                    <div class="pv-campo">
+                        <label for="vac-nivel-educativo">Nivel educativo mínimo <span class="pv-opcional">(opcional)</span></label>
+                        <select id="vac-nivel-educativo" class="pv-input">
                             <option value="">No especificado</option>
                             <option value="BACHILLER">Bachiller</option>
                             <option value="TECNICO">Técnico</option>
@@ -119,66 +143,97 @@
                         </select>
                     </div>
                 </div>
+            </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                    <div class="form-group">
-                        <label>Modalidad</label>
-                        <select id="vac-modalidad" required>
-                            <option value="presencial">Presencial</option>
-                            <option value="remoto">Remoto</option>
-                            <option value="hibrido">Híbrido</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Nivel del Cargo</label>
-                        <select id="vac-nivel" required>
-                            <option value="entrada">Nivel de entrada / Sin experiencia</option>
-                            <option value="intermedio">Nivel intermedio / Con experiencia</option>
-                            <option value="avanzado">Avanzado / Especializado</option>
-                            <option value="coordinacion">Coordinación / Supervisión</option>
-                            <option value="gerencia">Gerencia / Dirección</option>
-                        </select>
+            <!-- 3. SUELDO -->
+            <div class="pv-card">
+                <div class="pv-card-head">
+                    <span class="pv-paso">3</span>
+                    <div>
+                        <h3>Sueldo ofrecido</h3>
+                        <p>Los candidatos lo ven en la tarjeta de la vacante.</p>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label>Descripción del Rol</label>
-                    <textarea id="vac-descripcion" rows="3"
-                        placeholder="Describe brevemente las responsabilidades del puesto..." required></textarea>
+                <div class="pv-grid">
+                    <div class="pv-campo">
+                        <label for="vac-monto-min">Sueldo mínimo <span class="pv-req">*</span></label>
+                        <div class="pv-dinero">
+                            <span class="pv-signo">$</span>
+                            <input type="text" inputmode="numeric" id="vac-monto-min" class="pv-input"
+                                placeholder="2500000" required>
+                        </div>
+                    </div>
+
+                    <div class="pv-campo">
+                        <label for="vac-monto-max">Sueldo máximo <span class="pv-opcional">(opcional)</span></label>
+                        <div class="pv-dinero">
+                            <span class="pv-signo">$</span>
+                            <input type="text" inputmode="numeric" id="vac-monto-max" class="pv-input"
+                                placeholder="4000000">
+                        </div>
+                    </div>
+
+                    <div class="pv-campo">
+                        <label for="vac-moneda">Moneda</label>
+                        <select id="vac-moneda" class="pv-input">
+                            <option value="COP">COP (pesos colombianos)</option>
+                            <option value="USD">USD (dólares)</option>
+                            <option value="EUR">EUR (euros)</option>
+                            <option value="MXN">MXN (pesos mexicanos)</option>
+                        </select>
+                    </div>
+
+                    <div class="pv-campo">
+                        <label for="vac-periodicidad">Se paga</label>
+                        <select id="vac-periodicidad" class="pv-input">
+                            <option value="MENSUAL">Mensual</option>
+                            <option value="POR_HORA">Por hora</option>
+                            <option value="POR_PROYECTO">Por proyecto</option>
+                        </select>
+                    </div>
+
+                    <p class="pv-ayuda pv-full">Escribe solo números, sin puntos ni comas. Deja el máximo vacío si el sueldo es un valor fijo.</p>
+                </div>
+            </div>
+
+            <!-- 4. DETALLES -->
+            <div class="pv-card">
+                <div class="pv-card-head">
+                    <span class="pv-paso">4</span>
+                    <div>
+                        <h3>Detalles de la oferta</h3>
+                        <p>Qué hará la persona y qué le ofreces.</p>
+                    </div>
                 </div>
 
-                <!-- REQUISITOS ESTRUCTURADOS -->
-                <div class="form-group">
-                    <label>Requisitos del Candidato</label>
-                    <div id="requisitos-container"></div>
-                    <button type="button" id="add-requisito" class="btn-login"
-                        style="background:var(--bg); color:var(--ink); border:1px solid var(--line); padding:8px 14px; font-size:13px; margin-top:8px;">+
-                        Agregar requisito</button>
-                </div>
+                <div class="pv-grid">
+                    <div class="pv-campo pv-full">
+                        <label for="vac-descripcion">Descripción del rol <span class="pv-req">*</span></label>
+                        <textarea id="vac-descripcion" class="pv-input" rows="5" maxlength="3000"
+                            placeholder="Describe brevemente las responsabilidades del puesto..." required></textarea>
+                        <p class="pv-ayuda">Máximo 3.000 caracteres.</p>
+                    </div>
 
-                <div class="form-group">
-                    <label>¿Qué Ofrecemos? (Beneficios)</label>
-                    <textarea id="vac-beneficios" rows="3"
-                        placeholder="Ej: Horario flexible, Seguro médico, Capacidad de crecimiento..."
-                        required></textarea>
-                </div>
+                    <div class="pv-campo pv-full">
+                        <label>Requisitos del candidato <span class="pv-opcional">(uno por línea)</span></label>
+                        <div id="requisitos-container" class="pv-reqs"></div>
+                        <button type="button" id="add-requisito" class="pv-btn-agregar">+ Agregar requisito</button>
+                    </div>
 
-                <div style="display:flex; gap:10px;">
-                    <button type="submit" class="btn-login" id="btn-publicar"
-                        style="background: var(--gold); color: var(--ink); font-weight: 600; flex:1; padding: 12px;">Publicar
-                        Oferta Ahora</button>
-                    <button type="button" id="btn-cancelar-edicion" class="btn-login oculto"
-                        style="background: var(--bg); color: var(--ink); border: 1px solid var(--line); padding: 12px 20px;">Cancelar</button>
+                    <div class="pv-campo pv-full">
+                        <label for="vac-beneficios">¿Qué ofreces? <span class="pv-opcional">(opcional)</span></label>
+                        <textarea id="vac-beneficios" class="pv-input" rows="3" maxlength="255"
+                            placeholder="Ej: Horario flexible, seguro médico, bonos por desempeño..."></textarea>
+                    </div>
                 </div>
-            </form>
-        </div>
+            </div>
 
-        <div class="form-box" style="margin-top: 24px;">
-            <h3 style="font-family: 'Fraunces', serif; color: var(--ink); margin-bottom: 4px; font-size: 18px;">📋 Mis
-                Vacantes Publicadas</h3>
-            <p style="color: var(--slate); font-size: 13px; margin-bottom: 20px;">Estas son las ofertas activas de tu
-                empresa. Puedes eliminarlas cuando ya no estén disponibles.</p>
-            <div id="lista-mis-vacantes" style="display: grid; gap: 12px;"></div>
-        </div>
+            <div class="pv-acciones">
+                <button type="button" id="btn-cancelar-edicion" class="pv-btn pv-btn-secundario oculto">Cancelar</button>
+                <button type="submit" id="btn-publicar" class="pv-btn pv-btn-primario">Publicar Oferta Ahora</button>
+            </div>
+
+        </form>
     </section>
 </div>

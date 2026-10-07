@@ -8,6 +8,7 @@ public class EmpresaPerfilUpdateDTO {
     private String sitioWeb;
     private String numeroEmpleados;
     private String figuraLegal;
+    private String telefono;
 
     public String getRazonSocial() { return razonSocial; }
     public void setRazonSocial(String razonSocial) { this.razonSocial = razonSocial; }
@@ -23,4 +24,6 @@ public class EmpresaPerfilUpdateDTO {
     public void setNumeroEmpleados(String numeroEmpleados) { this.numeroEmpleados = numeroEmpleados; }
     public String getFiguraLegal() { return figuraLegal; }
     public void setFiguraLegal(String figuraLegal) { this.figuraLegal = figuraLegal; }
+    public String getTelefono() { return telefono; }
+    public void setTelefono(String telefono) { this.telefono = telefono; }
 }

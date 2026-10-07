@@ -18,6 +18,9 @@ public class TrabajadorPerfilUpdateDTO {
     private List<HabilidadDTO> habilidadesTecnicas;
     private List<HabilidadDTO> idiomas;
     private List<CertificacionUpdateDTO> certificaciones;
+    private List<String> apoyos;                 // null = la sección no vino; lista vacía = sin respuesta
+private String apoyosNota;
+private Boolean autorizaTratamientoApoyos;
 
     public TrabajadorPerfilUpdateDTO() {}
 
@@ -47,4 +50,11 @@ public class TrabajadorPerfilUpdateDTO {
     public void setIdiomas(List<HabilidadDTO> idiomas) { this.idiomas = idiomas; }
     public List<CertificacionUpdateDTO> getCertificaciones() { return certificaciones; }
     public void setCertificaciones(List<CertificacionUpdateDTO> certificaciones) { this.certificaciones = certificaciones; }
+    public List<String> getApoyos() { return apoyos; }
+public void setApoyos(List<String> apoyos) { this.apoyos = apoyos; }
+public String getApoyosNota() { return apoyosNota; }
+public void setApoyosNota(String apoyosNota) { this.apoyosNota = apoyosNota; }
+public Boolean getAutorizaTratamientoApoyos() { return autorizaTratamientoApoyos; }
+public void setAutorizaTratamientoApoyos(Boolean a) { this.autorizaTratamientoApoyos = a; }
+
 }

@@ -26,12 +26,17 @@ function renderizarPaginacionAdmin(container, paginaActual, totalPaginas, onCamb
     container.innerHTML = '';
     if (totalPaginas <= 1) return;
 
+    const irA = (pagina) => {
+        onCambiarPagina(pagina);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     const crearBtn = (texto, pagina, deshabilitado) => {
         const btn = document.createElement('button');
         btn.className = 'page-btn';
         btn.textContent = texto;
         btn.disabled = deshabilitado;
-        btn.addEventListener('click', () => onCambiarPagina(pagina));
+        btn.addEventListener('click', () => irA(pagina));
         return btn;
     };
 
@@ -39,14 +44,31 @@ function renderizarPaginacionAdmin(container, paginaActual, totalPaginas, onCamb
 
     const numeros = document.createElement('div');
     numeros.className = 'page-numbers';
-    for (let i = 1; i <= totalPaginas; i++) {
-        const btn = document.createElement('button');
-        btn.className = 'page-num' + (i === paginaActual ? ' active' : '');
-        btn.textContent = i;
-        btn.addEventListener('click', () => onCambiarPagina(i));
-        numeros.appendChild(btn);
-    }
+    rangoPaginas(paginaActual, totalPaginas).forEach(p => {
+        if (p === '…') {
+            const puntos = document.createElement('span');
+            puntos.className = 'page-ellipsis';
+            puntos.textContent = '…';
+            numeros.appendChild(puntos);
+        } else {
+            const btn = document.createElement('button');
+            btn.className = 'page-num' + (p === paginaActual ? ' active' : '');
+            btn.textContent = p;
+            btn.addEventListener('click', () => irA(p));
+            numeros.appendChild(btn);
+        }
+    });
     container.appendChild(numeros);
 
     container.appendChild(crearBtn('Siguiente »', paginaActual + 1, paginaActual >= totalPaginas));
+}
+
+function escaparHtml(valor) {
+    if (valor === null || valor === undefined) return '';
+    return String(valor)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
 }

@@ -76,19 +76,21 @@ async function cargarUsuarios() {
 function crearFilaUsuario(u) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-        <td><b>${u.nombre || '—'}</b></td>
-        <td>${u.email || '—'}</td>
+        <td class="celda-truncada" title="${escaparHtml(u.nombre)}"><b>${escaparHtml(u.nombre) || '—'}</b></td>
+        <td class="celda-truncada" title="${escaparHtml(u.email)}">${escaparHtml(u.email) || '—'}</td>
         <td>${u.rol || '—'}</td>
-        <td>${u.ciudad || '—'}</td>
+        <td>${escaparHtml(u.ciudad) || '—'}</td>
         <td>${u.fechaRegistro || '—'}</td>
         <td><span class="badge-estado ${u.activo ? 'badge-activo' : 'badge-inactivo'}">${u.activo ? 'Activo' : 'Inactivo'}</span></td>
-        <td style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="btn-tabla btn-ver-usuario" data-id="${u.id}">Ver</button>
-            <button class="btn-tabla ${u.activo ? 'btn-tabla-peligro' : ''}" data-id="${u.id}" data-activo="${u.activo}">${u.activo ? 'Desactivar' : 'Activar'}</button>
+        <td>
+            <div class="acciones-fila">
+                <button class="btn-tabla btn-ver-usuario">Ver</button>
+                <button class="btn-tabla btn-toggle-usuario ${u.activo ? 'btn-tabla-peligro' : ''}">${u.activo ? 'Desactivar' : 'Activar'}</button>
+            </div>
         </td>
     `;
     tr.querySelector('.btn-ver-usuario').addEventListener('click', () => verDetalleUsuario(u.id));
-    tr.querySelectorAll('.btn-tabla')[1].addEventListener('click', () => toggleEstadoUsuario(u.id, u.activo));
+    tr.querySelector('.btn-toggle-usuario').addEventListener('click', () => toggleEstadoUsuario(u.id, u.activo));
     return tr;
 }
 

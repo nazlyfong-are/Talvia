@@ -1,0 +1,77 @@
+<div th:fragment="contenido">
+    <section id="sec-mis-vacantes" class="tab-content">
+        <div class="mv-panel" id="mv-panel">
+
+            <div class="mv-head">
+                <div>
+                    <h2>📋 Mis Vacantes <span class="mv-total" id="mv-total"></span></h2>
+                    <p>Edita, pausa, cierra o elimina tus ofertas desde aquí.</p>
+                </div>
+                <button type="button" class="mv-btn-nueva" id="btn-nueva-vacante">➕ Nueva vacante</button>
+            </div>
+
+            <div class="mv-toolbar">
+                <div class="chip-row" id="mv-chips">
+                    <button type="button" class="chip active" data-estado="TODAS">Todas <span class="chip-count">0</span></button>
+                    <button type="button" class="chip" data-estado="ABIERTA">Abiertas <span class="chip-count">0</span></button>
+                    <button type="button" class="chip" data-estado="PAUSADA">Pausadas <span class="chip-count">0</span></button>
+                    <button type="button" class="chip" data-estado="CERRADA">Cerradas <span class="chip-count">0</span></button>
+                </div>
+
+                <div class="mv-filtros">
+                    <div class="mv-filtro mv-buscar">
+                        <label for="mv-buscar">Buscar</label>
+                        <input type="text" id="mv-buscar" class="mv-input" placeholder="Título o ciudad…" autocomplete="off">
+                    </div>
+                    <div class="mv-filtro">
+                        <label for="mv-area">Área</label>
+                        <select id="mv-area" class="mv-input">
+                            <option value="">Todas las áreas</option>
+                        </select>
+                    </div>
+                    <div class="mv-filtro">
+                        <label for="mv-orden">Ordenar por</label>
+                        <select id="mv-orden" class="mv-input">
+                            <option value="recientes">Más recientes</option>
+                            <option value="antiguas">Más antiguas</option>
+                            <option value="candidatos">Más candidatos</option>
+                            <option value="titulo">Título (A–Z)</option>
+                        </select>
+                    </div>
+                    <button type="button" class="mv-limpiar" id="mv-limpiar" hidden>Limpiar filtros</button>
+                </div>
+            </div>
+
+            <div class="mv-tabla-wrap">
+                <table class="mv-tabla">
+                    <thead>
+                        <tr>
+                            <th>Vacante</th>
+                            <th>Área</th>
+                            <th>Publicada</th>
+                            <th>Sueldo</th>
+                            <th>Candidatos</th>
+                            <th>Estado</th>
+                            <th class="mv-th-acc">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mv-tbody">
+                        <tr>
+                            <td colspan="7" class="mv-vacio">
+                                <div class="skeleton-loader skeleton-block"></div>
+                                <div class="skeleton-loader skeleton-block"></div>
+                                <div class="skeleton-loader skeleton-block"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mv-pie">
+                <span class="mv-resumen" id="mv-resumen"></span>
+                <div class="pagination-container" id="mv-paginacion"></div>
+            </div>
+
+        </div>
+    </section>
+</div>

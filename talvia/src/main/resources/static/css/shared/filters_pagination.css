@@ -251,6 +251,10 @@
     color: #ffffff;
 }
 
+.pagination-container { flex-wrap: wrap; row-gap: 10px; }
+.page-numbers { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; align-items: center; }
+.page-ellipsis { padding: 0 6px; color: var(--slate); user-select: none; }
+
 @media (max-width: 820px) {
     .filters {
         position: static;

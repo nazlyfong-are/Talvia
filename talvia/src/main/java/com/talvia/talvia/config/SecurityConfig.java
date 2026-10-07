@@ -13,12 +13,16 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
+import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired private UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -39,18 +43,18 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+        XorCsrfTokenRequestAttributeHandler delegate = new XorCsrfTokenRequestAttributeHandler();
+        // Fuerza que el token se genere y la cookie XSRF-TOKEN salga desde la primera respuesta
+        delegate.setCsrfRequestAttributeName(null);
+        // Usa solo handle() del Xor; para leer el token enviado se queda con la resolución
+        // por defecto (header X-XSRF-TOKEN), que acepta el valor tal cual está en la cookie
+        CsrfTokenRequestHandler requestHandler = delegate::handle;
+
         http
             .csrf(csrf -> csrf
-                .ignoringRequestMatchers(
-    "/api/auth/**",
-    "/api/register/**",
-    "/api/trabajador/**",
-    "/api/empresa/**",
-    "/api/postulaciones/**",
-    "/api/cuenta/**",
-    "/api/notificaciones/**",
-    "/api/admin/**"
-)
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .csrfTokenRequestHandler(requestHandler)
             )
             .sessionManagement(session -> session
                 .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -59,19 +63,21 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/", "/public/**", "/css/**", "/js/**", "/img/**",
                     "/api/auth/**", "/api/register/**",
-                    "/api/vacantes/**", "/api/empresas/**","/api/notificaciones/**",
+                    "/api/vacantes/**", "/api/empresas/**",
                     "/error"
                 ).permitAll()
 
                 .requestMatchers("/private/admin/**").hasRole("ADMIN")
                 .requestMatchers("/private/trabajador/**").hasRole("TRABAJADOR")
                 .requestMatchers("/private/empresa/**").hasRole("EMPRESA")
-                .requestMatchers("/api/notificaciones/**").authenticated()
+
                 .requestMatchers("/api/trabajador/**").hasRole("TRABAJADOR")
                 .requestMatchers("/api/postulaciones/**").hasRole("TRABAJADOR")
                 .requestMatchers("/api/empresa/**").hasRole("EMPRESA")
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/cuenta/**").authenticated()
+                .requestMatchers("/api/notificaciones/**").authenticated()
+
                 .anyRequest().authenticated()
             )
             .formLogin(form -> form.disable())

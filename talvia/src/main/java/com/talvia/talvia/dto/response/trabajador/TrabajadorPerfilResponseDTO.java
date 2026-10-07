@@ -23,6 +23,8 @@ public class TrabajadorPerfilResponseDTO {
     private List<HabilidadDTO> idiomas;
     private List<CertificacionResponseDTO> certificaciones;
     private List<CvDocumentoResponseDTO> cvs;
+    private List<String> apoyos;
+private String apoyosNota;
 
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -58,4 +60,8 @@ public class TrabajadorPerfilResponseDTO {
     public void setCertificaciones(List<CertificacionResponseDTO> certificaciones) { this.certificaciones = certificaciones; }
     public List<CvDocumentoResponseDTO> getCvs() { return cvs; }
     public void setCvs(List<CvDocumentoResponseDTO> cvs) { this.cvs = cvs; }
+    public List<String> getApoyos() { return apoyos; }
+public void setApoyos(List<String> apoyos) { this.apoyos = apoyos; }
+public String getApoyosNota() { return apoyosNota; }
+public void setApoyosNota(String apoyosNota) { this.apoyosNota = apoyosNota; }
 }

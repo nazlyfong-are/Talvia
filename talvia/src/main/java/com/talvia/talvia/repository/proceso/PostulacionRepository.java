@@ -19,6 +19,7 @@ public interface PostulacionRepository extends
         JpaSpecificationExecutor<Postulacion>{
     List<Postulacion> findByTrabajadorId(Long trabajadorId);
     List<Postulacion> findByVacanteId(Long vacanteId);
+@EntityGraph(attributePaths = {"trabajador", "vacante"})
     List<Postulacion> findByVacante_Empresa_IdOrderByFechaPostulacionDesc(Long empresaId);
     boolean existsByTrabajadorIdAndVacanteId(Long trabajadorId, Long vacanteId);
     boolean existsByCvEnviadoId(Long cvEnviadoId);

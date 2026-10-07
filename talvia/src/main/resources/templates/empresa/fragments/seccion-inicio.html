@@ -1,12 +1,25 @@
 <div th:fragment="contenido">
     <section id="sec-inicio" class="tab-content active">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 12px;">
-            <h2 style="font-family: 'Fraunces', serif; color: var(--ink);">📥 Bandeja de Postulaciones</h2>
-            <span id="badge-total" style="background: var(--gold); color: var(--ink); padding: 4px 12px; border-radius: 20px; font-weight: 600; font-size: 13px;">0 Candidatos</span>
+
+        <div class="ic-head">
+            <div>
+                <h2>📥 Bandeja de Postulaciones</h2>
+                <p>Los candidatos de cada vacante, agrupados para revisarlos con calma.</p>
+            </div>
+            <span class="ic-total" id="badge-total">0 Candidatos</span>
         </div>
 
-        <div class="candidatos-toolbar">
-            <input type="text" id="searchCandidatos" class="search-candidatos-input" placeholder="Buscar candidato por nombre…">
+        <div class="ic-toolbar">
+            <div class="ic-barra">
+                <input type="text" id="searchCandidatos" class="ic-buscar"
+                    placeholder="Buscar candidato por nombre…" autocomplete="off">
+                <button type="button" class="ic-btn-filtros" id="btn-filtros"
+                    aria-expanded="false" aria-controls="panel-filtros">
+                    <span>⚙️ Filtros</span>
+                    <span class="ic-filtros-n" id="filtros-n" hidden>0</span>
+                </button>
+            </div>
+
             <div class="chip-row" id="filtrosEstado">
                 <button type="button" class="chip active" data-estado="TODOS">Todos <span class="chip-count">0</span></button>
                 <button type="button" class="chip" data-estado="PENDIENTE">Pendientes <span class="chip-count">0</span></button>
@@ -14,8 +27,46 @@
                 <button type="button" class="chip" data-estado="ACEPTADO">Aceptados <span class="chip-count">0</span></button>
                 <button type="button" class="chip" data-estado="RECHAZADO">Rechazados <span class="chip-count">0</span></button>
             </div>
+
+            <div class="ic-panel" id="panel-filtros" hidden>
+                <div class="ic-campo">
+                    <label for="f-vacante">Vacante</label>
+                    <select id="f-vacante" class="ic-input">
+                        <option value="">Todas las vacantes</option>
+                    </select>
+                </div>
+                <div class="ic-campo">
+                    <label for="f-desde">Postulados desde</label>
+                    <input type="date" id="f-desde" class="ic-input">
+                </div>
+                <div class="ic-campo">
+                    <label for="f-hasta">Hasta</label>
+                    <input type="date" id="f-hasta" class="ic-input">
+                </div>
+                <div class="ic-campo">
+                    <label for="f-orden">Ordenar candidatos</label>
+                    <select id="f-orden" class="ic-input">
+                        <option value="recientes">Más recientes primero</option>
+                        <option value="antiguas">Más antiguos primero</option>
+                        <option value="nombre">Nombre (A–Z)</option>
+                    </select>
+                </div>
+                <label class="ic-check" for="f-sin-revisar">
+                    <input type="checkbox" id="f-sin-revisar">
+                    <span>Solo candidatos sin revisar
+                        <small>Su hoja de vida aún no se ha abierto</small></span>
+                </label>
+                <button type="button" class="ic-limpiar" id="f-limpiar">Limpiar filtros</button>
+            </div>
         </div>
 
-        <div id="acordeon-vacantes"></div>
+        <p class="ic-resumen" id="ic-resumen"></p>
+
+        <div id="acordeon-vacantes">
+            <div class="skeleton-loader skeleton-card"></div>
+            <div class="skeleton-loader skeleton-card"></div>
+        </div>
+
+        <div class="ic-pag" id="ic-paginacion"></div>
     </section>
 </div>

@@ -67,15 +67,17 @@ function crearFilaVacante(v) {
     const badgeClase = v.estado === 'ABIERTA' ? 'badge-abierta' : v.estado === 'PAUSADA' ? 'badge-pausada' : 'badge-cerrada';
     const tr = document.createElement('tr');
     tr.innerHTML = `
-        <td><b>${v.titulo || '—'}</b></td>
-        <td>${v.empresa || '—'}</td>
-        <td>${v.area || '—'}</td>
+        <td class="celda-truncada" title="${escaparHtml(v.titulo)}"><b>${escaparHtml(v.titulo) || '—'}</b></td>
+        <td class="celda-truncada" title="${escaparHtml(v.empresa)}">${escaparHtml(v.empresa) || '—'}</td>
+        <td>${escaparHtml(v.area) || '—'}</td>
         <td>${v.fecha || '—'}</td>
         <td>${v.totalPostulaciones ?? 0}</td>
         <td><span class="badge-estado ${badgeClase}">${v.estado || '—'}</span></td>
-        <td style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="btn-tabla btn-cerrar-vacante" data-id="${v.id}">Cerrar</button>
-            <button class="btn-tabla btn-tabla-peligro btn-eliminar-vacante" data-id="${v.id}" data-titulo="${v.titulo}">Eliminar</button>
+        <td>
+            <div class="acciones-fila">
+                <button class="btn-tabla btn-cerrar-vacante" ${v.estado === 'CERRADA' ? 'disabled' : ''}>Cerrar</button>
+                <button class="btn-tabla btn-tabla-peligro btn-eliminar-vacante">Eliminar</button>
+            </div>
         </td>
     `;
     tr.querySelector('.btn-cerrar-vacante').addEventListener('click', () => cerrarVacante(v.id));

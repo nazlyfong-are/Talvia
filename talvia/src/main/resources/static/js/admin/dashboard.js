@@ -63,11 +63,12 @@ function pintarGrafico(registros) {
     const maxValor = Math.max(...registros.map(r => r.total), 1);
 
     registros.forEach(r => {
-        const alturaPct = Math.max((r.total / maxValor) * 100, 3);
+        const alturaPx = Math.max((r.total / maxValor) * 110, 3);
         const col = document.createElement('div');
         col.className = 'bar-chart-col';
         col.innerHTML = `
-            <div class="bar-chart-bar" style="height:${alturaPct}%;" title="${r.total} registros"></div>
+            <div class="bar-chart-value">${r.total}</div>
+            <div class="bar-chart-bar" style="height:${alturaPx}px;" title="${r.total} registros"></div>
             <div class="bar-chart-label">${r.etiqueta}</div>
         `;
         cont.appendChild(col);

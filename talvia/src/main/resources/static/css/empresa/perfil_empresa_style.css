@@ -1,0 +1,242 @@
+/* ============================================
+   PERFIL DE EMPRESA: misma distribución que el perfil del trabajador
+   (encabezado oscuro con logo y contacto, panel de información,
+   zona de peligro). Prefijo .pe- para no chocar con otros estilos.
+============================================ */
+
+.perfil-emp .oculto,
+.pe-modal-overlay .oculto { display: none !important; }
+
+/* Modo vista / modo edición */
+.perfil-emp:not(.modo-edicion) .editar { display: none !important; }
+.perfil-emp.modo-edicion .ver { display: none !important; }
+
+/* ── Estado de carga (reutiliza la animación de shared/skeleton.css) ── */
+.perfil-emp.cargando .pe-valor {
+    display: inline-block;
+    min-width: 110px;
+    height: 1em;
+    color: transparent;
+    border-radius: 6px;
+    background-size: 200% 100%;
+    animation: skeleton-pulse 1.4s ease-in-out infinite;
+}
+.perfil-emp.cargando .pe-hero .pe-valor {
+    background-image: linear-gradient(90deg, rgba(255,255,255,.10) 25%, rgba(255,255,255,.22) 50%, rgba(255,255,255,.10) 75%);
+}
+.perfil-emp.cargando .pe-panel .pe-valor {
+    background-image: linear-gradient(90deg, #eef1f2 25%, #f7f8f9 50%, #eef1f2 75%);
+}
+.perfil-emp.cargando .pe-panel p.pe-valor { display: block; width: 80%; height: 3em; }
+
+/* ── Encabezado ── */
+.pe-hero {
+    background: var(--ink);
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 30px 34px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+}
+.pe-hero-main { display: flex; align-items: center; gap: 26px; flex-wrap: wrap; flex: 1 1 420px; min-width: 0; }
+.pe-hero-text { flex: 1 1 260px; min-width: 0; }
+
+.pe-logo-wrap { position: relative; width: 120px; height: 120px; flex-shrink: 0; margin-bottom: 10px; }
+.pe-logo {
+    width: 100%; height: 100%;
+    border-radius: 16px;
+    border: 3px solid var(--gold);
+    background: rgba(254, 237, 202, 0.12);
+    color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: "Fraunces", serif; font-size: 36px; font-weight: 600;
+    overflow: hidden;
+}
+.pe-logo img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
+.pe-logo-btn {
+    position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%);
+    background: var(--gold); color: var(--ink);
+    font-size: 11px; font-weight: 600;
+    padding: 6px 12px; border-radius: 20px;
+    cursor: pointer; white-space: nowrap;
+    box-shadow: 0 4px 6px rgba(0,0,0,.3);
+}
+
+.pe-eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 10px;
+}
+.pe-nombre {
+    font-family: "Fraunces", serif; font-size: 30px; font-weight: 600;
+    line-height: 1.15; margin: 0 0 6px; color: #fff; overflow-wrap: anywhere;
+}
+.pe-sector { color: var(--gold); font-size: 17px; font-weight: 500; margin-bottom: 12px; }
+.pe-contacto { display: flex; flex-wrap: wrap; gap: 8px 22px; color: #c7cfdc; font-size: 14px; }
+.pe-dato { display: inline-flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; overflow-wrap: anywhere; }
+.pe-ciudad-edit { display: inline-flex; flex-direction: column; gap: 6px; min-width: 190px; }
+
+/* ── Tarjeta de estado de cuenta ── */
+.pe-cuenta {
+    background: rgba(255,255,255,.05);
+    border: 1px solid rgba(255,255,255,.1);
+    border-radius: var(--radius);
+    padding: 20px;
+    min-width: 240px;
+    display: flex; flex-direction: column; gap: 8px;
+}
+.pe-cuenta-label {
+    font-family: "IBM Plex Mono", monospace; font-size: 12px;
+    color: var(--gold); text-transform: uppercase;
+}
+.pe-cuenta-titulo { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+
+/* ── Botones ── */
+.pe-btn {
+    width: 100%;
+    padding: 11px 16px;
+    border-radius: 6px;
+    font-family: inherit; font-size: 13.5px; font-weight: 600;
+    text-align: center; cursor: pointer;
+    border: 1px solid transparent;
+}
+.pe-btn:disabled { opacity: .6; cursor: not-allowed; }
+.pe-btn-claro { background: var(--gold); color: var(--ink); }
+.pe-btn-verde { background: var(--green); color: #fff; }
+.pe-btn-fantasma { background: transparent; color: #fff; border-color: rgba(255,255,255,.3); }
+.pe-btn-gris { background: #e2e8f0; color: #4a5568; }
+.pe-btn-rojo { background: #d93838; color: #fff; }
+
+/* ── Inputs ── */
+.pe-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-family: "IBM Plex Sans", sans-serif; font-size: 14px;
+    color: var(--ink); background: #fff;
+}
+.pe-input:focus { outline: none; border-color: var(--ink-soft); box-shadow: 0 0 0 3px rgba(45,90,112,.12); }
+textarea.pe-input { resize: vertical; min-height: 96px; }
+
+.pe-hero .pe-input { background: rgba(255,255,255,.08); border: 1px dashed var(--gold); color: #fff; }
+.pe-hero .pe-input::placeholder { color: rgba(255,255,255,.45); }
+.pe-hero .pe-input:focus { border-style: solid; box-shadow: 0 0 0 3px rgba(254,237,202,.18); }
+.pe-hero select.pe-input option { color: var(--ink); background: #fff; }
+.pe-input-grande { font-family: "Fraunces", serif; font-size: 24px; font-weight: 600; }
+
+/* ── Panel de información ── */
+.pe-panel {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 30px;
+    margin-top: 24px;
+}
+.pe-panel-head h3 { font-family: "Fraunces", serif; font-size: 20px; color: var(--ink); margin: 0 0 4px; }
+.pe-panel-head p { font-size: 13px; color: var(--slate); margin: 0 0 22px; }
+
+.pe-bloque { background: var(--bg); border-left: 4px solid var(--gold-deep); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+.pe-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 16px; }
+.pe-bloque-ancho { grid-column: 1 / -1; }
+
+.pe-etiqueta {
+    display: block; margin-bottom: 8px;
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px; font-weight: 600;
+    color: var(--slate); text-transform: uppercase; letter-spacing: .05em;
+}
+.pe-texto { font-size: 14.5px; color: var(--ink-soft); line-height: 1.65; margin: 0; white-space: pre-line; overflow-wrap: anywhere; }
+.pe-dato-valor { font-size: 15px; font-weight: 600; color: var(--ink); }
+.pe-link { color: var(--gold-deep); font-weight: 600; text-decoration: none; overflow-wrap: anywhere; }
+.pe-link:hover { text-decoration: underline; }
+
+/* ── Zona de peligro ── */
+.pe-peligro {
+    margin-top: 24px;
+    background: #fffafa;
+    border: 1px solid #f8d7d7;
+    border-radius: var(--radius);
+    padding: 24px;
+}
+.pe-peligro h3 { font-family: "Fraunces", serif; color: #d93838; font-size: 17px; margin: 0 0 6px; }
+.pe-peligro p { font-size: 13px; color: var(--slate); margin: 0 0 16px; }
+.pe-btn-peligro {
+    background: #fdf2f2; color: #d93838;
+    border: 1px solid #f8d7d7; border-radius: 6px;
+    padding: 10px 18px; font-size: 13px; font-weight: 600; cursor: pointer;
+}
+
+/* ── Modal ── */
+.pe-modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(12, 55, 74, .55);
+    backdrop-filter: blur(4px);
+    align-items: center; justify-content: center;
+    z-index: 1100; padding: 16px;
+}
+.pe-modal-overlay.abierto { display: flex; }
+.pe-modal-card {
+    background: #fff; color: var(--ink);
+    padding: 30px; border-radius: var(--radius);
+    max-width: 440px; width: 100%;
+    box-shadow: 0 15px 35px rgba(0,0,0,.25);
+}
+.pe-modal-card h3 { font-family: "Fraunces", serif; font-size: 20px; color: #d93838; margin: 0 0 8px; }
+.pe-modal-card p { font-size: 13.5px; color: var(--slate); margin: 0 0 20px; }
+.pe-modal-acciones { display: flex; gap: 10px; justify-content: flex-end; }
+.pe-modal-card .pe-btn { width: auto; }
+
+
+/* ============================================
+   ENCABEZADO DE ESQUINA A ESQUINA (solo en la pestaña Perfil)
+   dashboard-perfil.js agrega la clase .perfil-activo al <main> y al <body>
+   mientras esa pestaña está visible.
+============================================ */
+
+/* Límite de ancho de todas las pestañas del dashboard.
+   row-gap: 0 porque las secciones ocultas dejan filas vacías en la grilla y cada una
+   sumaba 36px de separación sobre el contenido. */
+.dash-main { grid-template-columns: 1fr; max-width: 1000px; margin: 30px auto; row-gap: 0; }
+
+/* Color de la franja que queda detrás del encabezado: azul marino en los dos temas.
+   (Antes usaba var(--ink), que en modo oscuro es casi blanco.) */
+.dash-main.perfil-activo { --franja: #0c374a; }
+html[data-theme="dark"] .dash-main.perfil-activo { --franja: var(--marino, #0b2733); }
+
+.dash-main.perfil-activo {
+    max-width: none;
+    margin: -1px 0 0;           /* sube 1px para tapar cualquier hueco de redondeo bajo el header */
+    padding: 0 0 80px;
+    row-gap: 0;
+    /* Si algún contenedor deja una rendija bajo el header, se ve azul marino y no claro */
+    background: linear-gradient(var(--franja), var(--franja)) top / 100% 64px no-repeat;
+}
+
+.dash-main.perfil-activo .pe-hero {
+    border-radius: 0;
+    padding-top: clamp(26px, 5vw, 44px);
+    padding-bottom: clamp(30px, 6vw, 52px);
+    /* El contenido interno queda centrado a 1000px, alineado con el panel de abajo */
+    padding-left: max(20px, calc((100% - 1000px) / 2));
+    padding-right: max(20px, calc((100% - 1000px) / 2));
+}
+
+.dash-main.perfil-activo .pe-panel,
+.dash-main.perfil-activo .pe-peligro {
+    box-sizing: border-box;
+    width: min(1000px, calc(100% - 40px));
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Sin espacios entre el header y el encabezado, venga de donde venga el espacio */
+.dash-main.perfil-activo > div,
+.dash-main.perfil-activo .tab-content,
+.dash-main.perfil-activo .perfil-emp { margin-top: 0; padding-top: 0; }
+
+/* Solo mientras la pestaña Perfil está activa: el header no marca su borde inferior */
+body.perfil-activo header.top { border-bottom: 0; box-shadow: none; }

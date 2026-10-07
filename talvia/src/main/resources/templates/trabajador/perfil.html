@@ -9,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <th:block th:replace="~{fragments/shared-css :: links}"></th:block>
     <link rel="stylesheet" th:href="@{/css/trabajador/perfil_style.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/inclusion.css}">
+    <!-- Siempre el último -->
+    <link rel="stylesheet" th:href="@{/css/shared/responsive.css}">
 </head>
 <body>
 
@@ -18,7 +21,9 @@
             <div class="brand-mark">TV</div>
             <div class="brand-name">Tal<span>via</span></div>
         </div>
+
         <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menú">☰</button>
+
         <nav class="top-nav">
             <a th:href="@{/private/trabajador/index}">Inicio</a>
             <a th:href="@{/private/trabajador/empresas}">Empresas</a>
@@ -45,6 +50,7 @@
     </div>
 </header>
 <div class="nav-backdrop" id="nav-backdrop"></div>
+
 <section class="hero" style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:24px;">
 
     <div style="display:flex; align-items:center; gap:24px; flex-wrap:wrap;">
@@ -182,6 +188,15 @@
             </div>
         </div>
 
+        <!-- PREFERENCIAS Y APOYOS (opcional) -->
+        <div class="filter-group" style="border:none; margin-top:30px;">
+            <label class="filter-label" style="font-size:14px; color:var(--ink); margin-bottom:10px;">
+                Preferencias y apoyos <span style="color:var(--slate); font-weight:400;">(opcional)</span>
+            </label>
+            <div class="inc-vista" id="apoyos-vista"><p class="inc-texto">Cargando…</p></div>
+            <div class="inc-edicion" id="apoyos-edicion"></div>
+        </div>
+
     </section>
 
     <!-- ZONA DE PELIGRO: ELIMINAR CUENTA -->
@@ -227,6 +242,7 @@
 
 <script th:src="@{/js/shared/notificaciones.js}"></script>
 <script th:src="@{/js/shared/mobile-nav.js}"></script>
+<script th:src="@{/js/shared/apoyos.js}"></script>
 <script th:src="@{/js/trabajador/perfil.js}"></script>
 </body>
 </html>
