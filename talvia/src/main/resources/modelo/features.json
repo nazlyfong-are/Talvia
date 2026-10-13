@@ -1,0 +1,17 @@
+{
+  "version": "v1",
+  "modelo": "regresi\u00f3n log\u00edstica",
+  "entradas": [
+    "mismo_area",
+    "brecha_experiencia",
+    "cumple_educacion",
+    "misma_ciudad",
+    "es_remoto",
+    "disponibilidad",
+    "anos_experiencia",
+    "exp_minima_anios",
+    "nivel_educativo_max",
+    "nivel_educativo_minimo"
+  ],
+  "valores_faltantes": "NaN"
+}

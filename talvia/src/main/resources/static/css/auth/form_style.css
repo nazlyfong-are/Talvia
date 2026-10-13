@@ -1,0 +1,431 @@
+/* Requiere que el HTML cargue antes shared/variables.css */
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: "IBM Plex Sans", sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+}
+
+.register-wrapper {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    min-height: 100vh;
+}
+
+/* ── PANEL IZQUIERDO ── */
+.type-panel {
+    background: var(--ink);
+    color: #fff;
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.type-panel-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 60px;
+}
+
+.logo-mark {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    color: var(--gold);
+}
+
+.logo-text {
+    font-family: "Fraunces", serif;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.type-panel-heading .type-eyebrow {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    margin-bottom: 10px;
+}
+
+.type-panel-heading h2 {
+    font-family: "Fraunces", serif;
+    font-size: 30px;
+    line-height: 1.2;
+    margin-bottom: 40px;
+}
+
+.type-tabs {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.tab-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 16px;
+    color: #fff;
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.tab-btn:hover { border-color: var(--gold); }
+
+.tab-btn.active {
+    background: rgba(254,237,202,0.12);
+    border-color: var(--gold);
+}
+
+.tab-icon svg { width: 22px; height: 22px; color: var(--gold); }
+
+.tab-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.tab-text strong,
+.tab-text span {
+    overflow-wrap: break-word;
+}
+
+.tab-arrow { font-size: 20px; color: var(--gold); }
+
+.type-panel-footer {
+    font-size: 13px;
+    color: #c7cfdc;
+    margin-top: 40px;
+}
+
+.type-panel-footer a {
+    color: var(--gold);
+    font-weight: 600;
+}
+
+/* ── PANEL DERECHO (formulario) ── */
+.form-panel {
+    background: var(--bg);
+    padding: 48px 60px;
+    overflow-y: auto;
+}
+
+.form-scroll { max-width: 640px; margin: 0 auto; }
+
+.mode-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--gold);
+    color: var(--ink);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+.mode-pill-dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: var(--gold-deep);
+}
+
+.form-header h1 {
+    font-family: "Fraunces", serif;
+    font-size: 32px;
+    margin-bottom: 6px;
+}
+
+.form-header p {
+    color: var(--slate);
+    font-size: 14px;
+    margin-bottom: 30px;
+}
+
+.form-section {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+}
+
+.section-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-family: "IBM Plex Mono", monospace;
+}
+
+.section-hint {
+    font-size: 12.5px;
+    color: var(--slate);
+    margin-bottom: 18px;
+}
+
+.subsection-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 20px 0 10px;
+}
+
+.fields-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.field-group.full-width { grid-column: 1 / -1; }
+
+.field-group label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 6px;
+}
+
+.field-group input[type="text"],
+.field-group input[type="email"],
+.field-group input[type="tel"],
+.field-group input[type="password"],
+.field-group input[type="date"],
+.field-group input[type="number"],
+.field-group select {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: #fff;
+}
+
+.field-group input:focus,
+.field-group select:focus {
+    outline: none;
+    border-color: var(--ink-soft);
+    box-shadow: 0 0 0 3px rgba(45,90,112,0.15);
+}
+
+.input-combo {
+    display: grid;
+    grid-template-columns: 1fr 110px;
+    gap: 8px;
+}
+
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-icon {
+    position: absolute;
+    left: 12px;
+    width: 16px; height: 16px;
+    color: var(--slate);
+}
+
+.input-wrapper input { padding-left: 38px !important; }
+
+.has-toggle .toggle-password {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--slate);
+}
+
+.has-toggle .toggle-password svg { width: 18px; height: 18px; }
+
+/* Filas dinámicas (formación, experiencia, certificaciones) */
+.dynamic-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 10px;
+    align-items: center;
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 10px;
+}
+
+.dynamic-row input,
+.dynamic-row select {
+    padding: 9px 10px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.dynamic-row label {
+    font-size: 12.5px;
+    color: var(--slate);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.file-attach-row {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-attach {
+    background: var(--gold);
+    color: var(--ink);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 7px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.file-attach-hint {
+    font-size: 11.5px;
+    color: var(--slate);
+}
+
+.file-attach-name {
+    font-size: 12px;
+    color: var(--green);
+    font-weight: 600;
+}
+
+.btn-remove-row {
+    grid-column: 1 / -1;
+    justify-self: end;
+    background: #fdf2f2;
+    color: #d93838;
+    border: 1px solid #f8d7d7;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-secondary-small {
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-secondary-small:hover { background: var(--ink); color: #fff; }
+
+/* Acciones finales */
+.form-actions { margin-top: 10px; }
+
+.btn-primary {
+    width: 100%;
+    background: var(--ink);
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-primary:hover { background: var(--ink-soft); }
+
+.btn-primary.loading { opacity: 0.6; pointer-events: none; }
+
+.btn-arrow { width: 18px; height: 18px; }
+
+/* Errores */
+.input-error { border-color: #d93838 !important; }
+
+.field-error-msg {
+    display: block;
+    font-size: 11.5px;
+    color: #d93838;
+    margin-top: 4px;
+}
+
+.register-wrapper {
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    min-height: 100vh;
+}
+
+.type-panel {
+    background: var(--ink);
+    color: #fff;
+    padding: 48px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-width: 0;      /* ← agregar esto */
+    overflow: hidden;  /* ← agregar esto */
+}
+
+/* Toast */
+.toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--ink);
+    color: #fff;
+    padding: 14px 22px;
+    border-radius: 8px;
+    font-size: 14px;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast.error { background: #d93838; }
+.toast.success { background: var(--green); }
+
+.oculto { display: none !important; }
+
+/* ── TOGGLE DE SECCIONES SEGÚN MODO── */
+.register-wrapper.mode-natural .block-juridica {
+    display: none;
+}
+
+.register-wrapper.mode-juridica .block-natural {
+    display: none;
+}

@@ -1,0 +1,183 @@
+<div th:fragment="contenido">
+    <section id="sec-perfil" class="tab-content">
+
+        <div class="perfil-emp cargando" id="perfil-empresa">
+
+            <!-- ENCABEZADO: logo, datos de contacto y estado de cuenta -->
+            <div class="pe-hero">
+                <div class="pe-hero-main">
+
+                    <div class="pe-logo-wrap">
+                        <div class="pe-logo" id="logo-preview">EM</div>
+                        <input type="file" id="input-logo-emp" accept="image/*" hidden>
+                        <label for="input-logo-emp" class="pe-logo-btn editar" id="label-logo-emp">📷 Cambiar logo</label>
+                    </div>
+
+                    <div class="pe-hero-text">
+                        <div class="pe-eyebrow">Panel de la Empresa</div>
+
+                        <h2 class="pe-nombre">
+                            <span class="pe-valor ver" id="v-razon-social">Cargando</span>
+                            <input type="text" class="pe-input pe-input-grande editar" id="emp-nombre" maxlength="120" placeholder="Razón social">
+                        </h2>
+
+                        <div class="pe-sector">
+                            <span class="pe-valor ver" id="v-sector">Cargando</span>
+                            <select class="pe-input editar" id="emp-sector">
+                                <option value="" disabled selected>Seleccione un sector</option>
+                                <option value="tecnologia">Tecnología & IT</option>
+                                <option value="ventas">Ventas y Comercial</option>
+                                <option value="logistica">Logística y Transporte</option>
+                                <option value="finanzas">Finanzas y Contabilidad</option>
+                                <option value="salud">Salud y Medicina</option>
+                                <option value="administracion">Administración</option>
+                                <option value="marketing">Marketing y Publicidad</option>
+                                <option value="ingenieria">Ingeniería</option>
+                                <option value="educacion">Educación</option>
+                                <option value="legal">Legal y Jurídico</option>
+                                <option value="recursos-humanos">Recursos Humanos</option>
+                                <option value="construccion">Construcción</option>
+                                <option value="atencion-cliente">Atención al cliente</option>
+                                <option value="produccion">Producción y Manufactura</option>
+                                <option value="diseno">Diseño y Artes</option>
+                                <option value="gastronomia">Gastronomía y Turismo</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="pe-contacto">
+                            <div class="pe-dato">
+                                📍
+                                <span class="pe-valor ver" id="v-ciudad">Cargando</span>
+                                <span class="pe-ciudad-edit editar">
+                                    <select class="pe-input" id="emp-ciudad">
+                                        <option value="" disabled selected>Seleccione su ciudad</option>
+                                        <option value="Bogotá">Bogotá</option>
+                                        <option value="Medellín">Medellín</option>
+                                        <option value="Cali">Cali</option>
+                                        <option value="Barranquilla">Barranquilla</option>
+                                        <option value="Cartagena">Cartagena</option>
+                                        <option value="Cúcuta">Cúcuta</option>
+                                        <option value="Bucaramanga">Bucaramanga</option>
+                                        <option value="Pereira">Pereira</option>
+                                        <option value="Santa Marta">Santa Marta</option>
+                                        <option value="Ibagué">Ibagué</option>
+                                        <option value="Manizales">Manizales</option>
+                                        <option value="Pasto">Pasto</option>
+                                        <option value="Neiva">Neiva</option>
+                                        <option value="Villavicencio">Villavicencio</option>
+                                        <option value="Armenia">Armenia</option>
+                                        <option value="Valledupar">Valledupar</option>
+                                        <option value="Montería">Montería</option>
+                                        <option value="Sincelejo">Sincelejo</option>
+                                        <option value="Popayán">Popayán</option>
+                                        <option value="Tunja">Tunja</option>
+                                        <option value="Riohacha">Riohacha</option>
+                                        <option value="Quibdó">Quibdó</option>
+                                        <option value="Yopal">Yopal</option>
+                                        <option value="otra">Otra ciudad...</option>
+                                    </select>
+                                    <input type="text" class="pe-input oculto" id="emp-ciudad-otra" maxlength="60" placeholder="Escriba su ciudad">
+                                </span>
+                            </div>
+
+                            <div class="pe-dato">✉️ <span class="pe-valor" id="v-correo">Cargando</span></div>
+
+                            <div class="pe-dato">
+                                📱
+                                <span class="pe-valor ver" id="v-telefono">Cargando</span>
+                                <input type="text" class="pe-input editar" id="emp-telefono" inputmode="numeric" maxlength="10" placeholder="3001234567">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pe-cuenta">
+                    <div class="pe-cuenta-label">Estado de cuenta</div>
+                    <div class="pe-cuenta-titulo">Perfil de Empresa</div>
+                    <button type="button" class="pe-btn pe-btn-claro ver" id="btn-editar-perfil">Editar información</button>
+                    <button type="button" class="pe-btn pe-btn-verde editar" id="btn-guardar-perfil">💾 Guardar cambios</button>
+                    <button type="button" class="pe-btn pe-btn-fantasma editar" id="btn-cancelar-perfil">Cancelar</button>
+                </div>
+            </div>
+
+            <!-- INFORMACIÓN DE LA EMPRESA -->
+            <div class="pe-panel">
+                <div class="pe-panel-head">
+                    <h3>Información de la empresa</h3>
+                    <p>Activa el modo edición para actualizar lo que ven los candidatos en tu perfil público.</p>
+                </div>
+
+                <div class="pe-bloque">
+                    <span class="pe-etiqueta">Sobre la empresa</span>
+                    <p class="pe-texto pe-valor ver" id="v-descripcion">Cargando</p>
+                    <textarea class="pe-input editar" id="emp-descripcion" rows="4" maxlength="1000"
+                        placeholder="Cuéntale a los candidatos a qué se dedica tu empresa, su cultura y lo que la hace atractiva para trabajar..."></textarea>
+                </div>
+
+                <div class="pe-grid">
+                    <div class="pe-bloque">
+                        <span class="pe-etiqueta">Figura legal</span>
+                        <span class="pe-dato-valor pe-valor ver" id="v-figura">Cargando</span>
+                        <select class="pe-input editar" id="emp-figura-legal">
+                            <option value="" disabled selected>Seleccione</option>
+                            <option value="SAS">S.A.S</option>
+                            <option value="LTDA">Ltda</option>
+                            <option value="SA">S.A</option>
+                            <option value="EU">E.U</option>
+                        </select>
+                    </div>
+
+                    <div class="pe-bloque">
+                        <span class="pe-etiqueta">Número de empleados</span>
+                        <span class="pe-dato-valor pe-valor ver" id="v-empleados">Cargando</span>
+                        <select class="pe-input editar" id="emp-empleados">
+                            <option value="" disabled selected>Seleccione</option>
+                            <option value="1-10">1 - 10</option>
+                            <option value="11-50">11 - 50</option>
+                            <option value="51-200">51 - 200</option>
+                            <option value="201-500">201 - 500</option>
+                            <option value="501-1000">501 - 1000</option>
+                            <option value="+1000">Más de 1000</option>
+                        </select>
+                    </div>
+
+                    <div class="pe-bloque pe-bloque-ancho">
+                        <span class="pe-etiqueta">Sitio web</span>
+                        <a class="pe-link pe-valor ver" id="v-sitio-web" target="_blank" rel="noopener">Cargando</a>
+                        <input type="text" class="pe-input editar" id="emp-sitio-web" maxlength="200" placeholder="https://www.tuempresa.com">
+                    </div>
+                </div>
+            </div>
+
+            <!-- ZONA DE PELIGRO -->
+            <div class="pe-peligro">
+                <h3>⚠️ Zona de peligro</h3>
+                <p>Eliminar tu cuenta borrará permanentemente tu perfil, tus vacantes publicadas y las postulaciones recibidas. Esta acción no se puede deshacer.</p>
+                <button type="button" class="pe-btn-peligro" id="btn-abrir-eliminar-cuenta-emp">Eliminar mi cuenta</button>
+            </div>
+        </div>
+
+        <!-- Modal: eliminar cuenta -->
+        <div class="pe-modal-overlay" id="modalEliminarCuentaEmp">
+            <div class="pe-modal-card">
+                <h3>Eliminar cuenta</h3>
+                <p id="texto-eliminar-cuenta-emp">Te enviaremos un código de confirmación a tu correo.</p>
+
+                <div id="paso-solicitar-eliminacion-emp" class="pe-modal-acciones">
+                    <button type="button" class="pe-btn pe-btn-gris" id="btnCerrarEliminarEmp">Cancelar</button>
+                    <button type="button" class="pe-btn pe-btn-rojo" id="btn-enviar-codigo-eliminar-emp">Enviar código</button>
+                </div>
+
+                <form id="form-confirmar-eliminacion-emp" class="oculto">
+                    <input type="text" class="pe-input" id="codigo-eliminar-cuenta-emp" inputmode="numeric" maxlength="6" placeholder="Código de 6 dígitos" required>
+                    <div class="pe-modal-acciones" style="margin-top:16px;">
+                        <button type="button" class="pe-btn pe-btn-gris" id="btnCancelarEliminarEmp2">Cancelar</button>
+                        <button type="submit" class="pe-btn pe-btn-rojo">Confirmar eliminación</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+    </section>
+</div>

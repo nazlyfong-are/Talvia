@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Verificar correo — Talvia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" th:href="@{/css/shared/variables.css}" />
+  <link rel="stylesheet" th:href="@{/css/auth/forgot_style.css}" />
+  <link rel="stylesheet" th:href="@{/css/shared/voz.css}" />
+  <script th:src="@{/js/shared/csrf.js}"></script>
+  <script th:src="@{/js/shared/voz.js}"></script>
+</head>
+<body>
+
+<div class="forgot-page">
+    <div class="forgot-card">
+
+        <div class="forgot-brand">
+            <div class="logo-mark"><span>T</span></div>
+            <span class="logo-text">TALVIA</span>
+        </div>
+
+        <div id="paso-verificar">
+            <h1 class="forgot-title">Verifica tu correo</h1>
+            <p class="forgot-subtitle">Te enviamos un código de 6 dígitos a <b id="correo-mostrado">tu correo</b>. Ingrésalo para activar tu cuenta.</p>
+
+            <form id="form-verificar">
+                <div class="field-group">
+                    <label for="codigo-verificar">Código de verificación</label>
+                    <input type="text" id="codigo-verificar" inputmode="numeric" maxlength="6" placeholder="123456" required>
+                </div>
+                <button type="submit" class="btn-primary" id="btn-verificar">Verificar cuenta</button>
+            </form>
+
+            <button type="button" id="btn-reenviar-verificacion" class="forgot-back-link" style="background:none; border:none; cursor:pointer;">¿No te llegó? Enviar de nuevo</button>
+        </div>
+
+        <div id="paso-exito" class="oculto">
+            <div class="forgot-success-icon">✓</div>
+            <h1 class="forgot-title">¡Cuenta verificada!</h1>
+            <p class="forgot-subtitle">Tu cuenta ya está activa. Ya puedes iniciar sesión.</p>
+            <a th:href="@{/public/login}" class="btn-primary" style="display:block; text-align:center; text-decoration:none;">Ir a iniciar sesión</a>
+        </div>
+
+    </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script th:src="@{/js/auth/verify-email.js}"></script>
+</body>
+</html>

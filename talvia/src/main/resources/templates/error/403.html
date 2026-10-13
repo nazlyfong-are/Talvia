@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acceso denegado — Talvia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/shared/variables.css}">
+    <link rel="stylesheet" th:href="@{/css/shared/error_style.css}">
+</head>
+<body>
+    <div class="error-page">
+        <div class="error-card">
+            <div class="error-code" style="color:#d93838;">403</div>
+            <h1 class="error-title">Acceso denegado</h1>
+            <p class="error-subtitle">No tienes permiso para ver esta página. Si crees que esto es un error, revisa que hayas iniciado sesión con la cuenta correcta.</p>
+            <a th:href="@{/public/login}" class="btn-primary">Ir a iniciar sesión</a>
+        </div>
+    </div>
+</body>
+</html>

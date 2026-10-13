@@ -1,0 +1,176 @@
+/* ============================================
+   TEMA CLARO / OSCURO  (versión 3)
+   1) Botón del header (.theme-toggle), que crea theme.js.
+   2) Paleta oscura, activa con <html data-theme="dark">.
+
+   Todo el CSS del proyecto usa variables (--ink, --panel, --bg, --line…).
+   En modo oscuro se cambian sus valores y el resto se adapta solo.
+   Los bloques azul marino (header, hero, footer…) toman el tono --marino.
+============================================ */
+
+/* ── Botón del header ── */
+.theme-toggle {
+    width: 38px; height: 38px; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: rgba(255, 255, 255, .08);
+    border: 1px solid rgba(254, 237, 202, .3);
+    border-radius: 50%;
+    color: var(--gold);
+    font-size: 17px; line-height: 1;
+    cursor: pointer;
+    transition: background .15s ease, transform .15s ease;
+}
+.theme-toggle:hover { background: rgba(255, 255, 255, .16); }
+.theme-toggle:active { transform: scale(.92); }
+
+@media (max-width: 480px) {
+    .theme-toggle { width: 34px; height: 34px; font-size: 15px; }
+}
+
+/* ── Transición suave al cambiar de tema (la activa theme.js durante 350 ms) ── */
+html.theme-anim, html.theme-anim *, html.theme-anim *::before, html.theme-anim *::after {
+    transition: background-color .25s ease, color .25s ease, border-color .25s ease !important;
+}
+
+
+/* =========================================================
+   PALETA OSCURA
+========================================================= */
+
+/* Azul marino del modo oscuro: header, hero y footer.
+   Para ajustar el tono de todos esos bloques, cambia solo estos dos valores. */
+html[data-theme="dark"] {
+    --marino: #0b2733;
+    --marino-borde: #1b3a48;
+}
+
+/* Valores de las variables. El panel de notificaciones vive dentro del header y por eso
+   vuelve a tomar la paleta oscura. */
+html[data-theme="dark"],
+html[data-theme="dark"] .notif-panel {
+    color-scheme: dark;           /* calendarios, listas desplegables y barras de scroll oscuros */
+    --ink: #e6eef2;               /* texto principal */
+    --ink-soft: #b9ccd6;
+    --slate: #8fa6b3;
+    --line: #243f4c;
+    --bg: #0a161c;                /* fondo de página */
+    --panel: #11232c;             /* tarjetas */
+    --green: #35996f;
+    --green-bg: #12332a;
+    --gold-deep: #d4a95a;
+}
+
+html[data-theme="dark"] body { background-color: var(--bg); color: var(--ink); }
+
+/* ── Bloques azul marino: recuperan los valores de la paleta clara, con el marino oscuro ── */
+html[data-theme="dark"] :is(
+    header.top, .hero, .vacante-hero, .cta-empresas, .pe-hero, #modalVistaCV .modal-cv
+) {
+    --ink: var(--marino);
+    --ink-soft: #2d5a70; --slate: #5c7688;
+    --line: #dfe6ea; --bg: #f6f8f8; --panel: #ffffff;
+    --green: #2f7d5c; --green-bg: #e7f3ee; --gold-deep: #a9843f;
+}
+
+/* Fondo de esos bloques (por si el CSS original usa un color fijo en lugar de variable) */
+html[data-theme="dark"] :is(header.top, .hero, .vacante-hero, .pe-hero, .footer) {
+    background-color: var(--marino);
+}
+html[data-theme="dark"] header.top { box-shadow: 0 1px 0 var(--marino-borde); }
+/* En la pestaña Perfil de empresa el header se funde con el encabezado: sin línea de separación */
+html[data-theme="dark"] body.perfil-activo header.top { box-shadow: none; border-bottom: 0; }
+html[data-theme="dark"] .cta-empresas { background: linear-gradient(135deg, var(--marino) 0%, #11323f 100%); }
+html[data-theme="dark"] .footer { color: #9fb4c0; }
+
+/* Detalles con fondo azul y texto dorado o blanco: usan el azul original, que resalta sobre la tarjeta oscura */
+html[data-theme="dark"] :is(
+    .mv-total, .ic-ac-count, .mv-cand.con, .ic-pg.activo, .pv-paso, .ic-avatar,
+    .company-logo, .page-num.active, .chip.active, .search-button, .btn-add-tag,
+    .toast, .ic-btn-filtros[aria-expanded="true"], .btn-apply:hover, .btn-secondary:hover
+) { --ink: #0c374a; }
+
+/* Fondo dorado con texto azul */
+html[data-theme="dark"] :is(
+    .mv-btn-nueva, .pv-btn-primario, .btn-apply-main, .btn-modal-confirmar, .pe-btn-claro,
+    .ic-total, .btn-cambiar-foto, .pe-logo-btn, .btn-attach, .ic-vacio button, .btn-publish
+) { --ink: #0c374a; }
+
+/* ── Superficies y controles ──
+   Se usa :where() para que los estados más específicos (.activo, :hover…) sigan ganando. */
+html[data-theme="dark"] :where(input, select, textarea):where(:not([type="checkbox"], [type="radio"], [type="file"], [type="range"], [type="color"])) {
+    background-color: var(--panel);
+    color: var(--ink);
+    border-color: var(--line);
+}
+html[data-theme="dark"] :where(
+    .ic-btn-filtros, .mv-acc, .ic-pg, .modal-card, .pe-modal-card, .mv-tabla tr,
+    .chip, .page-btn, .page-num
+) {
+    background-color: var(--panel);
+    color: var(--ink);
+}
+html[data-theme="dark"] .ic-ac-head:hover { background-color: rgba(255, 255, 255, .04); }
+
+/* ── Refuerzos: controles que el CSS de cada página pinta con más peso ── */
+
+/* Filtros y buscadores del panel de administración, y campos de configuración */
+html[data-theme="dark"] .admin-toolbar-filters :is(select.filter-select, input[type="date"]),
+html[data-theme="dark"] .admin-search-input,
+html[data-theme="dark"] .config-field :is(input, select) {
+    background-color: var(--panel);
+    color: var(--ink);
+    border-color: var(--line);
+}
+
+/* Botones deshabilitados (por ejemplo "Anterior" en la primera página) */
+html[data-theme="dark"] :is(.page-btn, .ic-pg, .mv-acc, .btn-tabla):disabled {
+    background-color: var(--bg);
+    color: var(--slate);
+    border-color: var(--line);
+    opacity: .55;
+}
+
+/* Al pasar el mouse por la paginación y los chips: un resaltado suave en lugar de un fondo claro */
+html[data-theme="dark"] :is(.page-btn, .page-num, .chip):not(.active, :disabled):hover {
+    background-color: rgba(255, 255, 255, .07);
+    color: var(--ink);
+    border-color: var(--gold-deep);
+}
+
+/* ── Colores de estado (los fondos pastel se cambian por tonos translúcidos) ── */
+html[data-theme="dark"] :where(
+    .estado-PENDIENTE, .ic-pill-PENDIENTE, .mv-badge-pausada, .badge-pausada,
+    .badge-pendiente, .tag-exp, .ic-vista-no, .mv-acc-pausar
+) { background-color: rgba(212, 169, 90, .16); color: #e6c37e; }
+
+html[data-theme="dark"] :where(.estado-EN_PROCESO, .ic-pill-EN_PROCESO, .badge-en-proceso) {
+    background-color: rgba(120, 170, 205, .16); color: #a5c8dd;
+}
+
+html[data-theme="dark"] :where(
+    .estado-RECHAZADO, .ic-pill-RECHAZADO, .mv-badge-cerrada, .badge-inactivo, .badge-cerrada,
+    .badge-rechazado, .mv-acc-peligro, .btn-tabla-peligro, .btn-borrar-item, .btn-remove-row,
+    .pv-req-quitar, .pe-btn-peligro
+) { background-color: rgba(217, 56, 56, .14); color: #ff8f8f; border-color: rgba(217, 56, 56, .38); }
+
+html[data-theme="dark"] .mv-acc-reactivar { background-color: var(--green-bg); border-color: var(--green); }
+
+html[data-theme="dark"] :where(.tag, .mv-cand) { background-color: rgba(255, 255, 255, .07); color: var(--ink-soft); }
+
+html[data-theme="dark"] .pe-peligro { background-color: rgba(217, 56, 56, .07); border-color: rgba(217, 56, 56, .3); }
+
+/* ── Cargando (skeleton) ── */
+html[data-theme="dark"] .skeleton-loader,
+html[data-theme="dark"] .perfil-emp.cargando .pe-panel .pe-valor {
+    background-image: linear-gradient(90deg, #17303b 25%, #20404d 50%, #17303b 75%);
+}
+
+/* ── Colores escritos dentro del HTML (style="…"): solo se vencen con !important ── */
+html[data-theme="dark"] :is([style*="#fffafa"], [style*="#fdf2f2"]) { background-color: rgba(217, 56, 56, .10) !important; }
+html[data-theme="dark"] [style*="#f8d7d7"] { border-color: rgba(217, 56, 56, .35) !important; }
+
+html[data-theme="dark"] :is(.ap .ap-chip input:checked + span, .ap .ap-contador) { --ink: #0c374a; }
+/* RANKING DE COMPATIBILIDAD */
+html[data-theme="dark"] .rk-negativo { color: #ff8f8f; background: rgba(217, 56, 56, .16); }
+html[data-theme="dark"] .rk-positivo { color: #5fd3a2; background: rgba(53, 153, 111, .18); }
+html[data-theme="dark"] .ic-rank-btn { --ink: #0c374a; }

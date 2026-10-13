@@ -1,0 +1,98 @@
+/* ============================================
+   PREFERENCIAS Y APOYOS (opcional)
+   Componente creado por shared/apoyos.js (prefijo .ap-).
+   Se usa en el registro y en el perfil del trabajador.
+============================================ */
+.ap [hidden] { display: none !important; }
+
+.ap .ap-pregunta { font-family: "Fraunces", serif; font-size: 18px; line-height: 1.35; color: var(--ink); margin: 0 0 6px; }
+.ap .ap-ayuda { font-size: 13px; line-height: 1.55; color: var(--slate); margin: 0 0 16px; }
+
+/* Fichas */
+.ap .ap-chip { position: relative; display: inline-block; margin: 0; cursor: pointer; }
+.ap .ap-chip input { position: absolute; opacity: 0; pointer-events: none; }
+.ap .ap-chip span {
+    display: inline-block;
+    padding: 9px 16px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: var(--panel, #fff);
+    color: var(--ink-soft);
+    font-size: 13.5px; font-weight: 600; line-height: 1.3;
+    transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+.ap .ap-chip:hover span { border-color: var(--gold-deep); }
+.ap .ap-chip input:checked + span { background: var(--ink); color: var(--gold); border-color: var(--ink); }
+.ap .ap-chip input:focus-visible + span { outline: 2px solid var(--ink-soft); outline-offset: 2px; }
+
+.ap .ap-salidas { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px; }
+
+/* Grupos plegables */
+.ap .ap-grupos { display: grid; gap: 10px; }
+.ap .ap-grupo { border: 1px solid var(--line); border-radius: 10px; background: var(--panel, #fff); overflow: hidden; }
+.ap .ap-grupo summary {
+    display: flex; align-items: center; gap: 10px;
+    padding: 13px 16px; cursor: pointer; list-style: none;
+    font-size: 14px; font-weight: 600; color: var(--ink);
+}
+.ap .ap-grupo summary::-webkit-details-marker { display: none; }
+.ap .ap-grupo summary::after { content: "▾"; margin-left: auto; color: var(--slate); transition: transform .2s ease; }
+.ap .ap-grupo[open] summary::after { transform: rotate(180deg); }
+.ap .ap-grupo summary:hover { background: var(--bg); }
+.ap .ap-contador {
+    min-width: 22px; height: 22px; padding: 0 7px;
+    display: inline-flex; align-items: center; justify-content: center;
+    background: var(--ink); color: var(--gold); border-radius: 11px;
+    font-family: "IBM Plex Mono", monospace; font-size: 11.5px; font-weight: 700;
+}
+.ap .ap-grupo-cuerpo { padding: 4px 16px 16px; border-top: 1px solid var(--line); }
+.ap .ap-grupo-pregunta { font-size: 13px; color: var(--slate); margin: 12px 0 10px; }
+.ap .ap-grupo-ayuda { display: block; margin-top: 2px; font-size: 12px; }
+.ap .ap-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.ap .ap-sugerencia {
+    font-size: 12.5px; color: var(--ink-soft); line-height: 1.5;
+    background: var(--bg); border-left: 3px solid var(--gold-deep);
+    border-radius: 6px; padding: 9px 12px; margin: 12px 0 0;
+}
+
+/* Nota libre */
+.ap .ap-nota { margin-top: 18px; }
+.ap .ap-nota label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 600; color: var(--ink); }
+.ap .ap-nota label span { font-weight: 400; color: var(--slate); }
+.ap .ap-nota textarea {
+    width: 100%; padding: 11px 14px;
+    border: 1px solid var(--line); border-radius: 8px;
+    background-color: var(--panel, #fff); color: var(--ink);
+    font-family: "IBM Plex Sans", sans-serif; font-size: 14px; line-height: 1.5; resize: vertical;
+}
+.ap .ap-nota textarea:focus { outline: none; border-color: var(--ink-soft); box-shadow: 0 0 0 3px rgba(45, 90, 112, .12); }
+.ap .ap-nota textarea:disabled { opacity: .5; cursor: not-allowed; }
+.ap .ap-nota-pie { display: flex; justify-content: space-between; gap: 12px; margin-top: 6px; font-size: 12px; color: var(--slate); }
+.ap .ap-nota-contador { font-family: "IBM Plex Mono", monospace; flex-shrink: 0; }
+
+/* Autorización, error y pie */
+.ap .ap-autoriza {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin: 16px 0 0; cursor: pointer;
+    font-size: 12.5px; font-weight: 400; line-height: 1.5; color: var(--ink-soft);
+}
+.ap .ap-autoriza input { margin-top: 3px; width: 16px; height: 16px; flex-shrink: 0; accent-color: var(--ink); }
+.ap .ap-error { margin: 10px 0 0; font-size: 12.5px; font-weight: 600; color: #d93838; }
+.ap .ap-pie { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 16px; font-size: 12px; color: var(--slate); }
+.ap .ap-quitar { background: none; border: 0; padding: 4px 0; color: var(--slate); font-size: 12.5px; font-weight: 600; text-decoration: underline; cursor: pointer; }
+.ap .ap-quitar:hover { color: #d93838; }
+
+/* Vista de solo lectura (perfil) */
+.ap-vista-grupo { margin: 0 0 12px; }
+.ap-vista-titulo { margin-bottom: 6px; font-family: "IBM Plex Mono", monospace; font-size: 11px; font-weight: 600; color: var(--slate); text-transform: uppercase; letter-spacing: .05em; }
+.ap-vista-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.ap-vista-chip { padding: 5px 11px; border-radius: 14px; background: var(--bg); border: 1px solid var(--line); color: var(--ink-soft); font-size: 12.5px; font-weight: 600; }
+.ap-vista-nota { margin: 8px 0 0; font-size: 13.5px; color: var(--ink-soft); line-height: 1.5; white-space: pre-line; overflow-wrap: anywhere; }
+
+/* Perfil: vista de solo lectura y modo edición */
+.inc-texto { margin: 0 0 4px; font-size: 14px; line-height: 1.5; color: var(--ink-soft); overflow-wrap: anywhere; }
+.inc-texto:empty { display: none; }
+.inc-edicion { display: none; }
+.filters.modo-edicion .inc-vista { display: none; }
+.filters.modo-edicion .inc-edicion { display: block; }

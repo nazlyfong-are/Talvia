@@ -1,0 +1,108 @@
+.candidatos-toolbar {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.search-candidatos-input {
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    font-size: 13.5px;
+    font-family: "IBM Plex Sans", sans-serif;
+    max-width: 320px;
+    background: #fff;
+}
+
+/* Acordeón de vacantes */
+.vacante-acordeon {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    overflow: hidden;
+}
+
+.vacante-acordeon-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    cursor: pointer;
+    background: var(--bg);
+    transition: background 0.15s ease;
+}
+.vacante-acordeon-header:hover { background: #eef1f2; }
+
+.vacante-acordeon-titulo {
+    font-family: 'Fraunces', serif;
+    font-size: 16px;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.vacante-acordeon-count {
+    background: var(--ink);
+    color: var(--gold);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+}
+
+.vacante-acordeon-arrow {
+    font-size: 18px;
+    color: var(--slate);
+    transition: transform 0.2s ease;
+}
+.vacante-acordeon.open .vacante-acordeon-arrow { transform: rotate(180deg); }
+
+.vacante-acordeon-body {
+    display: none;
+}
+.vacante-acordeon.open .vacante-acordeon-body { display: block; }
+
+.estado-badge {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+.estado-PENDIENTE { background: #fbf3e3; color: var(--gold-deep); }
+.estado-EN_PROCESO { background: #e6eef5; color: var(--ink-soft); }
+.estado-ACEPTADO { background: var(--green-bg); color: var(--green); }
+.estado-RECHAZADO { background: #fdecec; color: #d93838; }
+
+.sin-candidatos {
+    text-align: center;
+    padding: 30px;
+    color: var(--slate);
+}
+.chip-count {
+    display: inline-block;
+    margin-left: 6px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    opacity: 0.75;
+}
+
+.mv-total {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    font-weight: 600;
+    background: var(--ink);
+    color: var(--gold);
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+.mv-total:empty { display: none; }

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Empresa — Talvia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap"
+        rel="stylesheet">
+    <th:block th:replace="~{fragments/shared-css :: links}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/empresa/index_style.css}">
+    <link rel="stylesheet" th:href="@{/css/empresa/dashboard_style.css}">
+    <link rel="stylesheet" th:href="@{/css/empresa/perfil_empresa_style.css}">
+    <link rel="stylesheet" th:href="@{/css/empresa/publicar_vacante_style.css}">
+    <link rel="stylesheet" th:href="@{/css/empresa/mis_vacantes_style.css}">
+    <link rel="stylesheet" th:href="@{/css/empresa/inicio_candidatos_style.css}">
+    <link rel="stylesheet" th:href="@{/css/empresa/ranking_style.css}">
+    <!-- Siempre el último: el responsive tiene que ir después de los estilos que modifica -->
+    <link rel="stylesheet" th:href="@{/css/shared/responsive.css}">
+</head>
+
+<body>
+
+    <header class="top">
+        <div class="top-inner">
+            <div class="brand">
+                <div class="brand-mark">TV</div>
+                <div class="brand-name">Tal<span>via</span> <small
+                        style="font-size: 11px; color: var(--gold);">(Empresas)</small></div>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menú">☰</button>
+
+            <nav class="top-nav emp-nav" style="display: flex; gap: 10px;">
+                <button class="emp-nav-btn active" data-target="sec-inicio">📥 Inicio (Candidatos)</button>
+                <button class="emp-nav-btn" data-target="sec-publicar">➕ Publicar Vacante</button>
+                <button class="emp-nav-btn" data-target="sec-mis-vacantes">📋 Mis Vacantes</button>
+                <button class="emp-nav-btn" data-target="sec-perfil">🏢 Perfil Empresa</button>
+            </nav>
+
+            <div class="notif-wrapper">
+                <button class="notif-bell-btn" id="notif-bell-btn" title="Notificaciones">
+                    🔔
+                    <span class="notif-badge oculto" id="notif-badge">0</span>
+                </button>
+                <div class="notif-panel" id="notif-panel">
+                    <div class="notif-panel-header">
+                        <h4>Notificaciones</h4>
+                        <button class="notif-marcar-todas" id="notif-marcar-todas">Marcar todas como leídas</button>
+                    </div>
+                    <div class="notif-list" id="notif-list"></div>
+                </div>
+            </div>
+            <button class="btn-publish" style="background: transparent; border: 1px solid #d93838; color: #d93838;"
+                id="logoutBtn">Cerrar Sesión</button>
+        </div>
+    </header>
+    <div class="nav-backdrop" id="nav-backdrop"></div>
+
+    <main class="layout dash-main">
+        <div th:replace="~{empresa/fragments/seccion-inicio :: contenido}"></div>
+        <div th:replace="~{empresa/fragments/seccion-publicar :: contenido}"></div>
+        <div th:replace="~{empresa/fragments/seccion-mis-vacantes :: contenido}"></div>
+        <div th:replace="~{empresa/fragments/seccion-perfil :: contenido}"></div>
+    </main>
+
+    <div th:replace="~{empresa/fragments/modal-cv :: contenido}"></div>
+
+    <div class="toast" id="toast"></div>
+    <script th:src="@{/js/shared/notificaciones.js}"></script>
+    <script th:src="@{/js/shared/mobile-nav.js}"></script>
+    <script th:src="@{/js/shared/apoyos.js}"></script>
+    <script th:src="@{/js/empresa/dashboard-common.js}"></script>
+    <script th:src="@{/js/empresa/dashboard-perfil.js}"></script>
+    <script th:src="@{/js/empresa/dashboard-vacantes.js}"></script>
+    <script th:src="@{/js/empresa/dashboard-mis-vacantes.js}"></script>
+    <script th:src="@{/js/empresa/dashboard-postulaciones.js}"></script>
+    <script th:src="@{/js/empresa/dashboard-ranking.js}"></script>
+</body>
+
+</html>

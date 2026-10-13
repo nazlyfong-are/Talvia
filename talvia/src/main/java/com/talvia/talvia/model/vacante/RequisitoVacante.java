@@ -1,26 +1,17 @@
 package com.talvia.talvia.model.vacante;
 
-public class RequisitoVacante {
+import jakarta.persistence.Embeddable;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Embeddable
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class RequisitoVacante {
     private String descripcion;
     private boolean obligatorio;
-    
-    public RequisitoVacante() {
-    }
-    public RequisitoVacante(String descripcion, boolean obligatorio) {
-        this.descripcion = descripcion;
-        this.obligatorio = obligatorio;
-    }
-    public String getDescripcion() {
-        return descripcion;
-    }
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
-    }
-    public boolean isObligatorio() {
-        return obligatorio;
-    }
-    public void setObligatorio(boolean obligatorio) {
-        this.obligatorio = obligatorio;
-    }
 }

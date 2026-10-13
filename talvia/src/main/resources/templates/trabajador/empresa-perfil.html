@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de la empresa — Talvia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <th:block th:replace="~{fragments/shared-css :: links}"></th:block>
+    <link rel="stylesheet" th:href="@{/css/trabajador/empresa_perfil_style.css}">
+    <!-- Siempre el último -->
+    <link rel="stylesheet" th:href="@{/css/shared/responsive.css}">
+</head>
+<body>
+
+<header class="top">
+    <div class="top-inner">
+        <div class="brand">
+            <div class="brand-mark">TV</div>
+            <div class="brand-name">Tal<span>via</span></div>
+        </div>
+        <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menú">☰</button>
+        <nav class="top-nav">
+            <a th:href="@{/private/trabajador/index}">Inicio</a>
+            <a th:href="@{/private/trabajador/empresas}">Empresas</a>
+            <a th:href="@{/private/trabajador/postulaciones}">Mis Postulaciones</a>
+            <a th:href="@{/private/trabajador/favoritos}">Guardadas</a>
+            <a th:href="@{/private/trabajador/perfil}">Mi Perfil</a>
+        </nav>
+
+        <div class="notif-wrapper">
+            <button class="notif-bell-btn" id="notif-bell-btn" title="Notificaciones">
+                🔔
+                <span class="notif-badge oculto" id="notif-badge">0</span>
+            </button>
+            <div class="notif-panel" id="notif-panel">
+                <div class="notif-panel-header">
+                    <h4>Notificaciones</h4>
+                    <button class="notif-marcar-todas" id="notif-marcar-todas">Marcar todas como leídas</button>
+                </div>
+                <div class="notif-list" id="notif-list"></div>
+            </div>
+        </div>
+
+        <button class="btn-publish" style="background: transparent; border: 1px solid #d93838; color: #d93838;" id="logoutBtn">Cerrar Sesión</button>
+    </div>
+</header>
+<div class="nav-backdrop" id="nav-backdrop"></div>
+<section class="hero">
+    <div class="hero-inner empresa-hero-inner">
+        <div class="empresa-logo-grande" id="e-logo"></div>
+        <div>
+            <div class="hero-eyebrow hero-skel skeleton-loader skeleton-text" id="e-sector" style="width:130px;"></div>
+            <h1 class="hero-title hero-skel skeleton-loader skeleton-text" id="e-nombre" style="font-size: 32px; width:220px; display:block;"></h1>
+            <p class="hero-description" id="e-ubicacion-info" style="margin-bottom:0;">📍 Ciudad · Tamaño de la empresa</p>
+        </div>
+    </div>
+</section>
+
+<main class="layout" style="grid-template-columns: 1fr;">
+
+    <section class="empresa-section-box">
+        <h2 class="results-title" style="font-size:18px; margin-bottom:10px;">Sobre la empresa</h2>
+        <p id="e-descripcion" class="empresa-descripcion">
+            <span class="skeleton-loader skeleton-line" style="display:block; width:95%;"></span>
+            <span class="skeleton-loader skeleton-line" style="display:block; width:75%;"></span>
+        </p>
+        <a id="e-sitio-web" href="#" target="_blank" class="empresa-sitio-web oculto">🔗 Visitar sitio web</a>
+    </section>
+
+    <section>
+        <div class="results-head">
+            <div>
+                <h2 class="results-title">Vacantes activas</h2>
+                <span class="results-count" id="e-vacantes-count">Cargando...</span>
+            </div>
+        </div>
+        <div class="job-list" id="e-vacantes-list">
+            <div class="skeleton-loader skeleton-card"></div>
+        </div>
+    </section>
+
+</main>
+
+<footer class="footer">
+    © 2026 Talvia · Perfil de empresa
+</footer>
+<script th:src="@{/js/shared/notificaciones.js}"></script>
+<script th:src="@{/js/shared/mobile-nav.js}"></script>
+<script th:src="@{/js/trabajador/empresa-perfil.js}"></script>
+</body>
+</html>

@@ -1,0 +1,138 @@
+/* ============================================
+   PUBLICAR VACANTE: formulario en 4 tarjetas
+   Prefijo .pv- para no chocar con otros estilos.
+============================================ */
+
+.pv-form .oculto { display: none !important; }
+
+/* ── Encabezado ── */
+.pv-head { margin-bottom: 22px; }
+.pv-head h2 { font-family: "Fraunces", serif; font-size: 26px; color: var(--ink); margin: 0 0 6px; }
+.pv-head p { font-size: 14px; color: var(--slate); margin: 0; }
+
+/* ── Tarjetas ── */
+.pv-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 26px 28px;
+    margin-bottom: 18px;
+}
+.pv-card-head { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+.pv-card-head h3 { font-family: "Fraunces", serif; font-size: 17px; color: var(--ink); margin: 0 0 2px; }
+.pv-card-head p { font-size: 12.5px; color: var(--slate); margin: 0; }
+.pv-paso {
+    width: 30px; height: 30px; flex-shrink: 0;
+    border-radius: 50%;
+    background: var(--ink); color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: "IBM Plex Mono", monospace; font-size: 13px; font-weight: 600;
+}
+
+/* ── Rejilla y campos ── */
+.pv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+.pv-full { grid-column: 1 / -1; }
+.pv-campo { min-width: 0; }
+.pv-campo label { display: block; font-size: 12.5px; font-weight: 600; color: var(--ink-soft); margin-bottom: 6px; }
+.pv-req { color: #d93838; }
+.pv-opcional { font-weight: 400; color: var(--slate); }
+.pv-ayuda { font-size: 12px; color: var(--slate); margin: 6px 0 0; }
+
+.pv-input {
+    width: 100%;
+    padding: 11px 13px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background-color: #fff;
+    transition: border-color .15s ease, box-shadow .15s ease;
+}
+.pv-input:hover { border-color: var(--gold-deep); }
+.pv-input:focus { outline: none; border-color: var(--ink-soft); box-shadow: 0 0 0 3px rgba(45, 90, 112, .12); }
+.pv-input::placeholder { color: #a8b6bf; }
+textarea.pv-input { resize: vertical; line-height: 1.55; }
+.pv-campo > .pv-input + .pv-input { margin-top: 8px; }   /* "Otra ciudad" debajo del select */
+
+select.pv-input {
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 36px;
+    cursor: pointer;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235c7688' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 13px;
+}
+
+/* ── Campos de dinero ── */
+.pv-dinero { position: relative; }
+.pv-dinero .pv-input { padding-left: 30px; font-family: "IBM Plex Mono", monospace; }
+.pv-signo {
+    position: absolute; left: 13px; top: 50%; transform: translateY(-50%);
+    color: var(--slate); font-family: "IBM Plex Mono", monospace; font-size: 14px; pointer-events: none;
+}
+
+/* ── Requisitos ── */
+.pv-reqs:empty::before {
+    content: "Aún no agregaste requisitos. Pulsa «Agregar requisito».";
+    display: block;
+    padding: 14px 16px;
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+    background: var(--bg);
+    color: var(--slate);
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+.pv-req-fila { display: flex; gap: 8px; margin-bottom: 8px; }
+.pv-req-fila .pv-input { flex: 1; min-width: 0; }
+.pv-req-quitar {
+    flex-shrink: 0;
+    width: 40px;
+    background: #fdf2f2; color: #d93838;
+    border: 1px solid #f8d7d7; border-radius: 8px;
+    cursor: pointer; font-size: 14px;
+}
+.pv-req-quitar:hover { background: #fbe4e4; }
+
+.pv-btn-agregar {
+    background: transparent;
+    border: 1.5px dashed var(--line);
+    color: var(--ink-soft);
+    border-radius: 8px;
+    padding: 10px 16px;
+    font-family: inherit; font-size: 13px; font-weight: 600;
+    cursor: pointer; width: 100%;
+    transition: border-color .15s ease, color .15s ease, background .15s ease;
+}
+.pv-btn-agregar:hover { border-color: var(--gold-deep); color: var(--ink); background: rgba(254, 237, 202, .35); }
+
+/* ── Acciones ── */
+.pv-acciones { display: flex; justify-content: flex-end; align-items: center; gap: 12px; flex-wrap: wrap; padding-top: 6px; }
+.pv-btn {
+    padding: 13px 28px;
+    border-radius: 8px;
+    font-family: inherit; font-size: 14.5px; font-weight: 700;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+.pv-btn-primario { background: var(--gold); color: var(--ink); }
+.pv-btn-primario:hover { background: #f5e3ba; }
+.pv-btn-secundario { background: transparent; color: var(--ink); border-color: var(--line); font-weight: 600; }
+.pv-btn-secundario:hover { background: var(--bg); }
+
+/* Estado "guardando": lo activa dashboard-vacantes.js con la clase .loading */
+.pv-btn.loading { opacity: .65; pointer-events: none; }
+.pv-btn.loading::after {
+    content: "";
+    display: inline-block;
+    width: 14px; height: 14px; margin-left: 10px;
+    border: 2px solid rgba(12, 55, 74, .25);
+    border-top-color: var(--ink);
+    border-radius: 50%;
+    vertical-align: -2px;
+    animation: pv-giro .7s linear infinite;
+}
+@keyframes pv-giro { to { transform: rotate(360deg); } }

@@ -1,0 +1,129 @@
+.job-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.job-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    display: grid;
+    grid-template-columns: 56px 1fr auto;
+    gap: 18px;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+}
+
+.job-card:hover {
+    border-color: var(--gold);
+    transform: translateY(-2px);
+}
+
+.company-logo {
+    width: 56px;
+    height: 56px;
+    border-radius: 10px;
+    background: var(--ink);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "Fraunces", serif;
+    font-weight: 600;
+    font-size: 19px;
+}
+
+.job-top-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 4px;
+}
+
+.job-title {
+    font-size: 17px;
+    font-weight: 600;
+    font-family: "Fraunces", serif;
+}
+
+.badge-new {
+    background: var(--green-bg);
+    color: var(--green);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 3px 8px;
+    border-radius: 4px;
+}
+
+.job-company {
+    font-size: 13.5px;
+    color: var(--slate);
+    margin-bottom: 12px;
+}
+
+.job-company b {
+    color: var(--ink-soft);
+    font-weight: 600;
+}
+
+.tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tag {
+    font-size: 12px;
+    padding: 5px 10px;
+    border-radius: 6px;
+    background: #f0f2f6;
+    color: var(--ink-soft);
+    font-family: "IBM Plex Mono", monospace;
+}
+
+.tag-exp {
+    background: #fbf3e3;
+    color: var(--gold-deep);
+}
+
+.job-side {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.job-salary {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 6px;
+}
+
+.job-location {
+    font-size: 12.5px;
+    color: var(--slate);
+    margin-bottom: 14px;
+}
+
+.btn-apply {
+    background: transparent;
+    border: 1.5px solid var(--ink);
+    color: var(--ink);
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.btn-apply:hover {
+    background: var(--ink);
+    color: #fff;
+}

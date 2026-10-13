@@ -1,0 +1,14 @@
+:root {
+    --ink: #0c374a;
+    --ink-soft: #2d5a70;
+    --slate: #5c7688;
+    --line: #dfe6ea;
+    --bg: #f6f8f8;
+    --panel: #ffffff;
+    --gold: #feedca;
+    --gold-deep: #a9843f;
+    --green: #2f7d5c;
+    --green-bg: #e7f3ee;
+    --radius: 10px;
+    font-size: 16px;
+}

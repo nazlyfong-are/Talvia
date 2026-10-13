@@ -1,0 +1,121 @@
+/* ============================================
+   RANKING DE COMPATIBILIDAD: panel lateral de la empresa
+   Prefijo .rk-. Lo abre dashboard-ranking.js.
+============================================ */
+
+/* El modal del candidato tiene que quedar por encima del panel */
+#modalVistaCV { z-index: 1200; }
+
+.rk-fondo {
+    position: fixed; inset: 0;
+    z-index: 950;
+    display: none;
+    justify-content: flex-end;
+    background: rgba(12, 55, 74, .5);
+    backdrop-filter: blur(3px);
+}
+.rk-fondo.abierto { display: flex; }
+
+.rk-panel {
+    width: min(580px, 100%);
+    height: 100%;
+    display: flex; flex-direction: column;
+    background: var(--bg);
+    box-shadow: -12px 0 32px rgba(0, 0, 0, .25);
+    animation: rk-entrada .22s ease;
+}
+@keyframes rk-entrada { from { transform: translateX(40px); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* ── Encabezado ── */
+.rk-cab {
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
+    padding: 20px 22px 14px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+}
+.rk-eyebrow { font-family: "IBM Plex Mono", monospace; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--gold-deep); margin-bottom: 4px; }
+.rk-titulo { font-family: "Fraunces", serif; font-size: 21px; color: var(--ink); margin: 0 0 4px; overflow-wrap: anywhere; }
+.rk-sub { font-size: 12.5px; color: var(--slate); }
+.rk-cerrar {
+    flex-shrink: 0; width: 36px; height: 36px;
+    border: 1px solid var(--line); border-radius: 50%;
+    background: var(--bg); color: var(--ink);
+    font-size: 15px; cursor: pointer;
+}
+.rk-cerrar:hover { border-color: var(--gold-deep); }
+
+.rk-aviso {
+    padding: 10px 22px;
+    background: rgba(212, 169, 90, .14);
+    border-bottom: 1px solid var(--line);
+    font-size: 12.5px; line-height: 1.5; color: var(--ink-soft);
+}
+.rk-aviso[hidden] { display: none; }
+
+/* ── Herramientas ── */
+.rk-barra-herr { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 22px; border-bottom: 1px solid var(--line); }
+.rk-buscar {
+    flex: 1 1 160px; min-width: 0;
+    padding: 9px 12px;
+    border: 1px solid var(--line); border-radius: 6px;
+    background: var(--panel); color: var(--ink);
+    font-family: "IBM Plex Sans", sans-serif; font-size: 13.5px;
+}
+.rk-buscar:focus { outline: none; border-color: var(--ink-soft); box-shadow: 0 0 0 3px rgba(45, 90, 112, .12); }
+.rk-check { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; color: var(--ink); cursor: pointer; }
+.rk-check input { width: 16px; height: 16px; accent-color: var(--ink); }
+
+/* ── Lista ── */
+.rk-cuerpo { flex: 1; overflow-y: auto; padding: 16px 22px 28px; display: grid; gap: 12px; align-content: start; }
+
+/* NUEVO: la columna de la derecha pasa de 82px a 92px para el medidor */
+.rk-item {
+    display: grid; grid-template-columns: 38px minmax(0, 1fr) 92px; gap: 14px; align-items: start;
+    background: var(--panel);
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px;
+}
+.rk-pos { font-family: "IBM Plex Mono", monospace; font-size: 13px; font-weight: 600; color: var(--slate); padding-top: 2px; }
+.rk-nombre { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 14.5px; font-weight: 600; color: var(--ink); }
+.rk-meta { font-size: 12px; color: var(--slate); margin-top: 3px; }
+.rk-sin-revisar { font-family: "IBM Plex Mono", monospace; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; background: rgba(212, 169, 90, .18); color: var(--gold-deep); }
+
+.rk-factores { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
+.rk-factor { font-size: 11.5px; font-weight: 600; padding: 4px 9px; border-radius: 12px; line-height: 1.3; }
+.rk-factor b { margin-right: 3px; }
+.rk-positivo { background: rgba(47, 125, 92, .13); color: var(--green); }
+.rk-negativo { background: rgba(217, 56, 56, .11); color: #d93838; }
+.rk-neutro { background: rgba(120, 140, 155, .15); color: var(--slate); }
+
+.rk-ver { background: none; border: 0; padding: 0; color: var(--gold-deep); font-size: 12.5px; font-weight: 600; text-decoration: underline; cursor: pointer; }
+
+/* NUEVO: medidor circular con el porcentaje de compatibilidad (reemplaza al número suelto con barra) */
+.rk-puntaje { text-align: center; --rk-color: var(--slate); }
+.rk-puntaje.rk-alta { --rk-color: var(--green); }
+.rk-puntaje.rk-media { --rk-color: var(--gold-deep); }
+
+.rk-medidor {
+    --pct: 0;
+    position: relative;
+    width: 64px; height: 64px; margin: 0 auto;
+    display: grid; place-items: center;
+    border-radius: 50%;
+    background: conic-gradient(var(--rk-color) calc(var(--pct) * 1%), var(--line) 0);
+}
+.rk-medidor::before { content: ''; position: absolute; inset: 6px; border-radius: 50%; background: var(--panel); }
+.rk-medidor-valor { position: relative; font-family: "Fraunces", serif; font-size: 18px; font-weight: 600; line-height: 1; color: var(--ink); }
+.rk-medidor-valor small { margin-left: 1px; font-size: 11px; font-weight: 600; }
+.rk-medidor-texto { margin-top: 6px; font-size: 11px; color: var(--slate); }
+.rk-nivel { margin-top: 2px; font-family: "IBM Plex Mono", monospace; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--rk-color); }
+
+.rk-mas { justify-self: center; padding: 10px 20px; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 8px; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer; }
+.rk-mas:hover { border-color: var(--gold-deep); }
+
+.rk-vacio { text-align: center; padding: 40px 16px; color: var(--slate); font-size: 13.5px; background: var(--panel); border: 1px dashed var(--line); border-radius: 10px; }
+.rk-vacio strong { display: block; color: var(--ink); font-size: 15px; margin-bottom: 6px; }
+.rk-vacio button { margin-top: 12px; padding: 9px 16px; background: var(--gold); color: #0c374a; border: 0; border-radius: 8px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; }
+
+/* ── Botón dentro de cada acordeón del Inicio ── */
+.ic-ac-herr { display: flex; justify-content: flex-end; padding: 10px 20px; border-top: 1px solid var(--line); }
+.ic-rank-btn { background: var(--gold); color: var(--ink); border: 0; border-radius: 6px; padding: 8px 14px; font-family: "IBM Plex Sans", sans-serif; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+.ic-rank-btn:hover { background: #f5e3ba; }

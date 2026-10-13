@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Empresas — Talvia</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <th:block th:replace="~{fragments/shared-css :: links}"></th:block>
+</head>
+<body>
+
+    <header class="top">
+        <div class="top-inner">
+            <div class="brand">
+                <div class="brand-mark">TV</div>
+                <div class="brand-name">Tal<span>via</span></div>
+            </div>
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menú">☰</button>
+            <nav class="top-nav">
+                <a th:href="@{/private/trabajador/index}">Inicio</a>
+                <a th:href="@{/private/trabajador/empresas}" style="color: #fff; font-weight: 600;">Empresas</a>
+                <a th:href="@{/private/trabajador/postulaciones}">Mis Postulaciones</a>
+                <a th:href="@{/private/trabajador/favoritos}">Guardadas</a>
+                <a th:href="@{/private/trabajador/perfil}">Mi Perfil</a>
+            </nav>
+
+            <div class="notif-wrapper">
+                <button class="notif-bell-btn" id="notif-bell-btn" title="Notificaciones">
+                    🔔
+                    <span class="notif-badge oculto" id="notif-badge">0</span>
+                </button>
+                <div class="notif-panel" id="notif-panel">
+                    <div class="notif-panel-header">
+                        <h4>Notificaciones</h4>
+                        <button class="notif-marcar-todas" id="notif-marcar-todas">Marcar todas como leídas</button>
+                    </div>
+                    <div class="notif-list" id="notif-list"></div>
+                </div>
+            </div>
+
+            <button class="btn-publish" style="background: transparent; border: 1px solid #d93838; color: #d93838;" id="logoutBtn">Cerrar Sesión</button>
+        </div>
+    </header>
+<div class="nav-backdrop" id="nav-backdrop"></div>
+    <section class="hero">
+        <div class="hero-inner">
+            <div class="hero-eyebrow">Red de Aliados Estratégicos</div>
+            <h1 class="hero-title">Empresas que confían en nuestro talento</h1>
+            <p class="hero-description">
+                Conoce a las organizaciones que forman parte de nuestra red y que impulsan el desarrollo profesional creando oportunidades de alto impacto.
+            </p>
+        </div>
+    </section>
+
+    <main class="layout" style="grid-template-columns: 1fr;">
+
+        <div class="results-head">
+            <div>
+                <h2 class="results-title">Nuestras Empresas Aliadas</h2>
+                <span class="results-count" id="resultsCount">Cargando empresas...</span>
+            </div>
+        </div>
+
+        <div class="job-list" id="empresasList">
+            <div class="skeleton-loader skeleton-card"></div>
+            <div class="skeleton-loader skeleton-card"></div>
+        </div>
+
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2026 Talvia - Proyecto Académico. Todos los derechos reservados.</p>
+    </footer>
+    <script th:src="@{/js/shared/notificaciones.js}"></script>
+    <script th:src="@{/js/shared/mobile-nav.js}"></script>
+    <script th:src="@{/js/trabajador/empresas.js}"></script>
+</body>
+</html>

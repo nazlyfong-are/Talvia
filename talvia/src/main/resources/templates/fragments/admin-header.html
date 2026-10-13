@@ -1,0 +1,24 @@
+<th:block xmlns:th="http://www.thymeleaf.org" th:fragment="header(activo)">
+    <header class="top">
+        <div class="top-inner">
+            <div class="brand">
+                <div class="brand-mark">TV</div>
+                <div class="brand-name">Tal<span>via</span> <small style="font-size:11px; color:#ff9999;">(Admin)</small></div>
+            </div>
+
+            <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Abrir menú">☰</button>
+
+            <nav class="top-nav admin-nav">
+                <a th:href="@{/private/admin/dashboard}" th:classappend="${activo == 'dashboard'} ? 'nav-active'">Resumen</a>
+                <a th:href="@{/private/admin/usuarios}" th:classappend="${activo == 'usuarios'} ? 'nav-active'">Usuarios</a>
+                <a th:href="@{/private/admin/vacantes}" th:classappend="${activo == 'vacantes'} ? 'nav-active'">Vacantes</a>
+                <a th:href="@{/private/admin/postulaciones}" th:classappend="${activo == 'postulaciones'} ? 'nav-active'">Postulaciones</a>
+                <a th:href="@{/private/admin/exportar-datos}" th:classappend="${activo == 'exportar'} ? 'nav-active'">Exportar</a>
+                <a th:href="@{/private/admin/configuracion}" th:classappend="${activo == 'configuracion'} ? 'nav-active'">Configuración</a>
+            </nav>
+
+            <button class="btn-publish" style="background: transparent; border: 1px solid #d93838; color: #d93838;" id="logoutBtn">Cerrar Sesión</button>
+        </div>
+    </header>
+    <div class="nav-backdrop" id="nav-backdrop"></div>
+</th:block>

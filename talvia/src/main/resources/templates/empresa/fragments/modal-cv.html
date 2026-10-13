@@ -1,0 +1,79 @@
+<div th:fragment="contenido">
+    <div id="modalVistaCV" class="modal-overlay" style="display: none;">
+        <div class="modal-cv">
+            <button class="btn-close-modal" id="btnCerrarCV">X</button>
+
+            <div class="cv-header">
+                <div class="cv-name">Postulación #<span id="cv-id">1</span></div>
+                <div class="cv-role">Postulación a: <span id="cv-vacante-titulo">—</span></div>
+                <div style="margin-top: 10px; font-size: 13px; color: #718096;">Aplicó el: <span id="cv-fecha">—</span></div>
+            </div>
+
+            <div class="cv-section">
+                <h4 class="cv-section-title">📝 Cuestionario de la Empresa</h4>
+                <div class="cv-data-grid">
+                    <div>
+                        <span class="cv-label">Expectativa Salarial</span>
+                        <div class="cv-value" id="cv-salario" style="color: #27ae60; font-weight: bold;">---</div>
+                    </div>
+                    <div>
+                        <span class="cv-label">Disponibilidad</span>
+                        <div class="cv-value" id="cv-disponibilidad">---</div>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <span class="cv-label">Resumen de Experiencia para el Rol</span>
+                        <div class="cv-value" id="cv-experiencia-resumen" style="background: #f7fafc; padding: 10px; border-radius: 4px; border: 1px solid #e2e8f0; font-style: italic;">---</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cv-section">
+                <h4 class="cv-section-title">👤 Perfil del Candidato</h4>
+                <div class="cv-data-grid">
+                    <div>
+                        <span class="cv-label">Nombre Completo</span>
+                        <div class="cv-value" id="cv-nombre">---</div>
+                    </div>
+                    <div>
+                        <span class="cv-label">Especialidad</span>
+                        <div class="cv-value" id="cv-cargo">---</div>
+                    </div>
+                    <div style="grid-column: 1 / -1;">
+                        <span class="cv-label">Contacto</span>
+                        <div class="cv-value" id="cv-contacto">---</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cv-section">
+                <h4 class="cv-section-title">💼 Experiencia Profesional</h4>
+                <div id="cv-experiencia-lista" style="display: grid; gap: 12px;"></div>
+            </div>
+
+            <div class="cv-section">
+                <h4 class="cv-section-title">🎓 Formación Académica</h4>
+                <div id="cv-educacion-lista" style="display: grid; gap: 10px;"></div>
+            </div>
+
+            <div class="cv-section">
+                <h4 class="cv-section-title">📜 Certificaciones</h4>
+                <div id="cv-certificaciones-lista" style="display: grid; gap: 10px;"></div>
+            </div>
+
+            <div class="cv-section">
+                <div class="cv-data-grid">
+                    <div>
+                        <span class="cv-label">Idiomas</span>
+                        <div id="cv-idiomas">---</div>
+                    </div>
+                    <div>
+                        <span class="cv-label">Habilidades Clave</span>
+                        <div id="cv-habilidades">---</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cv-section" id="cv-archivo-completo-container"></div>
+        </div>
+    </div>
+</div>
