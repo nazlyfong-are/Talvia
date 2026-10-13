@@ -170,3 +170,7 @@ html[data-theme="dark"] :is([style*="#fffafa"], [style*="#fdf2f2"]) { background
 html[data-theme="dark"] [style*="#f8d7d7"] { border-color: rgba(217, 56, 56, .35) !important; }
 
 html[data-theme="dark"] :is(.ap .ap-chip input:checked + span, .ap .ap-contador) { --ink: #0c374a; }
+/* RANKING DE COMPATIBILIDAD */
+html[data-theme="dark"] .rk-negativo { color: #ff8f8f; background: rgba(217, 56, 56, .16); }
+html[data-theme="dark"] .rk-positivo { color: #5fd3a2; background: rgba(53, 153, 111, .18); }
+html[data-theme="dark"] .ic-rank-btn { --ink: #0c374a; }

@@ -1,13 +1,3 @@
-/* ============================================
-   PREFERENCIAS Y APOYOS DE TRABAJO (opcional)
-   Catálogo y componente compartidos por:
-   - registro (form.js)
-   - perfil del trabajador (perfil.js)
-   - modal del candidato en la empresa (dashboard-postulaciones.js)
-
-   Los códigos son los mismos del enum ApoyoLaboral del backend.
-   Para agregar, quitar o renombrar una opción: se cambia aquí y en ese enum.
-============================================ */
 window.Apoyos = (function () {
 
     const PREGUNTA = '¿Qué podemos hacer para que el proceso y el trabajo sean cómodos y accesibles para ti?';

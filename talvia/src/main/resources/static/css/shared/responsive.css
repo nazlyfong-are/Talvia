@@ -181,3 +181,13 @@
     .ap .ap-salidas .ap-chip span { display: block; text-align: center; }
     .ap .ap-nota-pie { flex-direction: column; }
 }
+
+/* ── RANKING DE COMPATIBILIDAD (empresa/ranking_style.css) ── */
+@media (max-width: 600px) {
+    .rk-cab, .rk-barra-herr, .rk-aviso { padding-left: 16px; padding-right: 16px; }
+    .rk-cuerpo { padding: 14px 16px 28px; }
+    .rk-item { grid-template-columns: minmax(0, 1fr) 70px; }
+    .rk-pos { grid-column: 1 / -1; padding-top: 0; }
+    .ic-ac-herr { padding: 10px 16px; }
+    .ic-rank-btn { width: 100%; }
+}

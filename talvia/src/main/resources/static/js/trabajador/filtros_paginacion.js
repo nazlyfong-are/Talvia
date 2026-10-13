@@ -1,12 +1,4 @@
-/* =========================================
-   FILTROS + PAGINACIÓN DEL TABLERO DE VACANTES
-   Requiere shared/paginacion.js (función rangoPaginas),
-   que se carga desde fragments/shared-css.
-   ========================================= */
 
-/* =========================================
-   CONFIGURACIÓN INICIAL
-   ========================================= */
 const state = {
     filters: {
         area: "todas",

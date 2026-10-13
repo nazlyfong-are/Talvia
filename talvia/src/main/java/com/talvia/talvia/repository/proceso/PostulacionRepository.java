@@ -14,25 +14,35 @@ import java.util.List;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface PostulacionRepository extends 
-        JpaRepository<Postulacion, Long>, 
-        JpaSpecificationExecutor<Postulacion>{
+public interface PostulacionRepository extends
+        JpaRepository<Postulacion, Long>,
+        JpaSpecificationExecutor<Postulacion> {
     List<Postulacion> findByTrabajadorId(Long trabajadorId);
+
     List<Postulacion> findByVacanteId(Long vacanteId);
-@EntityGraph(attributePaths = {"trabajador", "vacante"})
+
+    @EntityGraph(attributePaths = { "trabajador", "vacante" })
     List<Postulacion> findByVacante_Empresa_IdOrderByFechaPostulacionDesc(Long empresaId);
+
     boolean existsByTrabajadorIdAndVacanteId(Long trabajadorId, Long vacanteId);
+
     boolean existsByCvEnviadoId(Long cvEnviadoId);
+
     long countByEstado(EstadoPostulacion estado);
+
     long countByVacanteId(Long vacanteId);
 
-    //Trae pares para varias vacantes en una sola consulta
+    // Trae pares para varias vacantes en una sola consulta
     @Query("SELECT p.vacante.id, COUNT(p) FROM Postulacion p " +
-           "WHERE p.vacante.id IN :ids GROUP BY p.vacante.id")
+            "WHERE p.vacante.id IN :ids GROUP BY p.vacante.id")
     List<Object[]> contarPorVacantes(@Param("ids") List<Long> ids);
 
-    // Trae trabajador, vacante y empresa en una sola consulta (evita N+1) al listar con filtros
+    // Trae trabajador, vacante y empresa en una sola consulta (evita N+1) al listar
+    // con filtros
     @Override
-    @EntityGraph(attributePaths = {"trabajador", "vacante", "vacante.empresa"})
+    @EntityGraph(attributePaths = { "trabajador", "vacante", "vacante.empresa" })
     Page<Postulacion> findAll(Specification<Postulacion> spec, Pageable pageable);
+
+    @EntityGraph(attributePaths = { "trabajador", "trabajador.formaciones" })
+    List<Postulacion> findConPerfilByVacanteId(Long vacanteId);
 }

@@ -1,14 +1,3 @@
-/* ============================================
-   DASHBOARD EMPRESA: Perfil de la empresa
-   Carga, edición, guardado, logo y eliminación de cuenta.
-   Endpoints:
-   GET  /api/empresa/perfil
-   PUT  /api/empresa/perfil
-   POST /api/empresa/perfil/logo
-   POST /api/cuenta/eliminar/solicitar | /confirmar
-   Va envuelto en una función para no chocar con las variables
-   globales de los demás scripts del dashboard.
-============================================ */
 (function () {
     const $ = (id) => document.getElementById(id);
     const TELEFONO_VALIDO = /^(3[0-9]{9}|60[1-9][0-9]{7}|[1-8][0-9]{7})$/;

@@ -1,8 +1,3 @@
-/* ============================================
-   CAMPANA DE NOTIFICACIONES — compartida entre
-   trabajador y empresa
-============================================ */
-
 document.addEventListener('DOMContentLoaded', () => {
     const bellBtn = document.getElementById('notif-bell-btn');
     const panel = document.getElementById('notif-panel');

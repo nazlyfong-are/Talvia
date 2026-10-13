@@ -1,15 +1,3 @@
-/* ============================================
-   DASHBOARD EMPRESA: Inicio (Candidatos)
-   Acordeón de vacantes paginado en dos niveles:
-   - Nivel 1: vacantes de 5 en 5.
-   - Nivel 2: candidatos de 8 en 8 dentro de cada acordeón.
-   Filtros, orden y paginación en el navegador sobre:
-   GET /api/empresa/postulaciones
-   GET /api/empresa/postulaciones/{id}        (detalle; marca la hoja de vida como vista)
-   PUT /api/empresa/postulaciones/{id}/estado
-   Va dentro de una función para no chocar con las variables de otros scripts.
-   Usa rangoPaginas (shared/paginacion.js, opcional) e irASeccion (dashboard-vacantes.js, opcional).
-============================================ */
 (function () {
     const VACANTES_POR_PAGINA = 5;
     const CANDIDATOS_POR_PAGINA = 8;
@@ -128,6 +116,14 @@
         acordeones.addEventListener('click', (e) => {
             const cabecera = e.target.closest('.ic-ac-head');
             if (cabecera) { alternar(cabecera.closest('.ic-acordeon')); return; }
+
+            // NUEVO: botón del ranking de compatibilidad de la vacante
+            const rk = e.target.closest('[data-accion="ranking"]');
+            if (rk) {
+                const ac = rk.closest('.ic-acordeon');
+                if (typeof abrirRanking === 'function') abrirRanking(Number(ac.dataset.id), ac.dataset.titulo);
+                return;
+            }
 
             const ver = e.target.closest('[data-accion="ver"]');
             if (ver) { verCurriculum(Number(ver.closest('.ic-fila').dataset.id)); return; }
@@ -404,6 +400,7 @@
         const div = document.createElement('div');
         div.className = 'ic-acordeon' + (abierto ? ' abierto' : '');
         div.dataset.id = g.id;
+        div.dataset.titulo = g.titulo || '';          // NUEVO: el ranking lo usa como título del panel
         div.innerHTML = `
             <button type="button" class="ic-ac-head" aria-expanded="${abierto}">
                 <span class="ic-ac-titulo">${esc(g.titulo) || 'Vacante'}
@@ -412,6 +409,8 @@
                 <span class="ic-ac-flecha">▾</span>
             </button>
             <div class="ic-ac-body">
+                <!-- NUEVO: botón del ranking de compatibilidad -->
+                <div class="ic-ac-herr"><button type="button" class="ic-rank-btn" data-accion="ranking">🎯 Ver ranking de compatibilidad</button></div>
                 ${visibles.map(crearFila).join('')}
                 <div class="ic-ac-pie">
                     <span class="ic-ac-rango">Mostrando ${inicio + 1}–${inicio + visibles.length} de ${total}</span>
@@ -592,6 +591,41 @@
     const VINCULO = 'background:#e7f3ee; color:#2f7d5c; border:1px solid #2f7d5c; padding:3px 10px; border-radius:4px; font-size:12px; font-weight:600; text-decoration:none;';
     const SIN_DATOS = '<p style="font-size:13px; color:#a0aec0;">Sin información disponible.</p>';
 
+    // Solo aparece si el candidato marcó apoyos concretos o escribió una nota.
+    // "No necesito ajustes" y "Prefiero hablarlo más adelante" no se muestran.
+    function pintarPreferencias(c) {
+        let bloque = $('cv-preferencias');
+        if (!bloque) {
+            const ancla = $('cv-contacto');
+            if (!ancla) return;
+            bloque = document.createElement('div');
+            bloque.id = 'cv-preferencias';
+            ancla.insertAdjacentElement('afterend', bloque);
+        }
+
+        const grupos = window.Apoyos ? Apoyos.agrupar(c.apoyos || []) : [];
+        if (grupos.length === 0 && !c.apoyosNota) {
+            bloque.style.display = 'none';
+            bloque.innerHTML = '';
+            return;
+        }
+
+        bloque.style.cssText = 'display:block; margin:12px 0; padding:12px 14px; border-radius:6px; ' +
+            'background:#eef4f8; border:1px solid #c9dbe6; border-left:4px solid #2d5a70;';
+        bloque.innerHTML = `
+            <div style="font-size:12px; font-weight:700; color:#2d5a70; text-transform:uppercase; letter-spacing:.04em;">
+                Preferencias de trabajo
+            </div>
+            ${grupos.map(g => `
+                <div style="font-size:12.5px; color:#4a5568; margin-top:6px;">
+                    <strong style="color:#1a202c;">${esc(g.titulo)}:</strong> ${g.etiquetas.map(esc).join(' · ')}
+                </div>`).join('')}
+            ${c.apoyosNota ? `
+                <div style="font-size:12.5px; color:#4a5568; margin-top:8px;">
+                    <strong style="color:#1a202c;">Algo más:</strong> ${esc(c.apoyosNota)}
+                </div>` : ''}`;
+    }
+
     function pintarCandidato(c) {
         if (!c) return;
 
@@ -631,45 +665,12 @@
                     : '<span style="font-size:12px; color:#a0aec0;">Sin documento adjunto</span>'}
             </div>`).join('') || SIN_DATOS);
 
-                ponerHtml('cv-idiomas', (c.idiomas || []).map(i => `<span class="cv-badge">${esc(i.nombre)}</span>`).join('') || 'No especificado');
+        ponerHtml('cv-idiomas', (c.idiomas || []).map(i => `<span class="cv-badge">${esc(i.nombre)}</span>`).join('') || 'No especificado');
         ponerHtml('cv-habilidades', (c.habilidadesTecnicas || []).map(h => `<span class="cv-badge">${esc(h.nombre)}</span>`).join('') || 'No especificado');
 
         pintarPreferencias(c);
-    
     }
 
-    // Solo aparece si el candidato marcó apoyos concretos o escribió una nota.
-// "No necesito ajustes" y "Prefiero hablarlo más adelante" no se muestran.
-function pintarPreferencias(c) {
-    let bloque = $('cv-preferencias');
-    if (!bloque) {
-        const ancla = $('cv-contacto');
-        if (!ancla) return;
-        bloque = document.createElement('div');
-        bloque.id = 'cv-preferencias';
-        ancla.insertAdjacentElement('afterend', bloque);
-    }
-
-    const grupos = window.Apoyos ? Apoyos.agrupar(c.apoyos || []) : [];
-    if (grupos.length === 0 && !c.apoyosNota) {
-        bloque.style.display = 'none';
-        bloque.innerHTML = '';
-        return;
-    }
-
-    bloque.style.cssText = 'display:block; margin:12px 0; padding:12px 14px; border-radius:6px; ' +
-        'background:#eef4f8; border:1px solid #c9dbe6; border-left:4px solid #2d5a70;';
-    bloque.innerHTML = `
-        <div style="font-size:12px; font-weight:700; color:#2d5a70; text-transform:uppercase; letter-spacing:.04em;">
-            Preferencias de trabajo
-        </div>
-        ${grupos.map(g => `
-            <div style="font-size:12.5px; color:#4a5568; margin-top:6px;">
-                <strong style="color:#1a202c;">${esc(g.titulo)}:</strong> ${g.etiquetas.map(esc).join(' · ')}
-            </div>`).join('')}
-        ${c.apoyosNota ? `
-            <div style="font-size:12.5px; color:#4a5568; margin-top:8px;">
-                <strong style="color:#1a202c;">Algo más:</strong> ${esc(c.apoyosNota)}
-            </div>` : ''}`;
-}
+    // NUEVO: el panel del ranking abre el mismo modal del candidato
+    window.verCandidato = verCurriculum;
 })();

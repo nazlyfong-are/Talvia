@@ -1,10 +1,3 @@
-/* ============================================
-   TEMA CLARO / OSCURO
-   - Aplica el tema guardado antes de que se pinte la página (sin parpadeo).
-   - Agrega el botón 🌙 / ☀️ al header (igual en trabajador, empresa y admin).
-   - Guarda la elección en localStorage: se conserva entre páginas y visitas.
-   Se carga de forma síncrona desde el <head> (fragments/shared-css).
-============================================ */
 (function () {
     const CLAVE = 'talvia-tema';
     const raiz = document.documentElement;

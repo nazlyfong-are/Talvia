@@ -1,9 +1,3 @@
-/* ============================================
-   CSRF — agrega el token a toda petición de escritura
-   (POST, PUT, DELETE, PATCH) dirigida al mismo origen.
-   Spring manda el token en la cookie XSRF-TOKEN y espera
-   recibirlo de vuelta en el header X-XSRF-TOKEN.
-============================================ */
 (function () {
     const METODOS_SEGUROS = ['GET', 'HEAD', 'OPTIONS'];
     const fetchOriginal = window.fetch.bind(window);

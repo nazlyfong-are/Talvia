@@ -1,6 +1,4 @@
-/* ============================================
-   MIS FAVORITOS — Listado de vacantes guardadas
-============================================ */
+
 
 document.addEventListener('DOMContentLoaded', cargarFavoritos);
 

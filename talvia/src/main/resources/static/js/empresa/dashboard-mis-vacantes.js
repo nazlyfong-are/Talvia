@@ -1,15 +1,3 @@
-/* ============================================
-   DASHBOARD EMPRESA: Mis Vacantes (tabla)
-   Filtros, orden y paginación en el navegador, sobre los datos de:
-   GET /api/empresa/vacantes
-   GET /api/empresa/postulaciones   (solo para contar candidatos por vacante)
-   Acciones:
-   PUT    /api/empresa/vacantes/{id}/estado
-   DELETE /api/empresa/vacantes/{id}
-   Va dentro de una función para no chocar con las variables de otros scripts.
-   Usa funciones de otros archivos: editarVacante e irASeccion (dashboard-vacantes.js)
-   y rangoPaginas (shared/paginacion.js, opcional).
-============================================ */
 (function () {
     const POR_PAGINA = 10;
 
@@ -93,7 +81,7 @@
         $('mv-orden').addEventListener('change', (e) => { filtros.orden = e.target.value; pagina = 1; render(); });
         $('mv-limpiar').addEventListener('click', () => { reiniciarFiltros(); render(); });
 
-        // Un solo listener para todas las acciones de la tabla (editar, pausar, cerrar, eliminar)
+        // Un solo listener para todas las acciones de la tabla (ranking, editar, pausar, cerrar, eliminar)
         $('mv-tbody').addEventListener('click', (e) => {
             const boton = e.target.closest('[data-accion]');
             if (!boton) return;
@@ -102,6 +90,14 @@
             if (!v) return;
 
             switch (boton.dataset.accion) {
+                // NUEVO: ranking de compatibilidad
+                case 'ranking':
+                    if (typeof abrirRanking === 'function') {
+                        abrirRanking(v.id, v.titulo);
+                    } else {
+                        avisar('No se pudo abrir el ranking. Recarga la página con Ctrl+Shift+R.', 'error');
+                    }
+                    break;
                 case 'editar':
                     if (typeof editarVacante === 'function') {
                         editarVacante(v.id);
@@ -311,6 +307,10 @@
             <td data-label="Estado"><span class="mv-badge ${estado.clase}">${esc(estado.texto)}</span></td>
             <td data-label="Acciones" class="mv-col-acc">
                 <div class="mv-acciones">
+                    <!-- NUEVO: ranking de compatibilidad (desactivado si la vacante no tiene candidatos) -->
+                    <button type="button" class="mv-acc" data-accion="ranking" title="Ranking de candidatos" aria-label="Ranking de candidatos" ${n === 0 ? 'disabled' : ''}>
+                        <span>🎯</span><span class="mv-acc-txt">Ranking</span>
+                    </button>
                     <button type="button" class="mv-acc" data-accion="editar" title="Editar" aria-label="Editar">
                         <span>✏️</span><span class="mv-acc-txt">Editar</span>
                     </button>

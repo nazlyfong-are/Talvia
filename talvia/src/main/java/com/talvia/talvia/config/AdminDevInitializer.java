@@ -39,8 +39,5 @@ public class AdminDevInitializer implements CommandLineRunner {
         admin.setActivo(true); // si queda en false, el login lo trata como cuenta sin verificar
         admin.setCodigoAcceso(passwordEncoder.encode(CODIGO_SEGURIDAD));
         // admin.setNivelPermiso(...); // ajusta al tipo real de tu campo (ver nota abajo)
-
-        adminRepository.save(admin);
-        System.out.println(">>> Admin de prueba creado: " + EMAIL);
     }
 }

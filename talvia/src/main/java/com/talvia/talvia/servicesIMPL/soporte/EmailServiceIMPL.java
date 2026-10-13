@@ -29,9 +29,6 @@ public void enviarCorreoSimple(String destinatario, String asunto, String cuerpo
 
         mailSender.send(mensaje);
     } catch (Exception e) {
-        // Ampliado de MessagingException a Exception: Spring envuelve fallos de
-        // autenticación SMTP en MailAuthenticationException (unchecked), que no
-        // quedaba atrapada antes y tumbaba el flujo principal (registro, etc.)
         System.err.println(">>> ERROR AL ENVIAR CORREO a " + destinatario + ": " + e.getMessage());
     }
 }

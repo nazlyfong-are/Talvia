@@ -1,8 +1,3 @@
-/* ============================================
-   MENÚ MÓVIL — convierte la barra superior en
-   un panel lateral deslizante en pantallas chicas
-============================================ */
-
 document.addEventListener('DOMContentLoaded', () => {
     const btn = document.getElementById('mobile-menu-btn');
     const nav = document.querySelector('.top-nav');

@@ -1,12 +1,3 @@
-/* ============================================
-   DASHBOARD EMPRESA: Formulario de publicar / editar vacante
-   La lista de vacantes (tabla) vive en dashboard-mis-vacantes.js
-
-   Va dentro de una función propia para que sus nombres no puedan chocar con los
-   de otros scripts del dashboard (dos scripts que declaran el mismo `let` o
-   `const` hacen que el segundo no se ejecute y no avise).
-   Hacia afuera solo expone dos funciones: irASeccion y editarVacante.
-============================================ */
 (function () {
     let vacanteEditandoId = null;
 

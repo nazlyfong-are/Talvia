@@ -22,35 +22,37 @@ import com.talvia.talvia.services.notificacion.NotificacionService;
 @RestController
 public class VacanteSinCandidatosScheduler {
 
-    @Autowired private VacanteRepository vacanteRepository;
-    @Autowired private PostulacionRepository postulacionRepository;
-    @Autowired private NotificacionService notificacionService;
+    @Autowired
+    private VacanteRepository vacanteRepository;
+    @Autowired
+    private PostulacionRepository postulacionRepository;
+    @Autowired
+    private NotificacionService notificacionService;
 
     @Autowired
-private ConfiguracionSistemaRepository configRepository;
-
+    private ConfiguracionSistemaRepository configRepository;
 
     @Scheduled(cron = "0 0 8 * * *")
-public void revisarVacantesSinCandidatos() {
-    int diasConfigurados = configRepository.findById(1L)
-            .map(ConfiguracionSistema::getDiasVacanteSinCandidatos)
-            .orElse(15); // valor por defecto si nadie ha guardado configuración todavía
+    public void revisarVacantesSinCandidatos() {
+        int diasConfigurados = configRepository.findById(1L)
+                .map(ConfiguracionSistema::getDiasVacanteSinCandidatos)
+                .orElse(15); // valor por defecto si nadie ha guardado configuración todavía
 
-    LocalDateTime limite = LocalDateTime.now().minusDays(diasConfigurados);
-    List<Vacante> vacantesAbiertas = vacanteRepository.findByEstado(EstadoVacante.ABIERTA);
+        LocalDateTime limite = LocalDateTime.now().minusDays(diasConfigurados);
+        List<Vacante> vacantesAbiertas = vacanteRepository.findByEstado(EstadoVacante.ABIERTA);
 
-    for (Vacante v : vacantesAbiertas) {
-        boolean publicadaHaceRato = v.getFechaPublicacion() != null && v.getFechaPublicacion().isBefore(limite);
-        boolean sinPostulaciones = postulacionRepository.findByVacanteId(v.getId()).isEmpty();
+        for (Vacante v : vacantesAbiertas) {
+            boolean publicadaHaceRato = v.getFechaPublicacion() != null && v.getFechaPublicacion().isBefore(limite);
+            boolean sinPostulaciones = postulacionRepository.findByVacanteId(v.getId()).isEmpty();
 
-        if (publicadaHaceRato && sinPostulaciones) {
-            notificacionService.crear(v.getEmpresa(), TipoNotificacion.VACANTE_SIN_CANDIDATOS,
-                    "Tu vacante \"" + v.getTitulo() + "\" lleva más de " + diasConfigurados +
-                    " días sin candidatos. Considera revisar sus requisitos o el presupuesto ofrecido.",
-                    "/private/empresa/dashboard");
+            if (publicadaHaceRato && sinPostulaciones) {
+                notificacionService.crear(v.getEmpresa(), TipoNotificacion.VACANTE_SIN_CANDIDATOS,
+                        "Tu vacante \"" + v.getTitulo() + "\" lleva más de " + diasConfigurados +
+                                " días sin candidatos. Considera revisar sus requisitos o el presupuesto ofrecido.",
+                        "/private/empresa/dashboard");
+            }
         }
     }
-}
 
     // TEMPORAL PARA PRUEBAS, BORRAR LUEGO
     @GetMapping("/api/admin/probar-scheduler-vacantes")
