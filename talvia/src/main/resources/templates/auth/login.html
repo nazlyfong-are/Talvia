@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
   <meta charset="UTF-8" />
@@ -65,6 +65,17 @@
           </div>
           <h1>Acceso <br /><em>Restringido</em></h1>
           <p>Zona de gestión interna. Solo personal autorizado.</p>
+        </div>
+
+        <!-- NUEVO: aviso del modo admin (login.js lo busca por este id al cambiar de modo; si falta, se detiene) -->
+        <div class="admin-access-warning hidden" id="adminStats">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10" />
+            <line x1="12" y1="8" x2="12" y2="12" />
+            <line x1="12" y1="16" x2="12.01" y2="16" />
+          </svg>
+          El acceso a este panel es restringido y requiere un código de seguridad.
         </div>
 
       </div>
