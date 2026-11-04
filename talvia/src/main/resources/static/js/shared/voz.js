@@ -278,7 +278,7 @@
 
     /* ── Escuchar clics y teclado ── */
     const INTERACTIVO = 'a[href], button, summary, [role="button"], [role="link"], [role="tab"]';
-    const esPropio = (el) => !!el.closest('#voz-panel, #voz-boton, .voz-saltar');
+    const esPropio = (el) => !!el.closest('#voz-panel, #voz-boton, .voz-saltar, #vc-flotante, .vc-mic-campo, #vc-burbuja');
     let pendiente = null;
     let pendienteHasta = 0;
 
