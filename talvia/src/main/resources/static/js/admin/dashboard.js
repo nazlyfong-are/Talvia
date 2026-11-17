@@ -15,7 +15,7 @@ async function cargarEstadisticas() {
         if (!resp.ok) throw new Error('No se pudieron cargar las estadísticas.');
         const data = await resp.json();
         pintarStats(data);
-        pintarGrafico(data.registrosPorSemana || []);
+        pintarGrafico(data.registrosPorSemana || data.registroPorSemana || []);
     } catch (err) {
         document.getElementById('stats-grid').innerHTML =
             `<p style="color:#d93838;">Error: ${err.message}</p>`;
