@@ -32,3 +32,10 @@ build/
 ### VS Code ###
 .vscode/
 
+.idea/
+application-dev.properties
+AdminDevInitializer.java
+.env
+*.csv
+*.zip
+*.joblib

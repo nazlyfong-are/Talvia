@@ -186,8 +186,53 @@
 @media (max-width: 600px) {
     .rk-cab, .rk-barra-herr, .rk-aviso { padding-left: 16px; padding-right: 16px; }
     .rk-cuerpo { padding: 14px 16px 28px; }
-    .rk-item { grid-template-columns: minmax(0, 1fr) 70px; }
+    .rk-item { grid-template-columns: minmax(0, 1fr) 92px; }
     .rk-pos { grid-column: 1 / -1; padding-top: 0; }
     .ic-ac-herr { padding: 10px 16px; }
     .ic-rank-btn { width: 100%; }
+}
+
+/* ── Red de seguridad responsive ── */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+img, video { max-width: 100%; height: auto; }
+
+/* Un campo de menos de 16 px hace que iPhone amplíe la pantalla al tocarlo */
+@media (max-width: 768px) {
+  input, select, textarea { font-size: 16px; }
+}
+
+/* Los modales no pueden ser más altos que la pantalla */
+.modal-card, .modal-contenido {
+  max-height: 90vh;
+  max-height: 90dvh;
+  overflow-y: auto;
+}
+/* ── CERRAR SESIÓN DENTRO DEL MENÚ LATERAL (celular) ── */
+.nav-logout { display: none; }
+
+@media (max-width: 768px) {
+    #logoutBtn { display: none; }               /* el botón de la barra se oculta en celular */
+
+    .top-nav {
+        height: 100vh;
+        height: 100dvh;                         /* altura real visible, sin la barra del navegador */
+        padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .nav-logout {
+        display: block;
+        margin-top: auto;                       /* queda al final del menú */
+        width: 100%;
+        padding: 14px 0 8px;
+        border: 0;
+        border-top: 1px solid rgba(255, 255, 255, .15);
+        background: none;
+        color: #c7cfdc;
+        font: inherit;
+        font-size: 15px;
+        text-align: left;
+        cursor: pointer;
+    }
+    .nav-logout:hover, .nav-logout:focus-visible { color: #fff; }
 }

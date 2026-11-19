@@ -1,3 +1,12 @@
+/* =========================================
+   NUEVO: utilidades de búsqueda
+   - normalizar: sin tildes, sin mayúsculas y con un solo espacio entre palabras
+   - contieneTodas: todas las palabras escritas tienen que aparecer, en cualquier orden
+   - debounce: espera un momento a que el usuario deje de escribir
+   ========================================= */
+const normalizar = (t) => (t || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/\s+/g, " ").trim();
+const contieneTodas = (texto, consulta) => consulta === "" || consulta.split(" ").every(p => texto.includes(p));
+function debounce(fn, ms) { let t; return (...a) => { clearTimeout(t); t = setTimeout(() => fn(...a), ms); }; }
 
 const state = {
     filters: {
@@ -80,22 +89,22 @@ sortSelect.addEventListener("change", (e) => {
     aplicarFiltros();
 });
 
-searchBtn.addEventListener("click", () => {
-    state.filters.keyword = searchInput.value.toLowerCase().trim();
-    state.filters.location = locationInput.value.toLowerCase().trim();
+// NUEVO: una sola función lee la búsqueda (antes estaba repetida en el botón y en la tecla Enter)
+function leerBusqueda() {
+    state.filters.keyword = normalizar(searchInput.value);
+    state.filters.location = normalizar(locationInput.value);
     state.pagination.currentPage = 1;
     aplicarFiltros();
-});
+}
+
+searchBtn.addEventListener("click", leerBusqueda);
 
 [searchInput, locationInput].forEach(input => {
     input.addEventListener("keyup", (e) => {
-        if (e.key === "Enter") {
-            state.filters.keyword = searchInput.value.toLowerCase().trim();
-            state.filters.location = locationInput.value.toLowerCase().trim();
-            state.pagination.currentPage = 1;
-            aplicarFiltros();
-        }
+        if (e.key === "Enter") leerBusqueda();
     });
+    // NUEVO: busca mientras se escribe (y cuando el texto llega por dictado de voz)
+    input.addEventListener("input", debounce(leerBusqueda, 250));
 });
 
 clearFiltersBtn.addEventListener("click", () => {
@@ -144,9 +153,10 @@ function aplicarFiltros() {
         const modalidad = vacante.dataset.modality || "";
         const nivel = vacante.dataset.level || "";
 
-        const textContent = vacante.innerText.toLowerCase();
+        // NUEVO: el texto de la tarjeta y el de la empresa/ubicación se comparan ya normalizados
+        const textContent = normalizar(vacante.innerText || vacante.textContent);
         const jobCompanyElement = vacante.querySelector('.job-company');
-        const locationText = jobCompanyElement ? jobCompanyElement.innerText.toLowerCase() : "";
+        const locationText = jobCompanyElement ? normalizar(jobCompanyElement.innerText || jobCompanyElement.textContent) : "";
 
         const coincideArea = state.filters.area === "todas"
             || area.trim().toLowerCase() === state.filters.area.trim().toLowerCase();
@@ -156,8 +166,9 @@ function aplicarFiltros() {
         const coincideNivel = state.filters.nivel === "todos"
             || nivel.trim().toLowerCase() === state.filters.nivel.trim().toLowerCase();
 
-        const coincidePalabra = state.filters.keyword === "" || textContent.includes(state.filters.keyword);
-        const coincideLugar = state.filters.location === "" || locationText.includes(state.filters.location);
+        // NUEVO: todas las palabras escritas deben aparecer, en cualquier orden y sin importar tildes
+        const coincidePalabra = contieneTodas(textContent, state.filters.keyword);
+        const coincideLugar = contieneTodas(locationText, state.filters.location);
 
         return coincideArea && coincideExperiencia && coincideModalidad && coincideNivel && coincidePalabra && coincideLugar;
     });
